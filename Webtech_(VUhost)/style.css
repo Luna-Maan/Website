@@ -1,0 +1,417 @@
+body {
+  font-family: "Roboto slab", "Times New Roman", Times, serif;
+  font-size: 1.25rem;
+}
+
+/* properties of headers and paragraph types */
+h1 {
+  font-variant: small-caps;
+  font-weight: 300;
+  background-image: linear-gradient(to right, white, lightseagreen 50%);
+}
+
+h2 {
+  margin: 40px 0px 5px 0px
+}
+
+p,
+dl {
+  text-indent: 1rem;
+}
+
+pre {
+  margin-bottom: 0px;
+  border: 1px solid gray;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-transform: capitalize;
+}
+
+/* properties of lists */
+ul {
+  list-style-image: linear-gradient(to right, white, lightseagreen 50%);
+  list-style-position: outside;
+  list-style-type: none;
+  margin-top: 5px;
+}
+
+ol {
+  list-style: inside upper-roman;
+}
+
+ol>li {
+  padding-bottom: 12rem;
+}
+
+/* properties of images */
+img {
+  width: 200px;
+}
+
+.tableImg {
+  width: 9rem;
+  height: 12rem;
+  float: left;
+}
+
+figure {
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+figcaption {
+  font-style: italic;
+}
+
+/* properties of tables */
+table {
+  text-align: center;
+  width: 100%;
+  border-spacing: 0px 5px;
+  caption-side: bottom;
+}
+
+caption {
+  font: 1.2rem "Fira Sans", sans-serif;
+}
+
+th,
+td {
+  border-width: 1px;
+  border-style: solid;
+  border-color: gray;
+  padding: 12px;
+}
+
+th {
+  text-align: left;
+  background-color: lightseagreen;
+}
+
+th,
+td {
+  border-bottom: 1px;
+  border-style: solid;
+  border-color: gray;
+  padding: 8px;
+}
+
+@media print {
+  body {
+    widows: 2;
+    orphans: 2;
+  }
+
+  nav {
+    font-size: 2rem;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 4rem;
+  }
+
+  div {
+    page-break-inside: avoid;
+  }
+
+  #table {
+    display: block;
+  }
+
+  #table {
+    page-break-before: always;
+  }
+
+  .formRow {
+    display: none;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  table {
+    page-break-after: always;
+  }
+
+  dl {
+    page-break-inside: avoid;
+  }
+
+  textarea,
+  input[type="submit"],
+  input[type="text"],
+  select,
+  label {
+    display: none;
+  }
+
+  .linkExternal {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+
+  table {
+    text-align: center;
+    width: 100%;
+    border-spacing: 0px 5px;
+    font-size: 14px;
+  }
+
+  caption {
+    font-style: italic;
+  }
+
+  th,
+  td {
+    border-width: 1px;
+    border-style: solid;
+    border-color: gray;
+    padding: 8px;
+  }
+
+  th {
+    text-align: left;
+    background-color: lightseagreen;
+  }
+
+  td {
+    border-bottom: 1px;
+    border-style: solid;
+    border-color: gray;
+    padding: 8px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  tr {
+    display: flex;
+    flex-direction: column;
+  }
+
+  th,
+  td {
+    display: block;
+    box-sizing: border-box;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .formRow {
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  #modal-content {
+    padding-bottom: 21rem;
+    background-color: lavender;
+  }
+
+  tr.formRow th,
+  tr.formRow td {
+    display: block;
+    box-sizing: border-box;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  #modal-content {
+    padding-bottom: 24rem;
+  }
+}
+
+/* properties of links */
+a:visited {
+  color: blue;
+}
+
+.internalLink {
+  text-decoration: none;
+}
+
+a:link {
+  color: blue;
+}
+
+a:hover,
+.internalLink:hover {
+  color: red;
+}
+
+a:active,
+.internalLink:active {
+  color: green;
+}
+
+/* properties of forms */
+.descriptionLabel {
+  vertical-align: top;
+}
+
+input[type="text"],
+textarea,
+input[type="url"],
+input[type="number"] {
+  box-sizing: border-box;
+  padding: 0.5rem 0 0.5rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+textarea {
+  resize: none;
+}
+
+input[type="text"]:focus,
+textarea:focus,
+input[type="url"]:focus,
+input[type="number"]:focus {
+  background-color: rgb(178, 241, 238);
+}
+
+input[type="text"] {
+  float: none;
+}
+
+textarea {
+  width: 240px;
+  height: 100px;
+}
+
+input[type="submit"] {
+  height: 2rem;
+  vertical-align: top;
+  background-color: rgb(178, 241, 238);
+  border-radius: 0.5rem;
+}
+
+#reset {
+  height: 2rem;
+  vertical-align: top;
+  background-color: rgb(224, 55, 55);
+  border-radius: 0.5rem;
+}
+
+#reset:hover {
+  background-color: rgb(255, 0, 0);
+}
+
+input[type="submit"]:hover {
+  background-color: rgb(143, 216, 210);
+}
+
+.urlInput {
+  width: 13rem;
+}
+
+.nameInput {
+  width: 7rem;
+}
+
+.yearInput {
+  width: 4rem;
+}
+
+.genreInput {
+  width: 15rem;
+}
+
+.idInput {
+  width: 7rem;
+}
+
+.search {
+  width: 15rem;
+  background-color: lightgray;
+  height: 2.5rem;
+}
+
+select {
+  background-color: lightgray;
+  height: 2.5rem;
+  vertical-align: top;
+  border-radius: 0.5rem;
+}
+
+footer {
+  background-image: url("https://img.freepik.com/free-vector/modern-geometric-seamless-pattern_1035-18238.jpg");
+  background-repeat: repeat;
+  margin-bottom: 0px;
+  padding-bottom: 15px;
+}
+
+/* properties of the modal (for a part from w3schools https://www.w3schools.com/howto/howto_css_modals.asp)*/
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  padding-top: 2vh;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+  overflow: auto;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  overflow-y: auto;
+  max-height: 90%;
+}
+
+
+.modal-title {
+  margin: 0;
+}
+
+#showModal {
+  height: 2.5rem;
+  vertical-align: top;
+  background-color: lightseagreen;
+  border-radius: 0.5rem;
+}
+
+#showModal:hover {
+  background-color: rgb(30, 148, 144);
+}
+
+#close {
+  height: 2rem;
+  vertical-align: top;
+  background-color: lightseagreen;
+  border-radius: 0.5rem;
+}
+
+#close:hover {
+  background-color: rgb(30, 148, 144);
+}
+
+.formRow {
+  height: 2rem;
+  vertical-align: top;
+  background-color: lavender;
+  border-radius: 0.5rem;
+  width: auto;
+}
+
+.required {
+  color: red;
+  font-size: 1rem;
+}

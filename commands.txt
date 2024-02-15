@@ -49,3 +49,6 @@ using namespace client;
     document.addEventListener("DOMContentLoaded",
                               cheerp::Callback(setupInputAndDisplay));
 }
+
+    inputBox->setAttribute("type", "text");
+    inputBox->setAttribute("value", "1");

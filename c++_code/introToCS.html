@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>C++ code</title>
+    <script defer src="test.js"></script>
+    <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a class="active" href="introToCS.html">C++</a></li>
+            <li><a href="../Webtech_(VUhost)/index.html">webtech</a></li>
+        </ul>
+    </nav>
+    <header>
+        <h1>Random C++ programs</h1>
+    </header>
+    <main>
+        <h2>Module 1: Collatz</h2>
+        <pre>Steps until it reaches 1: <span id="pagetitle">1</span></pre>
+        <input id="input" type="number" value="1" />
+
+        <h2>Module 1: Polish notation</h2>
+        <p>the input has the form '(+,-,/,*)(number)(number)'</p>
+        <pre>Result: <span id="result">0</span></pre>
+        <table>
+            <tr>
+                <th><input id="input2" type="text" value="+" /></th>
+                <th><input id="input3" type="text" value="2" /></th>
+                <th><input id="input4" type="text" value="1" /></th>
+            </tr>
+        </table>
+
+        <h2>Module 2: Deduplicate</h2>
+        <p>Put in a space seperated list of numbers</p>
+        <pre>The deduplicated vector is: <span id="resultDedup">0</span></pre>
+        <input id="inputDedup" type="text" value="1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10" />
+    </main>
+</body>
+
+</html>

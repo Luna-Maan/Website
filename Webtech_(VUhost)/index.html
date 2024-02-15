@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Photobook</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <h1>Photobook</h1>
+    </header>
+
+    <main>
+        <nav>
+            <h2>Contents</h2>
+            <ul>
+                <li><a class="internalLink" href="#table">Table of games</a></li>
+                <li><a class="internalLink" href="#Favorites">Our favorite games</a></li>
+            </ul>
+        </nav>
+
+        <section id="table">
+            <h2>Good games</h2>
+            <label for="selectYear2">Select a year to filter:</label>
+            <select name="selectYear2" id="selectYear2">
+                <option value="noFilter">no filter</option>
+            </select>
+            <input type="text" class="search" id="search" placeholder="Search for a name/genre">
+            <button type="button" id="showModal">Add Videogames</button>
+            <table id="tab1">
+                <caption>Table: good games</caption>
+                <tr>
+                    <th>Poster</th>
+                    <th>Name</th>
+                    <th>Year</th>
+                    <th>Genre</th>
+                    <th>ID</th>
+                    <th>Description</th>
+                </tr>
+            </table>
+        </section>
+
+        <section>
+            <div class="modal" id="modal">
+                <div class="modal-content">
+
+                    <h2 class="modal-title">Add videogames</h2>
+
+                    <form>
+                        <table class="modal-table" id="modal-content">
+                            <tr class="formRow">
+                                <td>
+                                    <label for="poster2">Image url*</label>
+                                    <input class="urlInput" id="poster2" type="url" name="poster"
+                                        placeholder="https://image.com/link" required>
+                                </td>
+                                <td>
+                                    <label for="name2">Name*</label>
+                                    <input class="nameInput" id="name2" type="text" name="name" placeholder="Name"
+                                        required>
+                                </td>
+                                <td>
+                                    <label for="year2">Year*</label>
+                                    <input class="yearInput" id="year2" type="number" name="year" placeholder="Year"
+                                        required>
+                                </td>
+                                <td>
+                                    <label for="genre2">Genre*</label>
+                                    <input class="genreInput" id="genre2" type="text" name="genre"
+                                        placeholder="Genres (comma-seperated)" required>
+                                </td>
+                                <td>
+                                    <label for="id2">ID (optional)</label>
+                                    <input class="idInput" id="id2" type="number" name="id" placeholder="ID">
+                                </td>
+                                <td>
+                                    <label class="descriptionLabel" for="description2">Description*</label>
+                                    <textarea name="description" id="description2" placeholder="Description" rows="5"
+                                        cols="50" required></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                        <p>If a valid ID is entered all remaining fields are automatically pre-filled</p>
+                        <p class="required">*required fields</p>
+
+                        <div class="modal-footer">
+                            <button type="button" id="close">Close</button>
+                            <input type="submit" value="Add/submit">
+                            <input id="reset" type="button" value="RESET">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="Favorites">
+            <h2 class="linkExternal">Links to the websites of our favorite games</h2>
+            <ol class="linkExternal">
+                <li>
+                    <a href="https://www.hollowknight.com/">Hollow Knight</a>
+                    <div><img class="tableImg"
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTu-JRgF32rO1-AEHtvxl0bSXdBCa9dAS0PQH1I_Nkha4_c5ht0s2LY6quk-UNAHjOpthA&usqp=CAU"
+                            alt="Hollow knight game poster"></div>
+                </li>
+                <li>
+                    <a href="https://www.fortnite.com/">Fortnite</a>
+                    <div><img class="tableImg"
+                            src="https://m.media-amazon.com/images/M/MV5BNzU2YTY2OTgtZGZjZi00MTAyLThlYjUtMWM5ZmYzOGEyOWJhXkEyXkFqcGdeQXVyNTgyNTA4MjM@._V1_FMjpg_UX1000_.jpg"
+                            alt="fortnite game poster"></div>
+                </li>
+            </ol>
+            <div>
+                <h2>Hollow knight</h2>
+                <p><strong>Sales:</strong> Hollow Knight had sold over 500,000 copies by November 2017 and surpassed
+                    1,000,000 in sales on PC platforms on 11 June 2018, one day before releasing on Nintendo Switch,
+                    where it had sold over 250,000 copies in the two weeks after its launch. By July 2018 it had sold
+                    over 1,250,000 copies. By February 2019, Hollow Knight had sold over <em>2,800,000 copies.</em></p>
+                <p><strong>Awards:</strong> The game was nominated for "Best PC Game" in Destructoid's Game of the Year
+                    Awards 2017, and for "Best Platformer" in IGN's Best of 2017 Awards. It won the award for "Best
+                    Platformer" in PC Gamer's 2017 Game of the Year Awards. Polygon later named the game among the
+                    decade's best.</p>
+            </div>
+            <div>
+                <h2>Fortnite</h2>
+                <dl>
+                    <dt>Epic Games</dt>
+                    <dd>Epic Games, <abbr title="incorporated">Inc.</abbr> is an American video game and software
+                        developer and publisher based in Cary, North Carolina. - Epic Games developed Unreal Engine, a
+                        commercially available game engine which also powers its internally developed video games like
+                        Fortnite and the Unreal, Gears of War, and Infinity Blade series.</dd>
+
+                    <dt>Fortinte</dt>
+                    <dd>Fortinte is a player-versus-player game for up to 100 players, allowing one to play alone, in a
+                        duo, or in a squad (usually consisting of three or four players).s - Weaponless players airdrop
+                        from a "Battle Bus" that crosses the game's map. When they land, they must scavenge for weapons,
+                        items, resources, and even vehicles while trying to stay alive and to attack and eliminate other
+                        players.</dd>
+
+                </dl>
+                <p><strong>Sales:</strong> Fortnite has generated a revenue of over <em>$26 billion to date.</em> The
+                    largest portion of this revenue (over $6 billion) is predicted to have come in 2022. Fortnite
+                    generated a revenue of $5.8 billion in 2021.</p>
+                <p><strong>Awards:</strong> In 2017, the game was nominated for "Best Co-op Game" by PC Gamer, and for
+                    "Best Spectator Game" by IGN. In 2018, the game won the award for Best Ongoing Game by PC Gamer and
+                    IGN, the latter of which nominated it for "Best Nintendo Switch Game", "Best Mobile Game", and "Best
+                    Action Game".</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <pre>Photobook &copy; 2023</pre>
+    </footer>
+</body>
+
+</html>

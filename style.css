@@ -1,0 +1,124 @@
+body {
+    font-size: 1.25rem;
+}
+
+header {
+    margin-top: 4rem;
+}
+
+pre {
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 1rem;
+}
+
+ul {
+    margin-top: 10px;
+}
+
+h2 {
+    margin-bottom: 0;
+}
+
+p {
+    font-size: 1.2rem;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* navbar */
+nav ul {
+    list-style-type: none;
+    background-color: #333;
+    border: 1rem;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+nav ul li {
+    float: left;
+}
+
+nav ul li a {
+    display: block;
+    padding: 8px;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+nav ul li a:hover:not(.active) {
+    background-color: #111;
+}
+
+nav ul li a:link,
+nav ul li a:visited {
+    color: rgb(0, 208, 255);
+}
+
+nav ul li a:hover {
+    color: rgb(226, 19, 19);
+}
+
+.active {
+    background-color: #111;
+    color: rgb(226, 19, 19);
+}
+
+@media screen and (max-width: 400px) {
+    nav ul li {
+        float: none;
+    }
+
+    nav ul {
+        position: relative;
+        width: 100%;
+    }
+}
+
+/* input */
+input:focus {
+    background-color: rgb(178, 241, 238);
+}
+
+#inputDedup {
+    width: 30rem;
+}
+
+input {
+    box-sizing: border-box;
+    padding: 0.5rem 0 0.5rem 0.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 30px;
+}
+
+/* links */
+a:visited {
+    color: blue;
+}
+
+.internalLink {
+    text-decoration: none;
+}
+
+a:link {
+    color: blue;
+}
+
+a:hover,
+.internalLink:hover {
+    color: red;
+}
+
+a:active,
+.internalLink:active {
+    color: green;
+}
