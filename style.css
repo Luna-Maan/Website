@@ -2,10 +2,6 @@ body {
     font-size: 1.25rem;
 }
 
-header {
-    margin-top: 4rem;
-}
-
 pre {
     overflow-x: auto;
     white-space: pre-wrap;
@@ -30,58 +26,76 @@ a {
 }
 
 /* navbar */
-nav ul {
-    list-style-type: none;
-    background-color: #333;
-    border: 1rem;
-    margin: 0;
-    padding: 0;
+
+.navbar {
     overflow: hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
+    background-color: #333;
 }
 
-nav ul li {
+.navbar a {
     float: left;
-}
-
-nav ul li a {
-    display: block;
-    padding: 8px;
+    font-size: 16px;
+    color: white;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
 }
 
-nav ul li a:hover:not(.active) {
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+
+.dropdown .dropbtn {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+.navbar a:hover,
+.dropdown:hover .dropbtn {
+    color: red !important;
     background-color: #111;
 }
 
-nav ul li a:link,
-nav ul li a:visited {
-    color: rgb(0, 208, 255);
+.navbar a.white {
+    color: white;
 }
 
-nav ul li a:hover {
-    color: rgb(226, 19, 19);
-}
-
-.active {
+div a.active,
+#active {
     background-color: #111;
     color: rgb(226, 19, 19);
 }
 
-@media screen and (max-width: 400px) {
-    nav ul li {
-        float: none;
-    }
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
 
-    nav ul {
-        position: relative;
-        width: 100%;
-    }
+.dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
 /* input */

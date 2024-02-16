@@ -7,11 +7,29 @@
 
 <body>
     <nav>
-        <ul>
-            <li><a class="active" href="index.html">Home</a></li>
-            <li><a href="c++_code/introToCS.html">C++</a></li>
-            <li><a href="Webtech_(VUhost)/index.html">webtech</a></li>
-        </ul>
+        <div class="navbar">
+            <a class="active" href="#home">Home</a>
+            <div class="dropdown">
+                <button class="dropbtn">C++
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="c++_code/introToCS.html">Modules 1-3</a>
+                    <a href="#">Module 4</a>
+                    <a href="#">Module 5</a>
+                    <a href="#">Module 6</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <button class="dropbtn">WebTech
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="Webtech_(VUhost)/index.html">Website (VU hosted)</a>
+                    <a href="#">Website (self hosted)</a>
+                </div>
+            </div>
+        </div>
     </nav>
     <header>
         <h1>Coding projects</h1>
