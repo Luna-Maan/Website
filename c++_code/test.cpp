@@ -5,9 +5,18 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <stack>
 #include <vector>
 
 #include "mergesort.h"
+
+template <typename T>
+inline std::string tostr(T value) {
+    std::ostringstream s;
+    s.precision(std::numeric_limits<T>::digits10);
+    s << value;
+    return s.str();
+}
 
 std::string collatz(std::string num) {
     unsigned long long currentNum;
@@ -52,17 +61,17 @@ std::string polish(std::string operation) {
 
     switch (op) {
         case '+':
-            return std::to_string(numOne) + " + " + std::to_string(numTwo) +
-                   " = " + std::to_string(numOne + numTwo);
+            return tostr(numOne) + " + " + tostr(numTwo) + " = " +
+                   tostr(numOne + numTwo);
         case '-':
-            return std::to_string(numOne) + " - " + std::to_string(numTwo) +
-                   " = " + std::to_string(numOne - numTwo);
+            return tostr(numOne) + " - " + tostr(numTwo) + " = " +
+                   tostr(numOne - numTwo);
         case '/':
-            return std::to_string(numOne) + " / " + std::to_string(numTwo) +
-                   " = " + std::to_string(numOne / numTwo);
+            return tostr(numOne) + " / " + tostr(numTwo) + " = " +
+                   tostr(numOne / numTwo);
         case '*':
-            return std::to_string(numOne) + " * " + std::to_string(numTwo) +
-                   " = " + std::to_string(numOne * numTwo);
+            return tostr(numOne) + " * " + tostr(numTwo) + " = " +
+                   tostr(numOne * numTwo);
         default:
             return "Invalid operation.";
     }
@@ -209,12 +218,12 @@ std::string quadratic(std::string input) {
             break;
         case 1:
             output = "There is 1 solution.\n";
-            output += "The solution is: " + std::to_string(solutions.at(0));
+            output += "The solution is: " + tostr(solutions.at(0));
             break;
         case 2:
             output = "There are 2 solutions.\n";
-            output += "The solutions are: " + std::to_string(solutions.at(1)) +
-                      " and " + std::to_string(solutions.at(0));
+            output += "The solutions are: " + tostr(solutions.at(1)) + " and " +
+                      tostr(solutions.at(0));
             break;
     }
 
@@ -434,7 +443,53 @@ std::string mergeSort(std::string input) {
 
     mergeSort(numbers, 0, numbers.size() - 1);
     for (int i = 0; i < numbers.size(); i++) {
-        output += std::to_string(numbers.at(i)) + ' ';
+        output += tostr(numbers.at(i)) + ' ';
+    }
+
+    return output;
+}
+
+void sortStack(std::stack<double>& s) {
+    double topOfStack, temp;
+
+    if (s.size() < 2) {
+        return;
+    } else {
+        topOfStack = s.top();
+        s.pop();
+        while (true) {
+            sortStack(s);
+            if (s.size() < 1 || topOfStack <= s.top()) {
+                s.push(topOfStack);
+                return;
+            } else {
+                temp = s.top();
+                s.pop();
+                s.push(topOfStack);
+                topOfStack = temp;
+            }
+        }
+    }
+}
+
+std::string stackSort(std::string input) {
+    std::stack<double> s;
+    std::stringstream ss(input);
+    std::string output = "";
+
+    std::string temp;
+    double inputVal;
+
+    while (ss >> temp) {
+        inputVal = stod(temp);
+        s.push(inputVal);
+    }
+
+    sortStack(s);
+
+    while (!s.empty()) {
+        output += tostr(s.top()) + " ";
+        s.pop();
     }
 
     return output;
@@ -475,6 +530,10 @@ std::string mergeSort(std::string input) {
         static_cast<client::HTMLInputElement*>(
             client::document.getElementById("inputSort"));
 
+    client::HTMLInputElement* inputStackSort =
+        static_cast<client::HTMLInputElement*>(
+            client::document.getElementById("inputStackSort"));
+
     client::Element* titleElement =
         client::document.getElementById("pagetitle");
 
@@ -495,6 +554,9 @@ std::string mergeSort(std::string input) {
         client::document.getElementById("resultKnight");
 
     client::Element* resultSort = client::document.getElementById("resultSort");
+
+    client::Element* resultStackSort =
+        client::document.getElementById("resultStackSort");
 
     auto mirrorText = [titleElement, inputBox]() -> void {
         client::String* text = inputBox->get_value();
@@ -607,6 +669,20 @@ std::string mergeSort(std::string input) {
     mirrorTextSort();
 
     inputSort->addEventListener("input", cheerp::Callback(mirrorTextSort));
+
+    auto mirrorTextStackSort = [resultStackSort, inputStackSort]() -> void {
+        client::String* input = inputStackSort->get_value();
+        std::string text = input->operator std::string();
+        if (text.empty()) {
+            resultStackSort->set_textContent("Enter a list.");
+        };
+        resultStackSort->set_textContent(stackSort(text).c_str());
+    };
+
+    mirrorTextStackSort();
+
+    inputStackSort->addEventListener("input",
+                                     cheerp::Callback(mirrorTextStackSort));
 }
 
 int webMain() {
