@@ -19,8 +19,8 @@
                 </button>
                 <div class="dropdown-content">
                     <a href="introToCS.html">Modules 1-4</a>
-                    <a href="#">Module 5</a>
-                    <a href="#">Module 6</a>
+                    <a href="maze.html">Maze</a>
+                    <a href="#">BST</a>
                 </div>
             </div>
             <div class="dropdown">
@@ -52,48 +52,48 @@
     <main>
         <h1>Random C++ programs</h1>
         <h2 id=collatz>Module 1: Collatz</h2>
-        <pre>Steps until it reaches 1: <span id="pagetitle">Error</span></pre>
+        <pre class="wrap">Steps until it reaches 1: <span id="pagetitle">Error</span></pre>
         <input id="input" type="number" value="1" />
 
         <h2 id=polish>Module 1: Polish calculator</h2>
         <p>the input has the form '(+,-,/,*) (number) (number)'</p>
-        <pre>Result: <span id="result">Error</span></pre>
+        <pre class="wrap">Result: <span id="result">Error</span></pre>
         <input id="input2" type="text" value="+ 1 2" />
 
         <h2 id=dedup>Module 2: Deduplicate</h2>
         <p>Put in a space seperated list of numbers</p>
-        <pre>The deduplicated vector is: <span id="resultDedup">Error</span></pre>
+        <pre class="wrap">The deduplicated vector is: <span id="resultDedup">Error</span></pre>
         <input id="inputDedup" type="text" value="1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10" />
 
         <h2 id="small">Module 2: Smallest missing</h2>
         <p>Put in a space seperated list of numbers</p>
-        <pre>The smallest missing number is: <span id="resultMissing">Error</span></pre>
+        <pre class="wrap">The smallest missing number is: <span id="resultMissing">Error</span></pre>
         <input id="inputMissing" type="text" value="1 2 3 4 5 7 8 9 11 12 14 15 16 18" />
 
         <h2 id="quad">Module 2: Quadratic equation solver </h2>
         <p>Put in the coefficients of the quadratic equation seperated by spaces</p>
-        <pre><span id="resultQuad">Error</span></pre>
+        <pre class="wrap"><span id="resultQuad">Error</span></pre>
         <input id="inputQuad" type="text" value="1 2 1" />
 
         <h2 id="common">Module 3: Most common letter finder</h2>
         <p>Put in a string</p>
-        <pre><span id="resultLetter">Error</span></pre>
+        <pre class="wrap"><span id="resultLetter">Error</span></pre>
         <textarea id="inputLetter">Lorem ipsum</textarea>
 
         <h2 id=knight>Module 4: Knights path</h2>
         <p>Gives a knights path between two points (not gauranteed to be optimal). Input in the form (board size) (begin
             coordinate) (end coordinate). (e.g. 8 a6 b8)</p>
-        <pre><span id="resultKnight">Error</span></pre>
+        <pre class="wrap"><span id="resultKnight">Error</span></pre>
         <input id="inputKnight" type="text" value="8 a6 b8" />
 
         <h2 id="sort">Module 4: Merge sort</h2>
         <p>Put in a space seperated list of numbers (floats)</p>
-        <pre>The sorted vector is: <span id="resultSort">Error</span></pre>
+        <pre class="wrap">The sorted vector is: <span id="resultSort">Error</span></pre>
         <input class="fitInput" id="inputSort" type="text" value="1.6 1.7 1.8 1.9 2.0 1.1 1.2 1.3 1.4 1.5" />
 
         <h2 id="stackSort">Module 4: Stack sort</h2>
         <p>Put in a space seperated list of numbers (floats)</p>
-        <pre>The sorted vector is: <span id="resultStackSort">Error</span></pre>
+        <pre class="wrap">The sorted vector is: <span id="resultStackSort">Error</span></pre>
         <input class="fitInput" id="inputStackSort" type="text" value="1.6 1.7 1.8 1.9 2.0 1.1 1.2 1.3 1.4 1.5" />
     </main>
 </body>
