@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>C++ code</title>
     <script defer src="test.js"></script>
     <link rel="stylesheet" href="../style.css" />
@@ -17,8 +18,7 @@
                     <i class="fa fa-caret-down"></i>
                 </button>
                 <div class="dropdown-content">
-                    <a href="introToCS.html">Modules 1-3</a>
-                    <a href="#">Module 4</a>
+                    <a href="introToCS.html">Modules 1-4</a>
                     <a href="#">Module 5</a>
                     <a href="#">Module 6</a>
                 </div>
@@ -32,31 +32,65 @@
                     <a href="#">Website (self hosted)</a>
                 </div>
             </div>
+            <a class="white" href="../python_code/test.html">python</a>
         </div>
     </nav>
     <header>
-        <h1>Random C++ programs</h1>
+        <h1>Contents</h1>
+        <ul>
+            <li><a href="#collatz">Module 1: Collatz</a></li>
+            <li><a href="#polish">Module 1: Polish calculator</a></li>
+            <li><a href="#dedup">Module 2: Deduplicate</a></li>
+            <li><a href="#small">Module 2: Smallest missing</a></li>
+            <li><a href="#quad">Module 2: Quadratic solver</a></li>
+            <li><a href="#common">Module 3: Most common letter</a></li>
+            <li><a href="#knight">Module 4: Knights path</a></li>
+            <li><a href="#sort">Module 4: Merge sort</a></li>
+        </ul>
     </header>
     <main>
-        <h2>Module 1: Collatz</h2>
-        <pre>Steps until it reaches 1: <span id="pagetitle">1</span></pre>
+        <h1>Random C++ programs</h1>
+        <h2 id=collatz>Module 1: Collatz</h2>
+        <pre>Steps until it reaches 1: <span id="pagetitle">Error</span></pre>
         <input id="input" type="number" value="1" />
 
-        <h2>Module 1: Polish notation</h2>
-        <p>the input has the form '(+,-,/,*)(number)(number)'</p>
-        <pre>Result: <span id="result">0</span></pre>
-        <table>
-            <tr>
-                <th><input id="input2" type="text" value="+" /></th>
-                <th><input id="input3" type="text" value="2" /></th>
-                <th><input id="input4" type="text" value="1" /></th>
-            </tr>
-        </table>
+        <h2 id=polish>Module 1: Polish calculator</h2>
+        <p>the input has the form '(+,-,/,*) (number) (number)'</p>
+        <pre>Result: <span id="result">Error</span></pre>
+        <input id="input2" type="text" value="+ 1 2" />
 
-        <h2>Module 2: Deduplicate</h2>
+        <h2 id=dedup>Module 2: Deduplicate</h2>
         <p>Put in a space seperated list of numbers</p>
-        <pre>The deduplicated vector is: <span id="resultDedup">0</span></pre>
+        <pre>The deduplicated vector is: <span id="resultDedup">Error</span></pre>
         <input id="inputDedup" type="text" value="1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10" />
+
+        <h2 id="small">Module 2: Smallest missing</h2>
+        <p>Put in a space seperated list of numbers</p>
+        <pre>The smallest missing number is: <span id="resultMissing">Error</span></pre>
+        <input id="inputMissing" type="text" value="1 2 3 4 5 7 8 9 11 12 14 15 16 18" />
+
+        <h2 id="quad">Module 2: Quadratic equation solver </h2>
+        <p>Put in the coefficients of the quadratic equation seperated by spaces</p>
+        <pre><span id="resultQuad">Error</span></pre>
+        <input id="inputQuad" type="text" value="1 2 1" />
+
+        <h2 id="common">Module 3: Most common letter finder</h2>
+        <p>Put in a string</p>
+        <pre><span id="resultLetter">Error</span></pre>
+        <textarea id="inputLetter">Lorem ipsum</textarea>
+
+        <h2 id=knight>Module 4: Knights path</h2>
+        <p>Gives a knights path between two points (not gauranteed to be optimal). Input in the form (board size) (begin
+            coordinate) (end coordinate). (e.g. 8 a6 b8)</p>
+        <pre><span id="resultKnight">Error</span></pre>
+        <input id="inputKnight" type="text" value="8 a6 b8" />
+
+        <h2 id="sort">Module 4: Merge sort</h2>
+        <p>Put in a space seperated list of numbers (floats)</p>
+        <pre>The sorted vector is: <span id="resultSort">Error</span></pre>
+        <input class="fitInput" id="inputSort" type="text" value="1.6 1.7 1.8 1.9 2.0 1.1 1.2 1.3 1.4 1.5" />
+
+        <pre><span id="test">err</span></pre>
     </main>
 </body>
 

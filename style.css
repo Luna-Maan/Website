@@ -25,6 +25,11 @@ a {
     text-decoration: none;
 }
 
+/* list */
+dt {
+    font-weight: bold;
+}
+
 /* navbar */
 
 .navbar {
@@ -99,15 +104,21 @@ div a.active,
 }
 
 /* input */
-input:focus {
+
+input:focus,
+textarea:focus {
     background-color: rgb(178, 241, 238);
 }
 
-#inputDedup {
+#inputDedup,
+#inputMissing,
+.fitInput {
     width: 30rem;
+    max-width: 100%;
 }
 
-input {
+input,
+textarea {
     box-sizing: border-box;
     padding: 0.5rem 0 0.5rem 0.5rem;
     border-radius: 0.5rem;
