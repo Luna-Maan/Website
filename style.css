@@ -38,6 +38,13 @@ dt {
 }
 
 /* navbar */
+nav {
+    position: fixed;
+    top: 0;
+    padding-top: 8px;
+    width: 100%;
+    background-color: white;
+}
 
 .navbar {
     position: fixed;
