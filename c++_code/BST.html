@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>C++ code</title>
-    <script defer src="maze.js"></script>
+    <script defer src="BST.js"></script>
     <link rel="stylesheet" href="../style.css" />
 </head>
 
@@ -36,17 +36,12 @@
         </div>
     </nav>
     <main>
-        <h1>Maze maker</h1>
-        <p>Put in a space seperated list of integers. The first two numbers are the heigth and the width of the maze
-            respectively, the third
-            is the seed and is optional. UNIX time is used as seed when no seed is given.</p>
-        <p>Mazes that are too big will crash the program and then you'll need to reload the page. For exampple when
-            using the seed
-            '567' the max size is 133x133, both 134x133 and 133x134 will crash the code. The max size is dependent on
-            the
-            square of the inputs and the 'complexity' of the randomly generated path. This means that 133x135 will work
-            because the side paths are shorter and 500x10 will also work.</p>
-        <input id="input" type="text" value="8 5 3" />
-        <pre>Generated maze: <span id="result" class="nowrap">Error</span></pre>
+        <h1>Binary search tree</h1>
+        <p>The input box is only needed for inserting and that takes a space seperated list of integers.</p>
+        <input id="input" type="text" value="" />
+        <button id="button">insert</button>
+        <button id="output">output</button>
+        <button id="print">pretty output</button>
+        <pre><span id="result" class="nowrap">Error</span></pre>
     </main>
 </body>
