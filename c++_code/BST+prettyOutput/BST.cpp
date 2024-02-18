@@ -144,19 +144,19 @@ std::vector<int> BST::inOrderHelper(Node* currNode) {
     std::vector<int> result;
 
     if (currNode->left != nullptr) {
-        std::vector<int> templeft = inOrderHelper(currNode->left);
+        std::vector<int> templeft = inOrderHelper(currNode->left);  // gives us the left subtree in order in a list
 
-        for (int i = 0; i < templeft.size(); i++) {
+        for (int i = 0; i < templeft.size(); i++) {                 // loop over the list and add the elements to the result
             result.push_back(templeft.at(i));
         }
     }
 
-    result.push_back(currNode->data);
+    result.push_back(currNode->data);                                // add the current node to the result	
 
     if (currNode->right != nullptr) {
-        std::vector<int> tempright = inOrderHelper(currNode->right);
+        std::vector<int> tempright = inOrderHelper(currNode->right); // gives us the right subtree in order in a list
 
-        for (int i = 0; i < tempright.size(); i++) {
+        for (int i = 0; i < tempright.size(); i++) {                 // loop over the list and add the elements to the result
             result.push_back(tempright.at(i));
         }
     }

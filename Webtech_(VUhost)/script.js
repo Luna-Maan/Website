@@ -1,4 +1,10 @@
-let url = "https://wt.ops.labs.vu.nl/api24/9a0e18aa"
+let url = "https://wt.ops.labs.vu.nl/api24/9a0e18aa" //9a0e18aa
+
+// https://wt.ops.labs.vu.nl/api24/
+// https://wt.ops.labs.vu.nl/keys
+
+// https://webtech.labs.vu.nl/api24/  (backup)
+// https://webtech.labs.vu.nl/keys
 
 document.addEventListener("DOMContentLoaded", loadHandler)
 window.addEventListener("resize", loadHandler);

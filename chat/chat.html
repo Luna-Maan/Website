@@ -2,7 +2,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8" />
     <title>Main page</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../style.css" />
+    <script src="chat.js" defer></script>
 </head>
 
 <body>
@@ -33,30 +34,14 @@
         </div>
     </nav>
     <header>
-        <h1>Coding projects</h1>
+        <input type="text" id="name" />
+        <button id="reset">reset</button>
     </header>
     <main>
-        <h2>Code from University courses</h2>
-        <dl>
-            <dt>C++ code from 'Intro to Programming', compiled using <a
-                    href="https://labs.leaningtech.com/cheerp">cheerp</a>.</dt>
-            <dd><a href="c++_code/introToCS.html">Modules 1-4</a></dd>
-            <dd><a href="c++_code/maze.html">Module 5: Maze maker</a></dd>
-            <dd><a href="c++_code/BST.html">Module 6: Binary search tree</a></dd>
-
-            <dt>Webtech</dt>
-            <dd><a href="Webtech_(VUhost)/index.html">Website using the server hosted by VU</a></dd>
-            <dd>TODO: version using server hosted by me (I first need a website domain + non-static server)</dd>
-
-            <dt>Assembly from 'Computer Organisation'</dt>
-            <dd>The first assignment isn't given yet.</dd>
-        </dl>
-
-        <h2>Random projects</h2>
-        <dl>
-            <dt>Python, interpreted using <a href="https://brython.info/static_tutorial/en/index.html">brython</a>.</dt>
-            <dd><a href="python_code/test.html">TESTING</a></dd>
-            <dd>TODO: maybe project euler and some of my favorite python code</dd>
-        </dl>
+        <h2>Chat:</h2>
+        <p id="chatBox"></p>
+        <form>
+            <input type="text" id="chatInput" name="chatInput" />
+        </form>
     </main>
 </body>
