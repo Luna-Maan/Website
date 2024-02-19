@@ -32,6 +32,14 @@ a {
     text-decoration: none;
 }
 
+.noMargin {
+    margin: 0;
+}
+
+#chatBox {
+    margin-top: 5px
+}
+
 /* list */
 dt {
     font-weight: bold;
@@ -127,6 +135,9 @@ div a.active,
 }
 
 /* input */
+#name {
+    margin-bottom: 5px;
+}
 
 input:focus,
 textarea:focus {
