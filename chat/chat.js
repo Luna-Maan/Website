@@ -20,7 +20,8 @@ async function Hash(string) {
     return hashAsString;
 }
 
-async function loadHandler() {
+async function loadHandler(event) {
+    event.preventDefault();
     let box = document.getElementById("chatBox");
     let response = await fetch(url);
     let content = await response.text();
