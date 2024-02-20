@@ -1,3 +1,9 @@
+// resetting chat and getting a new key
+// 1. reset chat through the reset button
+// 2. reset the key database through the function 'resetKeys()'
+// 3. get a new key through the function 'uploadKey()'
+
+
 console.log("Chat.js");
 let url = "https://wt.ops.labs.vu.nl/api24/9fd5e7bd"
 let keysUrl = "https://wt.ops.labs.vu.nl/api24/14e65f95";
@@ -21,8 +27,13 @@ async function Hash(string) {
 }
 
 async function loadHandler(event) {
-    event.preventDefault();
+
+    if (event != undefined) {
+        event.preventDefault();
+    }
+
     let box = document.getElementById("chatBox");
+    let msgNum = document.getElementById("numMessages").value;
     let response = await fetch(url);
     let content = await response.text();
 
@@ -47,8 +58,11 @@ async function loadHandler(event) {
     if (json.length != 0) {
         beginID = json[0]["id"];
 
-        box.innerHTML = "";
-        for (let i = 0; i < json.length; i++) {
+        if (msgNum > json.length || msgNum == 0) {
+            msgNum = json.length;
+        }
+        let completeMsg = "";
+        for (let i = json.length - msgNum; i < json.length; i++) {
             msg = json[i]["description"]
             console.log(msg);
             binaryString = atob(msg);
@@ -60,9 +74,11 @@ async function loadHandler(event) {
             msg = bytes.buffer;
             msg = await decryptMessage(privKey, msg);
             msg = json[i]["name"] + ": " + msg;
-            box.innerHTML += msg + "<br>";
+            completeMsg += msg + "<br>";
         }
+        box.innerHTML = completeMsg;
     }
+    window.location.href = '#chatInput';
 }
 
 document.addEventListener("DOMContentLoaded", loadHandler)
@@ -115,7 +131,7 @@ async function resetHandler(event) {
     let password = document.getElementById("password").value;
     let hash = await Hash(password);
     console.log(hash);
-    if (hash == "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8") {
+    if (hash == "f2f1e81615487a3f84addda75489f5f5b3b9d448e6c2abf3af119aa4804dd380") {
         await fetch(url + "/reset");
         console.log(beginID)
         let promises = [];
@@ -270,38 +286,6 @@ async function uploadKey() {
     field.value = privateBase64String;
     console.log(privateBase64String);
 }
-
-// Example usage
-async function example() {
-    // Export key
-
-    response = await fetch(keysUrl);
-    let content = await response.text();
-
-    json = JSON.parse(content);
-    exportedPublicKey = json[9]["name"];
-    console.log(exportedPublicKey);
-    jsonBytes = new Uint8Array(atob(base64String).split('').map(c => c.charCodeAt(0)));
-    jsonString = new TextDecoder().decode(jsonBytes);
-    exportedPublicKey = JSON.parse(jsonString);
-
-    // Import keys
-    const importedPublicKey = await importKey(exportedPublicKey, "public");
-    const importedPrivateKey = await importKey(exportedPrivateKey, "private");
-
-    // Encrypt message
-    const messageToEncrypt = "Hello, world!";
-    const encryptedMessage = await encryptMessage(importedPublicKey, messageToEncrypt);
-    if (!encryptedMessage) return;
-
-    console.log("Encrypted message:", encryptedMessage);
-
-    // Decrypt message
-    const decryptedMessage = await decryptMessage(importedPrivateKey, encryptedMessage);
-    if (!decryptedMessage) return;
-
-    console.log("Decrypted message:", decryptedMessage);
-};
 
 beginResetID = 0;
 async function resetKeys() {
