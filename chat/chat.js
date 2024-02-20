@@ -65,6 +65,8 @@ async function loadHandler() {
 }
 
 document.addEventListener("DOMContentLoaded", loadHandler)
+refresh = document.getElementById("refresh");
+refresh.addEventListener("click", loadHandler);
 
 async function chatHandler(event) {
     if (event.key != "Enter") {
