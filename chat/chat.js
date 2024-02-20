@@ -42,13 +42,10 @@ async function loadHandler(event) {
     let privKey = document.getElementById("password").value;
     console.log(privKey);
     if (privKey != "") {
-        console.log("hallo");
-        console.log(privKey);
         jsonBytes = new Uint8Array(atob(privKey).split('').map(c => c.charCodeAt(0)));
         jsonString = new TextDecoder().decode(jsonBytes);
         privKey = JSON.parse(jsonString);
         privKey = await importKey(privKey, "private");
-        console.log(privKey);
     }
     else {
         box.innerHTML = "Please enter a password to view the chat";
@@ -84,6 +81,8 @@ async function loadHandler(event) {
 document.addEventListener("DOMContentLoaded", loadHandler)
 refresh = document.getElementById("refresh");
 refresh.addEventListener("click", loadHandler);
+inputPassword = document.getElementById("password");
+inputPassword.addEventListener("keyup", loadHandler);
 
 async function chatHandler(event) {
     if (event.key != "Enter") {
