@@ -29,7 +29,15 @@
                 </div>
             </div>
             <a class="white" href="python_code/test.html">python</a>
-            <a class="white" href="chat/chat.html">Chat</a>
+            <div class="dropdown">
+                <button class="dropbtn">Chat
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="chat/chat.html">RSA Groupchat</a>
+                    <p>AES-CTR Groupchat</p>
+                </div>
+            </div>
         </div>
     </nav>
     <header>
@@ -46,10 +54,6 @@
 
             <dt>Webtech</dt>
             <dd><a href="Webtech_(VUhost)/index.html">Website using the server hosted by VU</a></dd>
-            <dd>TODO: version using server hosted by me (I first need a website domain + non-static server)</dd>
-
-            <dt>Assembly from 'Computer Organisation'</dt>
-            <dd>The first assignment isn't given yet.</dd>
         </dl>
 
         <h2>Random projects</h2>
@@ -57,6 +61,12 @@
             <dt>Python, interpreted using <a href="https://brython.info/static_tutorial/en/index.html">brython</a>.</dt>
             <dd><a href="python_code/test.html">TESTING</a></dd>
             <dd>TODO: maybe project euler and some of my favorite python code</dd>
+            <dt>Chat</dt>
+            <dd><a href="chat/chat.html">RSA Groupchat, uses a public and a private key.</a></dd>
+            <dd>TODO: AES-CTR Groupchat, uses one key for encryption and decription. This key can also be much shorter
+                (32bytes=42 characters) and still be secure just like RSA, but a con is that it
+                offers no individual verification of who send the message. This doesn't matter however since I haven't
+                implemented indentification with RSA.</dd>
         </dl>
     </main>
 </body>
