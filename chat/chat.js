@@ -5,8 +5,8 @@
 
 
 console.log("Chat.js");
-let url = "https://wt.ops.labs.vu.nl/api24/9fd5e7bd"
-let keysUrl = "https://wt.ops.labs.vu.nl/api24/14e65f95";
+let url = "https://wt.ops.labs.vu.nl/api24/62812a40"
+let keysUrl = "https://wt.ops.labs.vu.nl/api24/b6a05699";
 
 let beginID;
 let pubKey = "";
@@ -38,7 +38,8 @@ async function loadHandler(event) {
     let content = await response.text();
 
     json = JSON.parse(content);
-
+    console.log(json.length);
+    beginID = json[0]["id"];
     let privKey = document.getElementById("password").value;
     console.log(privKey);
     if (privKey != "") {
@@ -51,6 +52,7 @@ async function loadHandler(event) {
         box.innerHTML = "Please enter a password to view the chat";
         return;
     }
+
 
     if (json.length != 0) {
         beginID = json[0]["id"];
@@ -159,7 +161,7 @@ async function generateRSAKeyPair() {
         const keyPair = await window.crypto.subtle.generateKey(
             {
                 name: "RSA-OAEP",
-                modulusLength: 2048,
+                modulusLength: 1024,
                 publicExponent: new Uint8Array([0x01, 0x00, 0x01]), // 65537
                 hash: "SHA-256"
             },
@@ -288,8 +290,8 @@ async function uploadKey() {
 
 beginResetID = 0;
 async function resetKeys() {
-    await getKeys();
     await fetch(keysUrl + "/reset");
+    await getKeys();
     console.log(beginResetID)
     let promises = [];
     for (let i = beginResetID; i < beginResetID + 9; i++) {
