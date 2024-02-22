@@ -12,7 +12,7 @@
 <body>
     <nav>
         <div class="navbar">
-            <a class="white" href="../index.html">Home</a>
+            <a class="white navLeft" href="../index.html">Home</a>
             <div class="dropdown">
                 <button class="dropbtn" id="active">C++
                     <i class="fa fa-caret-down"></i>
@@ -20,7 +20,7 @@
                 <div class="dropdown-content">
                     <a href="introToCS.html">Modules 1-4</a>
                     <a href="maze.html">Maze</a>
-                    <a href="BST.html">BST</a>
+                    <a class="bottom" href="BST.html">BST</a>
                 </div>
             </div>
             <div class="dropdown">
@@ -29,7 +29,7 @@
                 </button>
                 <div class="dropdown-content">
                     <a href="../Webtech_(VUhost)/index.html">Website (VU hosted)</a>
-                    <p>Website (self hosted)</p>
+                    <p><s>Website (self hosted)</s></p>
                 </div>
             </div>
             <a class="white" href="../python_code/test.html">python</a>
@@ -39,23 +39,35 @@
                 </button>
                 <div class="dropdown-content">
                     <a href="../chat/chat.html">RSA Groupchat</a>
-                    <a href="../chat/AES.html">AES-CTR Groupchat</p>
+                    <a class="bottom" href="../chat/AES.html">AES-CTR Groupchat</a>
                 </div>
             </div>
         </div>
     </nav>
+    <header>
+        <h1>C++</h1>
+    </header>
+    <h2 class="center">Modules 1-4</h2>
     <main>
-        <h1>Maze maker</h1>
-        <p>Put in a space seperated list of integers. The first two numbers are the heigth and the width of the maze
-            respectively, the third
-            is the seed and is optional. UNIX time is used as seed when no seed is given.</p>
-        <p>Mazes that are too big will crash the program and then you'll need to reload the page. For exampple when
-            using the seed
-            '567' the max size is 133x133, both 134x133 and 133x134 will crash the code. The max size is dependent on
-            the
-            square of the inputs and the 'complexity' of the randomly generated path. This means that 133x135 will work
-            because the side paths are shorter and 500x10 will also work.</p>
-        <input id="input" type="text" value="8 5 3" />
-        <pre>Generated maze: <span id="result" class="nowrap">Error</span></pre>
+        <div class="container">
+            <div class="project">
+                <h2>Maze maker</h2>
+                <p>Put in a space seperated list of integers. The first two numbers are the heigth and the width of the
+                    maze
+                    respectively, the third
+                    is the seed and is optional. UNIX time is used as seed when no seed is given.</p>
+                <p>Mazes that are too big will crash the program and then you'll need to reload the page. For exampple
+                    when
+                    using the seed
+                    '567' the max size is 133x133, both 134x133 and 133x134 will crash the code. The max size is
+                    dependent on
+                    the
+                    square of the inputs and the 'complexity' of the randomly generated path. This means that 133x135
+                    will work
+                    because the side paths are shorter and 500x10 will also work.</p>
+                <input id="input" type="text" value="8 5 3" />
+                <pre>Generated maze: <span id="result" class="nowrap">Error</span></pre>
+            </div>
+        </div>
     </main>
 </body>

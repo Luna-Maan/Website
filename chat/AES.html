@@ -9,7 +9,7 @@
 <body>
     <nav>
         <div class="navbar">
-            <a class="white" href="../index.html">Home</a>
+            <a class="white navLeft" href="../index.html">Home</a>
             <div class="dropdown">
                 <button class="dropbtn">C++
                     <i class="fa fa-caret-down"></i>
@@ -17,7 +17,7 @@
                 <div class="dropdown-content">
                     <a href="../c++_code/introToCS.html">Modules 1-4</a>
                     <a href="../c++_code/maze.html">Maze</a>
-                    <a href="../c++_code/BST.html">BST</a>
+                    <a class="bottom" href="../c++_code/BST.html">BST</a>
                 </div>
             </div>
             <div class="dropdown">
@@ -26,7 +26,7 @@
                 </button>
                 <div class="dropdown-content">
                     <a href="../Webtech_(VUhost)/index.html">Website (VU hosted)</a>
-                    <p>Website (self hosted)</p>
+                    <p><s>Website (self hosted)</s></p>
                 </div>
             </div>
             <a class="white" href="../python_code/test.html">python</a>
@@ -35,8 +35,8 @@
                     <i class="fa fa-caret-down"></i>
                 </button>
                 <div class="dropdown-content">
-                    <a href="chat.html">RSA Groupchat</a>
-                    <a href="AES.html">AES-CTR Groupchat</a>
+                    <a href="../chat/chat.html">RSA Groupchat</a>
+                    <a class="bottom" href="../chat/AES.html">AES-CTR Groupchat</a>
                 </div>
             </div>
         </div>
@@ -49,11 +49,16 @@
         </form>
     </header>
     <main>
-        Name: <input type="text" id="name" value="test" /> <br>
-        Number of messages: <input type="number" id="numMessages" value="30" /> <br>
-        <h2 class="noMargin">Chat:</h2>
-        <p id="chatBox"></p>
-        <input type="text" id="chatInput" name="chatInput" />
-        <button type="button" id="refresh">Refresh</button>
+        <div class="container">
+            <div class="project">
+                Name: <input type="text" id="name" value="test" /> <br>
+                Number of messages: <input type="number" id="numMessages" value="30" /> <br><br>
+                <h2 class="noMargin">Chat:</h2>
+                <p id="chatBox"></p>
+                <input style="min-width: calc(min(100%,300px)); width: calc(100% - 71px);" type="text" id="chatInput"
+                    name="chatInput" placeholder="text" />
+                <button type="button" id="refresh">Refresh</button>
+            </div>
+        </div>
     </main>
 </body>

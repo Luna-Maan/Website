@@ -1,3 +1,5 @@
 from browser import document
-        
-document <= "Hello !"
+
+
+print("Hello, World!")
+document <= "This line is printed from hello.py."

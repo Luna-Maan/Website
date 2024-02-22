@@ -12,7 +12,7 @@
 <body>
     <nav>
         <div class="navbar">
-            <a class="white" href="../index.html">Home</a>
+            <a class="white navLeft" href="../index.html">Home</a>
             <div class="dropdown">
                 <button class="dropbtn" id="active">C++
                     <i class="fa fa-caret-down"></i>
@@ -20,7 +20,7 @@
                 <div class="dropdown-content">
                     <a href="introToCS.html">Modules 1-4</a>
                     <a href="maze.html">Maze</a>
-                    <a href="BST.html">BST</a>
+                    <a class="bottom" href="BST.html">BST</a>
                 </div>
             </div>
             <div class="dropdown">
@@ -29,7 +29,7 @@
                 </button>
                 <div class="dropdown-content">
                     <a href="../Webtech_(VUhost)/index.html">Website (VU hosted)</a>
-                    <p>Website (self hosted)</p>
+                    <p><s>Website (self hosted)</s></p>
                 </div>
             </div>
             <a class="white" href="../python_code/test.html">python</a>
@@ -39,18 +39,28 @@
                 </button>
                 <div class="dropdown-content">
                     <a href="../chat/chat.html">RSA Groupchat</a>
-                    <a href="../chat/AES.html">AES-CTR Groupchat</p>
+                    <a class="bottom" href="../chat/AES.html">AES-CTR Groupchat</a>
                 </div>
             </div>
         </div>
     </nav>
+    <header>
+        <h1>C++</h1>
+    </header>
+    <h2 class="center">Modules 6</h2>
     <main>
-        <h1>Binary search tree</h1>
-        <p>The input box is only needed for inserting and that's done with a space seperated list of integers.</p>
-        <input id="input" type="text" value="" />
-        <button id="button">insert</button>
-        <button id="output">output</button>
-        <button id="print">pretty output</button>
-        <pre><span id="result" class="nowrap">Error</span></pre>
+        <div class="container">
+            <div class="project">
+                <h2>Binary search tree</h2>
+                <p>The input box is only needed for inserting and that's done with a space seperated list of integers.
+                </p>
+                <input style="min-width: calc(min(100%,300px)); width: calc(100% - 215px);" id="input" class="fitInput"
+                    type="text" value="" placeholder="1 2 3" />
+                <button id="button">insert</button>
+                <button id="output">output</button>
+                <button id="print">pretty output</button>
+                <pre><span id="result" class="nowrap">Error</span></pre>
+            </div>
+        </div>
     </main>
 </body>
