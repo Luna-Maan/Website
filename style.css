@@ -211,6 +211,10 @@ button:active {
     .navbar {
         text-align: center;
     }
+    
+    nav {
+        padding-bottom: 103px;
+    }
 
     h1 {
         margin-top: 103px;
