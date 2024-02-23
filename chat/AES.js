@@ -10,6 +10,7 @@ let keysUrl = "https://wt.ops.labs.vu.nl/api24/14e65f95";
 let beginID;
 let pubKey = "";
 let password = "";
+let keyDict = {};
 
 async function Hash(string) {
     const encoder = new TextEncoder();
@@ -38,6 +39,9 @@ async function loadHandler(event) {
         }
     }
 
+    if (Object.keys(keyDict).length == 0) {
+        await getKeys();
+    }
 
     let box = document.getElementById("chatBox");
     let msgNum = document.getElementById("numMessages").value;
@@ -119,10 +123,38 @@ async function chatHandler(event) {
     privKey = document.getElementById("password").value;
 
     if (privKey == "") {
+        let box = document.getElementById("chatBox");
         box.innerHTML = "Please enter a password to view the chat";
         return;
     }
 
+    userName = document.getElementById("name").value;
+    if (Object.keys(keyDict).length == 0) {
+        console.log("getKeys");
+        await getKeys();
+    }
+    console.log(keyDict);
+    if (keyDict[userName] == undefined) {
+        let object = {};
+        object["name"] = userName;
+        object["year"] = document.getElementById("personalPassword").value;
+        object["genre"] = " ";
+        object["description"] = " ";
+        object["poster"] = " ";
+        let json = JSON.stringify(object);
+        let response = await fetch(keysUrl, {
+            method: "POST",
+            body: json,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        console.log(response);
+        await getKeys();
+    }
+    else {
+        console.log(keyDict[userName]);
+    }
     msg = await encryptMessage(msg, privKey);
     password = "";
     const { iv, ciphertext } = msg;
@@ -315,16 +347,17 @@ async function resetKeys() {
 async function getKeys() {
     let response = await fetch(keysUrl);
     let content = await response.text();
+    keyDict = {};
 
     json = JSON.parse(content);
 
-    // console.log(json);
+    console.log(json);
 
     if (json.length != 0) {
         beginResetID = json[0]["id"];
 
         for (let i = 0; i < json.length; i++) {
-            // console.log(json[i]);
+            keyDict[json[i]["name"]] = json[i]["description"];
         }
     }
 }
