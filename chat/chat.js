@@ -27,6 +27,11 @@ async function Hash(string) {
 }
 
 async function loadHandler(event) {
+    if (event.type === "keyup") {
+        if (event.key != "Enter") {
+            return;
+        }
+    }
 
     if (event != undefined) {
         event.preventDefault();
