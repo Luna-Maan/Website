@@ -69,8 +69,8 @@ async function loadHandler(event) {
             }
             let completeMsg = "";
             for (let i = json.length - msgNum; i < json.length; i++) {
-                msg = json[i]["description"]
-                console.log(msg);
+                msg = json[i]["name"]
+                console_msg = "Encrypted name: " + msg + "\n";
                 binaryString = atob(msg);
                 length = binaryString.length;
                 bytes = new Uint8Array(length);
@@ -79,7 +79,7 @@ async function loadHandler(event) {
                 }
                 msg = bytes.buffer;
 
-                let IV = json[i]["year"]
+                let IV = json[i]["genre"]
                 // console.log(IV);
                 binaryString = atob(IV);
                 length = binaryString.length;
@@ -93,7 +93,32 @@ async function loadHandler(event) {
                 // console.log(msg);
                 // console.log(privKey);
                 msg = await decryptMessage(privKey, msg);
-                msg = json[i]["name"] + ": " + msg;
+                completeMsg += msg + ": ";
+
+                msg = json[i]["description"]
+                console.log(console_msg + "Encrypted message: ", msg, "\n");
+                binaryString = atob(msg);
+                length = binaryString.length;
+                bytes = new Uint8Array(length);
+                for (let i = 0; i < length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                msg = bytes.buffer;
+
+                IV = json[i]["year"]
+                // console.log(IV);
+                binaryString = atob(IV);
+                length = binaryString.length;
+                bytes = new Uint8Array(length);
+                for (let i = 0; i < length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                IV = bytes.buffer;
+                msg = { IV, msg }
+                // console.log("1");
+                // console.log(msg);
+                // console.log(privKey);
+                msg = await decryptMessage(privKey, msg);
                 completeMsg += msg + "<br>";
             }
             password = "";
@@ -163,16 +188,23 @@ async function chatHandler(event) {
             console.log(keyDict[userName]);
         }
 
-        console.log("Password: " + await Hash(document.getElementById("password").value));
         msg = await encryptMessage(msg, privKey);
+
         password = "";
         const { iv, ciphertext } = msg;
         let IV = btoa(String.fromCharCode.apply(null, new Uint8Array(iv)));
         msg = btoa(String.fromCharCode.apply(null, new Uint8Array(ciphertext)));
 
+        name = await encryptMessage(name, privKey);
+
+
+        const { iv: myIV, ciphertext: myCiphertext } = name;
+        let IVName = btoa(String.fromCharCode.apply(null, myIV));
+        name = btoa(String.fromCharCode.apply(null, myCiphertext));
+
         object["name"] = name;
         object["year"] = IV;
-        object["genre"] = " ";
+        object["genre"] = IVName;
         object["description"] = msg;
         object["poster"] = " ";
         // console.log(msg);
