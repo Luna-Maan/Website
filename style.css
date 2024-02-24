@@ -111,7 +111,7 @@ nav {
     float: right;
     font-size: 16px;
     margin: 0;
-    text-align: center;
+    text-align: right;
     padding: 14px 16px;
     text-decoration: none;
 }
@@ -192,7 +192,8 @@ div a.active,
 }
 
 .dropdown:hover .dropdown-content {
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 
 /* input */

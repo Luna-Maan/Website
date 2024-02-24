@@ -2,6 +2,7 @@
 // 1. reset chat through the reset button
 // 2. use keygen to generate a new key
 
+// to reset the chat, put the masterpassword in the password field and in console call resetHandler
 
 // console.log("Chat.js");
 let url = "https://wt.ops.labs.vu.nl/api24/9fd5e7bd"
@@ -59,43 +60,48 @@ async function loadHandler(event) {
         return;
     }
 
-    if (json.length != 0) {
-        beginID = json[0]["id"];
+    if (await Hash(document.getElementById("password").value) == "525044231c08aa493f7b7ccd086dfc54499d091e3dd8bc5cbc3308e28488b5f3") {
+        if (json.length != 0) {
+            beginID = json[0]["id"];
 
-        if (msgNum > json.length || msgNum == 0) {
-            msgNum = json.length;
-        }
-        let completeMsg = "";
-        for (let i = json.length - msgNum; i < json.length; i++) {
-            msg = json[i]["description"]
-            console.log(msg);
-            binaryString = atob(msg);
-            length = binaryString.length;
-            bytes = new Uint8Array(length);
-            for (let i = 0; i < length; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
+            if (msgNum > json.length || msgNum == 0) {
+                msgNum = json.length;
             }
-            msg = bytes.buffer;
+            let completeMsg = "";
+            for (let i = json.length - msgNum; i < json.length; i++) {
+                msg = json[i]["description"]
+                console.log(msg);
+                binaryString = atob(msg);
+                length = binaryString.length;
+                bytes = new Uint8Array(length);
+                for (let i = 0; i < length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                msg = bytes.buffer;
 
-            let IV = json[i]["year"]
-            // console.log(IV);
-            binaryString = atob(IV);
-            length = binaryString.length;
-            bytes = new Uint8Array(length);
-            for (let i = 0; i < length; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
+                let IV = json[i]["year"]
+                // console.log(IV);
+                binaryString = atob(IV);
+                length = binaryString.length;
+                bytes = new Uint8Array(length);
+                for (let i = 0; i < length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                IV = bytes.buffer;
+                msg = { IV, msg }
+                // console.log("1");
+                // console.log(msg);
+                // console.log(privKey);
+                msg = await decryptMessage(privKey, msg);
+                msg = json[i]["name"] + ": " + msg;
+                completeMsg += msg + "<br>";
             }
-            IV = bytes.buffer;
-            msg = { IV, msg }
-            // console.log("1");
-            // console.log(msg);
-            // console.log(privKey);
-            msg = await decryptMessage(privKey, msg);
-            msg = json[i]["name"] + ": " + msg;
-            completeMsg += msg + "<br>";
+            password = "";
+            box.innerHTML = completeMsg;
         }
-        password = "";
-        box.innerHTML = completeMsg;
+    }
+    else {
+        box.innerHTML = "Wrong password";
     }
     window.location.href = '#chatInput';
     // console.log("89");
@@ -128,56 +134,64 @@ async function chatHandler(event) {
         return;
     }
 
-    userName = document.getElementById("name").value;
-    if (Object.keys(keyDict).length == 0) {
-        console.log("getKeys");
-        await getKeys();
-    }
-    console.log(keyDict);
-    if (keyDict[userName] == undefined) {
-        let object = {};
-        object["name"] = userName;
-        object["year"] = document.getElementById("personalPassword").value;
+    if (await Hash(document.getElementById("password").value) == "525044231c08aa493f7b7ccd086dfc54499d091e3dd8bc5cbc3308e28488b5f3") {
+        userName = document.getElementById("name").value;
+        if (Object.keys(keyDict).length == 0) {
+            console.log("getKeys");
+            await getKeys();
+        }
+        console.log(keyDict);
+        if (keyDict[userName] == undefined) {
+            let object = {};
+            object["name"] = userName;
+            object["year"] = document.getElementById("personalPassword").value;
+            object["genre"] = " ";
+            object["description"] = " ";
+            object["poster"] = " ";
+            let json = JSON.stringify(object);
+            let response = await fetch(keysUrl, {
+                method: "POST",
+                body: json,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            console.log(response);
+            await getKeys();
+        }
+        else {
+            console.log(keyDict[userName]);
+        }
+
+        console.log("Password: " + await Hash(document.getElementById("password").value));
+        msg = await encryptMessage(msg, privKey);
+        password = "";
+        const { iv, ciphertext } = msg;
+        let IV = btoa(String.fromCharCode.apply(null, new Uint8Array(iv)));
+        msg = btoa(String.fromCharCode.apply(null, new Uint8Array(ciphertext)));
+
+        object["name"] = name;
+        object["year"] = IV;
         object["genre"] = " ";
-        object["description"] = " ";
+        object["description"] = msg;
         object["poster"] = " ";
+        // console.log(msg);
+
         let json = JSON.stringify(object);
-        let response = await fetch(keysUrl, {
+
+        console.log(json);
+        let response = await fetch(url, {
             method: "POST",
             body: json,
             headers: {
                 "Content-Type": "application/json"
             }
         });
-        console.log(response);
-        await getKeys();
     }
     else {
-        console.log(keyDict[userName]);
+        let box = document.getElementById("chatBox");
+        box.innerHTML = "Wrong password";
     }
-    msg = await encryptMessage(msg, privKey);
-    password = "";
-    const { iv, ciphertext } = msg;
-    let IV = btoa(String.fromCharCode.apply(null, new Uint8Array(iv)));
-    msg = btoa(String.fromCharCode.apply(null, new Uint8Array(ciphertext)));
-
-    object["name"] = name;
-    object["year"] = IV;
-    object["genre"] = " ";
-    object["description"] = msg;
-    object["poster"] = " ";
-    // console.log(msg);
-
-    let json = JSON.stringify(object);
-
-    console.log(json);
-    let response = await fetch(url, {
-        method: "POST",
-        body: json,
-        headers: {
-            "Content-Type": "application/json"
-        }
-    });
 
     // console.log("loadHandler");
     loadHandler();
@@ -187,9 +201,8 @@ async function chatHandler(event) {
 let chat = document.getElementById("chatInput");
 chat.addEventListener("keyup", chatHandler);
 
-async function resetHandler(event) {
+async function resetHandler() {
     console.log("159");
-    event.preventDefault();
     let password = document.getElementById("password").value;
     let hash = await Hash(password);
     console.log(password, hash);
@@ -210,7 +223,6 @@ async function resetHandler(event) {
         box.innerHTML = "";
     }
 
-    this.submit();
     // console.log("181");
 }
 
