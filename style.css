@@ -1,7 +1,17 @@
+:root {
+    --primary-color: #1a1a1a;
+    --secondary-color: #333333;
+    --title-color: #ff2e2e;
+    --text-color: white;
+    --link-color: #2A9134;
+    --navSelected-color: #111;
+}
+
+
 body {
     font-family: Arial, sans-serif;
-    background-color: #1a1a1a;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--text-color);
     margin: 8px;
     padding: 0;
 }
@@ -17,13 +27,12 @@ pre {
 }
 
 header {
-    background-color: #1a1a1a;
     padding: 20px;
     text-align: center;
 }
 
 h1 {
-    color: #ff4d4d;
+    color: var(--title-color);
     margin: 0;
     margin-top: 54px;
 }
@@ -35,14 +44,14 @@ h1 {
 }
 
 .project {
-    background-color: #333333;
+    background-color: var(--secondary-color);
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
 }
 
 .project h2 {
-    color: #ff4d4d;
+    color: var(--title-color);
     margin-top: 0;
 }
 
@@ -51,7 +60,7 @@ h1 {
 }
 
 a {
-    color: #2A9134;
+    color: var(--link-color);
 
 }
 
@@ -75,7 +84,7 @@ nav {
     padding-top: 8px;
     padding-bottom: 54px;
     width: 100%;
-    background-color: #1a1a1a;
+    background-color: var(--primary-color);
 }
 
 .bottom {
@@ -85,7 +94,7 @@ nav {
 .navbar {
     position: fixed;
     top: 8px;
-    background-color: #333;
+    background-color: var(--secondary-color);
     width: calc(100% - 16px);
     border-radius: 8px;
 }
@@ -93,10 +102,22 @@ nav {
 .navbar a {
     float: left;
     font-size: 16px;
-
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
+}
+
+.navbar p {
+    float: right;
+    font-size: 16px;
+    margin: 0;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+#theme {
+    margin: 0;
 }
 
 .navLeft {
@@ -108,12 +129,16 @@ nav {
     overflow: hidden;
 }
 
+#themeCustomizer {
+    float: right;
+}
+
 .dropdown .dropbtn {
     font-size: 16px;
     border: none;
     border-radius: 0;
     outline: none;
-    color: white;
+    color: var(--text-color);
     padding: 14px 16px;
     background-color: inherit;
     font-family: inherit;
@@ -121,25 +146,26 @@ nav {
 }
 
 .navbar a:hover,
-.dropdown:hover .dropbtn {
-    color: red !important;
-    background-color: #111;
+.dropdown:hover .dropbtn,
+.navbar p:hover {
+    color: var(--title-color) !important;
+    background-color: var(--navSelected-color);
 }
 
 .navbar a.white {
-    color: white;
+    color: var(--text-color);
 }
 
 div a.active,
 #active {
-    background-color: #111;
-    color: rgb(226, 19, 19);
+    background-color: var(--navSelected-color);
+    color: var(--title-color);
 }
 
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #333;
+    background-color: var(--secondary-color);
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     border-radius: 0 0 8px 8px;
@@ -147,7 +173,7 @@ div a.active,
 
 .dropdown-content a {
     float: none;
-    color: white;
+    color: var(--text-color);
     padding: 12px 16px;
     text-decoration: none;
     display: block;
@@ -158,11 +184,11 @@ div a.active,
     margin: 0;
     padding: 12px 16px;
     font-size: 16px;
-    color: white;
+    color: var(--text-color);
 }
 
 .dropdown-content a:hover {
-    background-color: black;
+    background-color: var(--navSelected-color);
 }
 
 .dropdown:hover .dropdown-content {
@@ -176,7 +202,7 @@ div a.active,
 
 input:focus,
 textarea:focus {
-    background-color: rgb(178, 241, 238);
+    background-color: hsl(177, 69%, 82%);
 }
 
 #inputDedup,
@@ -202,8 +228,17 @@ button:active {
     background-color: rgb(155, 216, 238);
 }
 
+input[type="color"] {
+    padding: 0;
+}
+
+input[type="checkbox"] {
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+
 /* mobile */
-@media (max-width: 413px) {
+@media (max-width: 711px) {
     .navLeft {
         border-radius: 8px 0 0 0;
     }
@@ -211,7 +246,7 @@ button:active {
     .navbar {
         text-align: center;
     }
-    
+
     nav {
         padding-bottom: 103px;
     }

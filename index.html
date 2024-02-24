@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New layout</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 
 <body>
@@ -39,6 +40,21 @@
                 <div class="dropdown-content">
                     <a href="chat/chat.html">RSA Groupchat</a>
                     <a class="bottom" href="chat/AES.html">AES-CTR Groupchat</a>
+                </div>
+            </div>
+            <P>Light mode: <input type="checkbox" id="theme" name="theme" /></P>
+            <div class="dropdown" id="themeCustomizer">
+                <button class="dropbtn">Theme customizer
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <p>Primary: <input type="color" id="primary" name="color" value="#1a1a1a" /></p> <br>
+                    <p>Secondary: <input type="color" id="secondary" name="color" value="#333333" /></p> <br>
+                    <p>Title: <input type="color" id="titleColor" name="color" value="#ff2e2e" /></p> <br>
+                    <p>Text: <input type="color" id="textColor" name="color" value="#ffffff" /></p> <br>
+                    <p>Links: <input type="color" id="linkColor" name="color" value="#2A9134" /></p> <br>
+                    <p>Nav: <input type="color" id="navSelectedColor" name="color" value="#111111" /></p> <br>
+                    <p>Submit: <input type="submit" id="submitColor" value="Set theme"></p>
                 </div>
             </div>
         </div>
