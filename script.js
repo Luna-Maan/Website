@@ -96,3 +96,32 @@ themeSwitch.addEventListener("change", function () {
         setColor("dark");
     }
 });
+
+
+preset = document.getElementById("presets");
+preset.addEventListener("change", function () {
+    if (this.value === "light") {
+        document.getElementById("primary").value = allCookies["primary"];
+        document.getElementById("secondary").value = allCookies["secondary"];
+        document.getElementById("titleColor").value = allCookies["title"];
+        document.getElementById("textColor").value = allCookies["text"];
+        document.getElementById("linkColor").value = allCookies["link"];
+        document.getElementById("navSelectedColor").value = allCookies["navSelected"];
+    }
+    else if (this.value === "dark") {
+        document.getElementById("primary").value = "#1a1a1a";
+        document.getElementById("secondary").value = "#333333";
+        document.getElementById("titleColor").value = "#ff2e2e";
+        document.getElementById("textColor").value = "white";
+        document.getElementById("linkColor").value = "#2A9134";
+        document.getElementById("navSelectedColor").value = "#111";
+    }
+    else if (this.value === "custom") {
+        document.getElementById("primary").value = "white";
+        document.getElementById("secondary").value = "lightgray";
+        document.getElementById("titleColor").value = allCookies["title"];
+        document.getElementById("textColor").value = allCookies["text"];
+        document.getElementById("linkColor").value = allCookies["link"];
+        document.getElementById("navSelectedColor").value = allCookies["navSelected"];
+    }
+});

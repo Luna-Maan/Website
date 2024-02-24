@@ -212,6 +212,7 @@ textarea:focus {
 }
 
 input,
+select,
 textarea,
 button {
     box-sizing: border-box;
@@ -236,6 +237,8 @@ input[type="checkbox"] {
     border-radius: 0.5rem;
     padding: 0.5rem;
 }
+
+
 
 /* mobile */
 @media (max-width: 711px) {
