@@ -1,3 +1,9 @@
+export async function onRequest(context) {
+    const task = await context.env.database.get("hallo");
+    console.log(task);
+}
+
+
 function getCookies() {
     var cookies = document.cookie.split(';');
     var result = {};
