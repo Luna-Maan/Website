@@ -52,8 +52,15 @@
         <div class="container">
             <div class="project">
                 <h2>mental math</h2>
-                max number: <input type="number" id="max" value="100" /> <br> <br>
-                <p id="question">2 + 2 = </p>
+                Number of correct: <input type="number" id="numQuestions" value="10" /> <br>
+                max number: &ensp;&ensp;&ensp;&ensp;&ensp;<input type="number" id="max" value="100" /><br>
+                (mutiply has
+                sqrt(max) as
+                maximum operands
+                and division has sqrt(max) as maximum dividend and answer.) <br>
+                <pre>Operators:<input type="checkbox" id="add" checked>+  <input type="checkbox" id="sub" checked>-  <input type="checkbox" id="mul" checked>*  <input type="checkbox" id="div" checked>/  </pre>
+                <br>
+                <p id="question"></p>
                 <input type="number" id="answer" />
                 <p id="result"></p>
                 <p id="stats"></p>
