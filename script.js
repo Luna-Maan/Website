@@ -1,7 +1,9 @@
-export async function onRequest(context) {
-    const task = await context.env.database.get("hallo");
-    console.log(task);
+async function loadHandler() {
+    let response = await fetch("https://tutorial-worker.pvanoostveenneo2.workers.dev/");
+    let text = await response.text();
+    console.log(text);
 }
+loadHandler();
 
 
 function getCookies() {
