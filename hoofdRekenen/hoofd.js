@@ -9,6 +9,7 @@ operators = [];
 amountMode = true;
 timerSet = false;
 timer = 0;
+usedTime = 0;
 
 function loadHandler() {
     let add = document.getElementById("add").checked;
@@ -293,9 +294,12 @@ async function checkAnswer() {
             content = document.getElementById("modal-content");
 
             title.innerHTML = "Quiz complete!";
-            content.innerHTML = "You have completed the quiz! <br> You got " + correct + " out of " + (incorrect + correct) + " correct! <br> It took you " + (new Date() - startTime) / 1000 + " seconds!";
+            usedTime = new Date() - startTime;
+            content.innerHTML = "You have completed the quiz! <br> You got " + correct + " out of " + (incorrect + correct) + " correct! <br> It took you " + (usedTime) / 1000 + " seconds!";
 
             modal.style.display = "block";
+
+            showLeaderboard();
 
             loadHandler();
             return;
@@ -319,6 +323,9 @@ function timeEndQuiz() {
     content.innerHTML = "You have completed the quiz! <br> You got " + correct + " out of " + (incorrect + correct) + " correct! <br> It took you " + (new Date() - startTime) / 1000 + " seconds!";
 
     modal.style.display = "block";
+
+    showLeaderboard();
+
     loadHandler();
 }
 
@@ -361,3 +368,125 @@ closeModal.addEventListener("click", function () {
     modal = document.getElementById("modal");
     modal.style.display = "none";
 });
+
+async function showLeaderboard() {
+    let leaderboard = document.getElementById("leaderboard");
+    let title = document.getElementById("leaderboard-title");
+
+    standardOps = ["add", "subtract", "multiply", "divide"];
+
+    let response = await fetch("https://tutorial-worker.pvanoostveenneo2.workers.dev/leaderboard/default");
+    let text = await response.text();
+    text = JSON.parse(text);
+    console.log(text);
+    if (check(operators, standardOps) && amountMode && maxQuestions == 10 && document.getElementById("max").value == 100 && !document.getElementById("negatives").checked) {
+        leaderboard.style.display = "table";
+        title.innerHTML = "Leaderboard for this category:";
+        leaderboard.innerHTML = "<tr><th>Rank</th><th>Name</th><th>Score</th></tr>";
+
+        for (let i = 0; i < text.length; i++) {
+            leaderboard.innerHTML += "<tr><td>" + (i + 1) + "</td><td>" + text[i].name + "</td><td>" + text[i].score + "</td></tr>";
+        }
+        return;
+    }
+    else {
+        leaderboard.style.display = "none";
+        title.innerHTML = "No leaderboard for these settings";
+    }
+}
+
+async function submitTimeScore() {
+    let username = document.getElementById("name").value;
+    let leaderboard = document.getElementById("leaderboard");
+
+    standardOps = ["add", "subtract", "multiply", "divide"];
+    console.log(check(operators, standardOps));
+    console.log(amountMode);
+    console.log(maxQuestions);
+    console.log(document.getElementById("max").value);
+    console.log(document.getElementById("negatives").checked);
+    if (check(operators, standardOps) && amountMode && maxQuestions == 10 && document.getElementById("max").value == 100 && !document.getElementById("negatives").checked) {
+        let response = await fetch("https://tutorial-worker.pvanoostveenneo2.workers.dev/leaderboard/default");
+        text = await response.text();
+        text = JSON.parse(text);
+    }
+    else {
+        return;
+    }
+
+    console.log(text);
+    score = usedTime / 1000;
+    submit = true;
+    for (let i = 0; i < text.length; i++) {
+        console.log(text[i].name);
+        if (username == text[i].name) {
+            if (score > text[i].score) {
+                text.splice(i, 1);
+                break;
+            }
+            else {
+                submit = false;
+                break;
+            }
+        }
+    }
+
+    console.log(submit);
+    if (submit) {
+        for (let i = 0; i < text.length; i++) {
+            if (score < text[i].score) {
+                text.splice(i, 0, { name: username, score: score });
+                submit = false;
+                break;
+            }
+        }
+    }
+    if (submit) {
+        text.push({ name: username, score: score });
+    }
+
+    console.log(text);
+
+    leaderboard.style.display = "table";
+    leaderboard.innerHTML = "<tr><th>Rank</th><th>Name</th><th>Score</th></tr>";
+
+    for (let i = 0; i < text.length; i++) {
+        leaderboard.innerHTML += "<tr><td>" + (i + 1) + "</td><td>" + text[i].name + "</td><td>" + text[i].score + "</td></tr>";
+    }
+
+    if (check(operators, standardOps) && amountMode && maxQuestions == 10 && document.getElementById("max").value == 100 && !document.getElementById("negatives").checked) {
+        let response = await fetch("https://tutorial-worker.pvanoostveenneo2.workers.dev/leaderboard/default", {
+            method: "POST",
+            body: JSON.stringify(text)
+        });
+    }
+}
+
+usernameInput = document.getElementById("name");
+usernameInput.addEventListener("keyup", function (event) {
+    if (event.key === "Enter" && usernameInput.value != "") {
+        if (amountMode) {
+            /* when doing the quiz with a question goal then score=seconds taken, so lower is better */
+            submitTimeScore();
+        }
+        else {
+            /* when doing the quiz with time limit , higer score is better */
+            submitAmountScore();
+        }
+    }
+});
+
+
+function check(targetarr, arr) {
+    if (targetarr.length != arr.length) {
+        return false;
+    }
+
+    for (let i = 0; i < targetarr.length; i++) {
+        if (targetarr[i] != arr[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}

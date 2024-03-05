@@ -1,9 +1,9 @@
-async function loadHandler() {
-    let response = await fetch("https://tutorial-worker.pvanoostveenneo2.workers.dev/");
-    let text = await response.text();
-    let element = document.getElementById("counter");
-    element.innerHTML = "visits: " + text;
-}
+/* async function loadHandler() {
+let response = await fetch("https://tutorial-worker.pvanoostveenneo2.workers.dev/");
+let text = await response.text();
+let element = document.getElementById("counter");
+element.innerHTML = "visits: " + text;
+}*/
 
 window.addEventListener("load", loadHandler);
 

@@ -62,7 +62,6 @@ h1 {
 
 a {
     color: var(--link-color);
-
 }
 
 .center {
@@ -81,6 +80,27 @@ a {
 
 ul {
     margin-top: 0;
+}
+
+/* table */
+table.leaderboard {
+    width: 100%;
+    border: 1px solid var(--text-color);
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table.leaderboard th {
+    background-color: var(--navSelected-color);
+    color: var(--title-color);
+    border: 1px solid var(--text-color);
+    padding: 8px;
+}
+
+table.leaderboard td {
+    border: 1px solid var(--text-color);
+    background-color: var(--primary-color);
+    padding: 8px;
 }
 
 /* navbar */
@@ -245,8 +265,6 @@ input[type="checkbox"] {
     border-radius: 0.5rem;
     padding: 0.5rem;
 }
-
-
 
 /* tooltip */
 .tooltip {
