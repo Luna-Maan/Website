@@ -39,6 +39,7 @@ else if (allCookies["theme"] === "custom") {
     document.documentElement.style.setProperty('--text-color', allCookies["text"]);
     document.documentElement.style.setProperty('--link-color', allCookies["link"]);
     document.documentElement.style.setProperty('--navSelected-color', allCookies["navSelected"]);
+    document.documentElement.style.setProperty('--input-color', allCookies["inputSelected"]);
 } else {
     console.log("dark");
 }
@@ -48,9 +49,10 @@ document.getElementById("titleColor").value = allCookies["title"];
 document.getElementById("textColor").value = allCookies["text"];
 document.getElementById("linkColor").value = allCookies["link"];
 document.getElementById("navSelectedColor").value = allCookies["navSelected"];
+document.getElementById("inputSelectedColor").value = allCookies["inputSelected"];
 
 
-async function setColor(theme, primary, secondary, title, text, link, navSelected) {
+async function setColor(theme, primary, secondary, title, text, link, navSelected, inputSelected) {
     if (theme === "dark") {
         document.cookie = "theme=dark; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
     }
@@ -74,12 +76,16 @@ async function setColor(theme, primary, secondary, title, text, link, navSelecte
         if (navSelected === "" || navSelected === undefined) {
             navSelected = "#111";
         }
+        if (inputSelected === "" || inputSelected === undefined) {
+            inputSelected = "#b1f1ee";
+        }
         document.cookie = "primary=" + primary + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
         document.cookie = "secondary=" + secondary + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
         document.cookie = "title=" + title + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
         document.cookie = "text=" + text + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
         document.cookie = "link=" + link + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
         document.cookie = "navSelected=" + navSelected + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
+        document.cookie = "inputSelected=" + inputSelected + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
     }
     else {
         document.cookie = "theme=light; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
@@ -95,7 +101,8 @@ submitColor.addEventListener("click", function () {
     let text = document.getElementById("textColor").value;
     let link = document.getElementById("linkColor").value;
     let navSelected = document.getElementById("navSelectedColor").value;
-    setColor("custom", primary, secondary, title, text, link, navSelected);
+    let inputSelected = document.getElementById("inputSelectedColor").value;
+    setColor("custom", primary, secondary, title, text, link, navSelected, inputSelected);
 });
 
 themeSwitch = document.getElementById("theme");
@@ -118,6 +125,7 @@ preset.addEventListener("change", function () {
         document.getElementById("textColor").value = "#000000";
         document.getElementById("linkColor").value = "#2A9134";
         document.getElementById("navSelectedColor").value = "#333333";
+        document.getElementById("inputSelectedColor").value = "#b1f1ee";
     }
     else if (this.value === "dark") {
         document.getElementById("primary").value = "#1a1a1a";
@@ -126,6 +134,7 @@ preset.addEventListener("change", function () {
         document.getElementById("textColor").value = "#ffffff";
         document.getElementById("linkColor").value = "#2A9134";
         document.getElementById("navSelectedColor").value = "#111111";
+        document.getElementById("inputSelectedColor").value = "#b1f1ee";
     }
     else if (this.value === "custom") {
         document.getElementById("primary").value = allCookies["primary"];
@@ -134,5 +143,6 @@ preset.addEventListener("change", function () {
         document.getElementById("textColor").value = allCookies["text"];
         document.getElementById("linkColor").value = allCookies["link"];
         document.getElementById("navSelectedColor").value = allCookies["navSelected"];
+        document.getElementById("inputSelectedColor").value = allCookies["inputSelected"];
     }
 });

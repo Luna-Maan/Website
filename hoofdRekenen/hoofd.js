@@ -288,7 +288,15 @@ async function checkAnswer() {
         result.innerHTML = "Correct!";
         stats.innerHTML = "Correct: " + correct + "/" + (incorrect + correct);
         if (correct == maxQuestions) {
-            alert("You have completed the quiz!\nYou got " + correct + " out of " + (incorrect + correct) + " correct!\nIt took you " + (new Date() - startTime) / 1000 + " seconds!");
+            modal = document.getElementById("modal");
+            title = document.getElementById("modal-title");
+            content = document.getElementById("modal-content");
+
+            title.innerHTML = "Quiz complete!";
+            content.innerHTML = "You have completed the quiz! <br> You got " + correct + " out of " + (incorrect + correct) + " correct! <br> It took you " + (new Date() - startTime) / 1000 + " seconds!";
+
+            modal.style.display = "block";
+
             loadHandler();
             return;
         }
@@ -298,17 +306,19 @@ async function checkAnswer() {
         incorrect++;
         result.innerHTML = "Incorrect!";
         stats.innerHTML = "Correct: " + correct + "/" + (incorrect + correct);
-        if (correct == maxQuestions) {
-            alert("You have completed the quiz!\nYou got " + correct + " out of " + (incorrect + correct) + " correct!\nIt took you " + (new Date() - startTime) / 1000 + " seconds!");
-            loadHandler();
-            return;
-        }
         nextQuestion();
     }
 }
 
 function timeEndQuiz() {
-    alert("Time's up!\nYou got " + correct + " out of " + (incorrect + correct) + " correct!");
+    modal = document.getElementById("modal");
+    title = document.getElementById("modal-title");
+    content = document.getElementById("modal-content");
+
+    title.innerHTML = "Time is up!";
+    content.innerHTML = "You have completed the quiz! <br> You got " + correct + " out of " + (incorrect + correct) + " correct! <br> It took you " + (new Date() - startTime) / 1000 + " seconds!";
+
+    modal.style.display = "block";
     loadHandler();
 }
 
@@ -318,7 +328,6 @@ inputBox.addEventListener("keyup", function (event) {
         checkAnswer();
     }
 });
-
 
 mode1 = document.getElementById("amountMode");
 mode1.addEventListener("change", function () {
@@ -334,4 +343,21 @@ mode2.addEventListener("change", function () {
     document.getElementById("amountInput").style.display = "none";
     document.getElementById("timeInput").style.display = "table-row";
     amountMode = false;
+});
+
+
+window.addEventListener("click", windowHandler);
+async function windowHandler(event) {
+    let modal = document.getElementById("modal");
+    let isClickInside = modal.contains(event.target);
+
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+closeModal = document.getElementById("close");
+closeModal.addEventListener("click", function () {
+    modal = document.getElementById("modal");
+    modal.style.display = "none";
 });
