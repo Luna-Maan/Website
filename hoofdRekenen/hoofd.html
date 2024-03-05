@@ -56,6 +56,13 @@
                 <h2>mental math</h2>
                 <table>
                     <tr>
+                        <td>Timed or amount:</td>
+                        <td>
+                            <label><input type="radio" name="mode" id="amountMode" value="amount" checked>Amount</label>
+                            <label><input type="radio" name="mode" id="timedMode" value="timed">Timed</label>
+                        </td>
+                    </tr>
+                    <tr id="amountInput">
                         <td>
                             <div class="tooltip">Number of correct
                                 <span class="tooltiptext">Number of questions you need to answer correctly. 0 for
@@ -66,15 +73,13 @@
                             <input type="number" id="numQuestions" value="10" /> <br> <br>
                         </td>
                     </tr>
-                    <tr>
+                    <tr id="timeInput" style="display: none;">
                         <td>
-                            <div class="tooltip">max number
-                                <span class="tooltiptext">Maximum number that's used in subtraction / division. Others
-                                    have lower
-                                    max depending on their difficulty.</span>
-                            </div>:
+                            Time limit (seconds):
                         </td>
-                        <td> <input type="number" id="max" value="100" /><br></td>
+                        <td>
+                            <input type="number" id="timeLimit" value="60" /> <br> <br>
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -118,6 +123,16 @@
                     <tr>
                         <td>Negative numbers:</td>
                         <td><label><input type="checkbox" id="negatives"></label></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="tooltip">max number
+                                <span class="tooltiptext">Maximum number that's used in subtraction / division. Others
+                                    have lower
+                                    max depending on their difficulty.</span>
+                            </div>:
+                        </td>
+                        <td> <input type="number" id="max" value="100" /><br></td>
                     </tr>
                 </table>
 

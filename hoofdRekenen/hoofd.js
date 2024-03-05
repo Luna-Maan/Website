@@ -6,6 +6,9 @@ startTime = 0;
 vraag = "";
 numOperators = 0;
 operators = [];
+amountMode = true;
+timerSet = false;
+timer = 0;
 
 function loadHandler() {
     let add = document.getElementById("add").checked;
@@ -19,6 +22,23 @@ function loadHandler() {
 
     let result = document.getElementById("result");
     let stats = document.getElementById("stats");
+
+    maxQuestions = document.getElementById("numQuestions").value;
+
+    if (timerSet) {
+        clearTimeout(timer);
+        timerSet = false;
+    }
+
+    if (amountMode) {
+        maxQuestions = parseInt(maxQuestions);
+        if (maxQuestions == 0) {
+            maxQuestions = -1;
+        }
+    }
+    else {
+        maxQuestions = -1;
+    }
 
     result.innerHTML = "";
     stats.innerHTML = "";
@@ -252,10 +272,15 @@ async function checkAnswer() {
         startTime = new Date();
     }
 
+    if (amountMode == false && timerSet == false) {
+        time = document.getElementById("timeLimit").value;
+        timer = setTimeout(timeEndQuiz, time * 1000);
+        timerSet = true;
+    }
+
     let input = document.getElementById("answer");
     let result = document.getElementById("result");
     let stats = document.getElementById("stats");
-    let maxQuestions = document.getElementById("numQuestions").value;
 
     if (input.value == answer) {
         input.value = "";
@@ -280,8 +305,11 @@ async function checkAnswer() {
         }
         nextQuestion();
     }
+}
 
-
+function timeEndQuiz() {
+    alert("Time's up!\nYou got " + correct + " out of " + (incorrect + correct) + " correct!");
+    loadHandler();
 }
 
 let inputBox = document.getElementById("answer");
@@ -289,4 +317,21 @@ inputBox.addEventListener("keyup", function (event) {
     if (event.key === "Enter") {
         checkAnswer();
     }
+});
+
+
+mode1 = document.getElementById("amountMode");
+mode1.addEventListener("change", function () {
+    console.log("amountMode");
+    document.getElementById("amountInput").style.display = "table-row";
+    document.getElementById("timeInput").style.display = "none";
+    amountMode = true;
+});
+
+mode2 = document.getElementById("timedMode");
+mode2.addEventListener("change", function () {
+    console.log("timedMode");
+    document.getElementById("amountInput").style.display = "none";
+    document.getElementById("timeInput").style.display = "table-row";
+    amountMode = false;
 });
