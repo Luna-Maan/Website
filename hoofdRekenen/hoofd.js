@@ -21,6 +21,9 @@ function loadHandler() {
     let root = document.getElementById("root").checked;
     let modulo = document.getElementById("mod").checked;
 
+    let knuth = document.getElementById("knuth").checked;
+    let priemn = document.getElementById("priemn").checked;
+
     let result = document.getElementById("result");
     let stats = document.getElementById("stats");
 
@@ -66,6 +69,7 @@ function loadHandler() {
         numOperators += 1;
         operators.push("divide");
     }
+
     if (exponent) {
         numOperators += 1;
         operators.push("exponent");
@@ -77,6 +81,15 @@ function loadHandler() {
     if (modulo) {
         numOperators += 1;
         operators.push("modulo");
+    }
+
+    if (knuth) {
+        numOperators += 1;
+        operators.push("knuth");
+    }
+    if (priemn) {
+        numOperators += 1;
+        operators.push("priemn");
     }
 
     if (numOperators == 0) {
@@ -113,6 +126,12 @@ function nextQuestion() {
     }
     if (operators[operator] === "modulo") {
         moduloQuestion();
+    }
+    if (operators[operator] === "knuth") {
+        knuthQuestion();
+    }
+    if (operators[operator] === "priemn") {
+        priemnQuestion();
     }
 
     question.innerHTML = vraag;
@@ -262,6 +281,72 @@ function rootQuestion() {
     vraag += "<span class=\"tooltiptext\"><a target=\"_blank\" href=\"https://en.wikipedia.org/wiki/Square_root\">wikipedia: square root</a></span></div>";
     vraag += ": \\(\\sqrt{" + een + "}=\\)";
     answer = een ** 0.5;
+}
+
+function knuthQuestion() {
+    let max = document.getElementById("max").value;
+
+    maxnum = 0;
+    while (maxnum ** maxnum < max) {
+        maxnum++;
+    }
+
+    een = Math.floor(Math.random() * (maxnum - 1)) + 1;
+
+    vraag += "<span class=\"tooltiptext\"><a target=\"_blank\" href=\"https://en.wikipedia.org/wiki/Knuth%27s_up-arrow_notation\">wikipedia: Knuth's up-arrow notation</a></span></div>: ";
+
+    if (een == 1) {
+        twee = Math.floor(Math.random() * max);
+        answer = 1;
+    }
+    else if (een == 2) {
+        if (max > 65536) {
+            twee = Math.ceil(Math.random() * 3) + 1
+        }
+        else if (max > 16) {
+            twee = Math.ceil(Math.random() * 2) + 1
+        }
+        else if (max > 4) {
+            twee = Math.ceil(Math.random() * 1) + 1;
+        }
+        else {
+            twee = 1;
+        }
+        if (twee == 1) {
+            answer = 2;
+        }
+        if (twee == 2) {
+            answer = 2 ** 2;
+        }
+        if (twee == 3) {
+            answer = 2 ** (2 ** 2);
+        }
+        if (twee == 4) {
+            answer = 2 ** (2 ** (2 ** 2));
+        }
+    }
+    else {
+        twee = Math.floor(Math.random() * 2) + 1;
+        if (twee == 1) {
+            answer = een;
+        }
+        if (twee == 2) {
+            answer = een ** een;
+        }
+    }
+    vraag += "\\(" + een + "\\uparrow \\uparrow" + twee + "=\\)";
+}
+
+function priemnQuestion() {
+    let max = document.getElementById("max").value;
+
+    een = Math.floor(Math.random() * (max ** (1 / 3))) + 1;
+
+    priemNumbers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271];
+
+    vraag += "<span class=\"tooltiptext\"><a target=\"_blank\" href=\"https://en.wikipedia.org/wiki/Prime_number\">wikipedia: prime number.</a> P<sub>n</sub> is the n'th prime number. P<sub>1</sub>=2</span></div>: ";
+    vraag += "\\(P_{" + een + "}=\\)";
+    answer = priemNumbers[een - 1];
 }
 
 window.addEventListener("load", loadHandler);
