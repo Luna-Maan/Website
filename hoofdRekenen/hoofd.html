@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="../style.css" />
     <script src="../script.js" defer></script>
     <script src="hoofd.js" defer></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 <body>
@@ -52,14 +54,76 @@
         <div class="container">
             <div class="project">
                 <h2>mental math</h2>
-                Number of correct: <input type="number" id="numQuestions" value="10" /> <br>
-                max number: &ensp;&ensp;&ensp;&ensp;&ensp;<input type="number" id="max" value="100" /><br>
-                (mutiply has
-                sqrt(max) as
-                maximum operands
-                and division has sqrt(max) as maximum dividend and answer.) <br>
-                <pre>Operators:<input type="checkbox" id="add" checked>+  <input type="checkbox" id="sub" checked>-  <input type="checkbox" id="mul" checked>*  <input type="checkbox" id="div" checked>/  </pre>
-                <br>
+                <table>
+                    <tr>
+                        <td>
+                            <div class="tooltip">Number of correct
+                                <span class="tooltiptext">Number of questions you need to answer correctly. 0 for
+                                    unlimited questions</span>
+                            </div>:
+                        </td>
+                        <td>
+                            <input type="number" id="numQuestions" value="10" /> <br> <br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="tooltip">max number
+                                <span class="tooltiptext">Maximum number that's used in subtraction / division. Others
+                                    have lower
+                                    max depending on their difficulty.</span>
+                            </div>:
+                        </td>
+                        <td> <input type="number" id="max" value="100" /><br></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Standard operators:
+                        </td>
+                        <td>
+                            <ul class="opList">
+                                <li><label><input type="checkbox" id="add" checked>
+                                        <p>+</p>
+                                    </label></li>
+                                <li><label><input type="checkbox" id="sub" checked>
+                                        <p>-</p>
+                                    </label></li>
+                                <li><label><input type="checkbox" id="mul" checked>
+                                        <p>*</p>
+                                    </label></li>
+                                <li><label><input type="checkbox" id="div" checked>
+                                        <p>/</p>
+                                    </label></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Operators:
+                        </td>
+                        <td>
+                            <ul class="opList">
+                                <li><label><input type="checkbox" id="exp">
+                                        <p>^</p>
+                                    </label></li>
+                                <li><label><input type="checkbox" id="mod">
+                                        <p>mod</p>
+                                    </label></li>
+                                <li><label><input type="checkbox" id="root">
+                                        <p>&#8730;</p>
+                                    </label></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Negative numbers:</td>
+                        <td><label><input type="checkbox" id="negatives"></label></td>
+                    </tr>
+                </table>
+
+                <button id="start">(Re)start test</button> <br>
+                (Timer starts when you answer the first question.)
+                <br> <br> <br>
                 <p id="question"></p>
                 <input type="number" id="answer" />
                 <p id="result"></p>

@@ -28,7 +28,7 @@ if (allCookies["theme"] === "light") {
     document.documentElement.style.setProperty('--primary-color', 'white');
     document.documentElement.style.setProperty('--secondary-color', 'lightgray');
     document.documentElement.style.setProperty('--text-color', 'black');
-    document.documentElement.style.setProperty('--navSelected-color', '#333');
+    document.documentElement.style.setProperty('--navSelected-color', '#222');
     themeSwitch = document.getElementById("theme");
     themeSwitch.checked = true;
 }

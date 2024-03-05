@@ -68,6 +68,11 @@ a {
     text-align: center;
 }
 
+#question {
+    font-size: larger;
+    margin-bottom: 12px;
+}
+
 /* list */
 .list {
     margin: 0;
@@ -224,6 +229,7 @@ button {
 
 button:hover {
     background-color: hsl(177, 80%, 82%);
+    cursor: pointer;
 }
 
 button:active {
@@ -240,6 +246,83 @@ input[type="checkbox"] {
 }
 
 
+
+/* tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 2px dotted var(--link-color);
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 140px;
+    background-color: var(--navSelected-color);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--navSelected-color) transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* mental math */
+.opList {
+    padding: 0;
+    margin: 0;
+    clear: both;
+}
+
+.opList li {
+    list-style-type: none;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+label {
+    box-sizing: border-box;
+    border-radius: 0.5rem;
+    display: inline-block;
+    width: fit-content;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    border: 1px solid var(--text-color);
+    cursor: pointer;
+}
+
+label:has(>input[type="checkbox"]:checked) {
+    background-color: var(--navSelected-color);
+    color: var(--title-color);
+}
 
 /* mobile */
 @media (max-width: 808px) {
@@ -260,9 +343,11 @@ input[type="checkbox"] {
     }
 }
 
+
+
 @media (max-width: 428px) {
     nav {
-        padding-bottom: 140px;
+        padding-bottom: 100px;
     }
 
     h1 {
