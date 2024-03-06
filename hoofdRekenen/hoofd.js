@@ -1,3 +1,5 @@
+url = "https://tutorial-worker.pvanoostveenneo2.workers.dev/leaderboard"
+
 answer = 0;
 questionNum = 0;
 correct = 0;
@@ -9,9 +11,11 @@ operators = [];
 amountMode = true;
 timerSet = false;
 timer = 0;
+time = 0;
 usedTime = 0;
 maximum = 0;
 negatives = false;
+score = 0;
 
 function loadHandler() {
     let add = document.getElementById("add").checked;
@@ -393,7 +397,6 @@ async function checkAnswer() {
         incorrect++;
         result.innerHTML = "Incorrect!";
         stats.innerHTML = "Correct: " + correct + "/" + (incorrect + correct);
-        nextQuestion();
     }
 }
 
@@ -402,6 +405,7 @@ function timeEndQuiz() {
     title = document.getElementById("modal-title");
     content = document.getElementById("modal-content");
 
+    score = correct;
     title.innerHTML = "Time is up!";
     content.innerHTML = "You have completed the quiz! <br> You got " + correct + " out of " + (incorrect + correct) + " correct! <br> It took you " + (new Date() - startTime) / 1000 + " seconds!";
 
@@ -458,30 +462,33 @@ async function showLeaderboard() {
     let name = document.getElementById("name");
 
     standardOps = ["add", "subtract", "multiply", "divide"];
-
-    let response = await fetch("https://tutorial-worker.pvanoostveenneo2.workers.dev/leaderboard/default");
-    let text = await response.text();
-    text = JSON.parse(text);
-    console.log(text);
-    console.log(check(operators, standardOps), amountMode, maxQuestions, maximum, !negatives);
     if (check(operators, standardOps) && amountMode && maxQuestions == 10 && maximum == 100 && !negatives) {
-        leaderboard.style.display = "table";
-        title.innerHTML = "Leaderboard for this category:";
-        leaderboard.innerHTML = "<tr><th>Rank</th><th>Name</th><th>Score</th></tr>";
-        name.disabled = false;
-
-        for (let i = 0; i < text.length; i++) {
-            leaderboard.innerHTML += "<tr><td>" + (i + 1) + "</td><td>" + text[i].name + "</td><td>" + text[i].score + "</td></tr>";
-        }
-        return;
+        boardUrl = url + "/default";
+    }
+    else if ((check(operators, standardOps) && !amountMode && time == 60 && maximum == 100 && !negatives)) {
+        boardUrl = url + "/default_time";
     }
     else {
         leaderboard.style.display = "none";
         title.innerHTML = "No leaderboard for these settings";
+        return;
+    }
+
+    let response = await fetch(boardUrl);
+    let text = await response.text();
+    text = JSON.parse(text);
+
+    leaderboard.style.display = "table";
+    title.innerHTML = "Leaderboard for this category:";
+    leaderboard.innerHTML = "<tr><th>Rank</th><th>Name</th><th>Score</th></tr>";
+    name.disabled = false;
+
+    for (let i = 0; i < text.length; i++) {
+        leaderboard.innerHTML += "<tr><td>" + (i + 1) + "</td><td>" + text[i].name + "</td><td>" + text[i].score + "</td></tr>";
     }
 }
 
-async function submitTimeScore() {
+async function submitScore() {
     let username = document.getElementById("name").value;
     let leaderboard = document.getElementById("leaderboard");
     let name = document.getElementById("name");
@@ -490,43 +497,82 @@ async function submitTimeScore() {
 
     standardOps = ["add", "subtract", "multiply", "divide"];
     if (check(operators, standardOps) && amountMode && maxQuestions == 10 && maximum == 100 && !negatives) {
-        let response = await fetch("https://tutorial-worker.pvanoostveenneo2.workers.dev/leaderboard/default");
-        text = await response.text();
-        text = JSON.parse(text);
+        boardUrl = url + "/default";
+    }
+    else if ((check(operators, standardOps) && !amountMode && time == 60 && maximum == 100 && !negatives)) {
+        boardUrl = url + "/default_time";
     }
     else {
         return;
     }
 
+    let response = await fetch(boardUrl);
+    text = await response.text();
+    text = JSON.parse(text);
+
     console.log(text);
-    score = usedTime / 1000;
+
     submit = true;
-    for (let i = 0; i < text.length; i++) {
-        console.log(text[i].name);
-        if (username == text[i].name) {
-            if (score < text[i].score) {
-                text.splice(i, 1);
-                break;
+
+    inserted = false;
+    if (amountMode) {
+        score = usedTime / 1000;
+        for (let i = 0; i < text.length; i++) {
+            console.log(text[i].name);
+            if (username == text[i].name) {
+                if (score < text[i].score) {
+                    text.splice(i, 1);
+                    inserted = true;
+                    break;
+                }
+                else {
+                    submit = false;
+                    break;
+                }
             }
-            else {
-                submit = false;
-                break;
+        }
+        if (submit) {
+            for (let i = 0; i < text.length; i++) {
+                if (score < text[i].score) {
+                    text.splice(i, 0, { name: username, score: score });
+                    inserted = true;
+                    submit = false;
+                    break;
+                }
+            }
+        }
+    }
+    else {
+        score = score;
+        for (let i = 0; i < text.length; i++) {
+            console.log(text[i].name);
+            if (username == text[i].name) {
+                if (score > text[i].score) {
+                    text.splice(i, 1);
+                    inserted = true;
+                    break;
+                }
+                else {
+                    submit = false;
+                    break;
+                }
+            }
+        }
+        if (submit) {
+            for (let i = 0; i < text.length; i++) {
+                if (score > text[i].score) {
+                    text.splice(i, 0, { name: username, score: score });
+                    inserted = true;
+                    submit = false;
+                    break;
+                }
             }
         }
     }
 
-    console.log(submit);
-    if (submit) {
-        for (let i = 0; i < text.length; i++) {
-            if (score < text[i].score) {
-                text.splice(i, 0, { name: username, score: score });
-                submit = false;
-                break;
-            }
-        }
-    }
     if (submit) {
         text.push({ name: username, score: score });
+        inserted = true;
     }
 
     console.log(text);
@@ -538,8 +584,8 @@ async function submitTimeScore() {
         leaderboard.innerHTML += "<tr><td>" + (i + 1) + "</td><td>" + text[i].name + "</td><td>" + text[i].score + "</td></tr>";
     }
 
-    if (check(operators, standardOps) && amountMode && maxQuestions == 10 && maximum == 100 && !negatives) {
-        let response = await fetch("https://tutorial-worker.pvanoostveenneo2.workers.dev/leaderboard/default", {
+    if (inserted) {
+        response = await fetch(boardUrl, {
             method: "POST",
             body: JSON.stringify(text)
         });
@@ -549,14 +595,7 @@ async function submitTimeScore() {
 usernameInput = document.getElementById("name");
 usernameInput.addEventListener("keyup", function (event) {
     if (event.key === "Enter" && usernameInput.value != "") {
-        if (amountMode) {
-            /* when doing the quiz with a question goal then score=seconds taken, so lower is better */
-            submitTimeScore();
-        }
-        else {
-            /* when doing the quiz with time limit , higer score is better */
-            submitAmountScore();
-        }
+        submitScore();
     }
 });
 
