@@ -5,8 +5,39 @@ let element = document.getElementById("counter");
 element.innerHTML = "visits: " + text;
 }*/
 
-window.addEventListener("load", loadHandler);
+var previousscroll = window.scrollY;
+window.addEventListener("scroll", function () {
+    if (this.window.innerWidth > 815) {
+        return;
+    }
+    else if (this.window.innerWidth > 434 && this.scrollY > 100) {
+        var currentscroll = window.scrollY;
+        if (previousscroll > currentscroll) {
+            document.getElementById("navbar").style.top = "8px";
+            document.getElementById("nav").style.top = "0px";
+        } else {
+            document.getElementById("nav").style.top = "-100px";
+            document.getElementById("navbar").style.top = "-100px";
+        }
+    }
+    else if (this.scrollY > 140) {
+        var currentscroll = window.scrollY;
+        if (previousscroll > currentscroll) {
+            document.getElementById("navbar").style.top = "8px";
+            document.getElementById("nav").style.top = "0px";
+        } else {
+            document.getElementById("nav").style.top = "-150px";
+            document.getElementById("navbar").style.top = "-150px";
+        }
+    }
+    else {
+        return;
+    }
+    previousscroll = currentscroll;
+});
 
+
+window.addEventListener("load", loadHandler);
 
 function getCookies() {
     var cookies = document.cookie.split(';');
