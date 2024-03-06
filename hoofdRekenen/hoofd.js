@@ -505,7 +505,7 @@ async function submitTimeScore() {
     for (let i = 0; i < text.length; i++) {
         console.log(text[i].name);
         if (username == text[i].name) {
-            if (score > text[i].score) {
+            if (score < text[i].score) {
                 text.splice(i, 1);
                 break;
             }
