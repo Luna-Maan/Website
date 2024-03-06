@@ -10,6 +10,8 @@ amountMode = true;
 timerSet = false;
 timer = 0;
 usedTime = 0;
+maximum = 0;
+negatives = false;
 
 function loadHandler() {
     let add = document.getElementById("add").checked;
@@ -28,6 +30,8 @@ function loadHandler() {
     let stats = document.getElementById("stats");
 
     maxQuestions = document.getElementById("numQuestions").value;
+    maximum = parseInt(document.getElementById("max").value);
+    negatives = document.getElementById("negatives").checked;
 
     if (timerSet) {
         clearTimeout(timer);
@@ -100,6 +104,10 @@ function loadHandler() {
     nextQuestion();
 }
 
+window.addEventListener("load", loadHandler);
+start = document.getElementById("start");
+start.addEventListener("click", loadHandler);
+
 function nextQuestion() {
     console.log("nextQuestion")
     let question = document.getElementById("question");
@@ -139,9 +147,9 @@ function nextQuestion() {
     questionNum++;
 }
 
+/* question types */
 function addQuestion() {
-    let max = parseInt(document.getElementById("max").value) + 1;
-    let negatives = document.getElementById("negatives").checked;
+    let max = maximum + 1;
 
     if (negatives) {
         een = Math.floor(Math.random() * max * 2) - max;
@@ -158,8 +166,7 @@ function addQuestion() {
 }
 
 function subtractQuestion() {
-    let max = parseInt(document.getElementById("max").value) + 1;
-    let negatives = document.getElementById("negatives").checked;
+    let max = maximum + 1;
 
     if (negatives) {
         een = Math.floor(Math.random() * max * 2) - max;
@@ -176,8 +183,7 @@ function subtractQuestion() {
 }
 
 function multiplyQuestion() {
-    let max = document.getElementById("max").value;
-    let negatives = document.getElementById("negatives").checked;
+    let max = maximum;
 
     max = Math.ceil(max ** 0.5);
 
@@ -196,8 +202,7 @@ function multiplyQuestion() {
 }
 
 function divideQuestion() {
-    let max = document.getElementById("max").value;
-    let negatives = document.getElementById("negatives").checked;
+    let max = maximum;
 
     max = Math.ceil(max ** 0.5);
 
@@ -221,9 +226,7 @@ function divideQuestion() {
 }
 
 function exponentQuestion() {
-    let max = document.getElementById("max").value;
-    let negatives = document.getElementById("negatives").checked;
-
+    let max = maximum;
 
     if (negatives) {
         twee = Math.floor(Math.random() * (Math.log(max) - 2)) + 2;
@@ -245,8 +248,7 @@ function exponentQuestion() {
 }
 
 function moduloQuestion() {
-    let max = document.getElementById("max").value;
-    let negatives = document.getElementById("negatives").checked;
+    let max = maximum;
 
     if (negatives) {
         een = Math.floor(Math.random() * max * 2) - max;
@@ -271,7 +273,7 @@ function moduloQuestion() {
 }
 
 function rootQuestion() {
-    let max = document.getElementById("max").value;
+    let max = maximum;
 
     max = Math.ceil(max ** 0.5);
 
@@ -284,7 +286,7 @@ function rootQuestion() {
 }
 
 function knuthQuestion() {
-    let max = document.getElementById("max").value;
+    let max = maximum;
 
     maxnum = 0;
     while (maxnum ** maxnum < max) {
@@ -338,7 +340,7 @@ function knuthQuestion() {
 }
 
 function priemnQuestion() {
-    let max = document.getElementById("max").value;
+    let max = maximum;
 
     een = Math.floor(Math.random() * (max ** (1 / 3))) + 1;
 
@@ -348,10 +350,6 @@ function priemnQuestion() {
     vraag += "\\(P_{" + een + "}=\\)";
     answer = priemNumbers[een - 1];
 }
-
-window.addEventListener("load", loadHandler);
-start = document.getElementById("start");
-start.addEventListener("click", loadHandler);
 
 async function checkAnswer() {
     if (questionNum == 1) {
@@ -437,7 +435,7 @@ mode2.addEventListener("change", function () {
     amountMode = false;
 });
 
-
+/* leaderboard and modal */
 window.addEventListener("click", windowHandler);
 async function windowHandler(event) {
     let modal = document.getElementById("modal");
@@ -457,6 +455,7 @@ closeModal.addEventListener("click", function () {
 async function showLeaderboard() {
     let leaderboard = document.getElementById("leaderboard");
     let title = document.getElementById("leaderboard-title");
+    let name = document.getElementById("name");
 
     standardOps = ["add", "subtract", "multiply", "divide"];
 
@@ -464,10 +463,12 @@ async function showLeaderboard() {
     let text = await response.text();
     text = JSON.parse(text);
     console.log(text);
-    if (check(operators, standardOps) && amountMode && maxQuestions == 10 && document.getElementById("max").value == 100 && !document.getElementById("negatives").checked) {
+    console.log(check(operators, standardOps), amountMode, maxQuestions, maximum, !negatives);
+    if (check(operators, standardOps) && amountMode && maxQuestions == 10 && maximum == 100 && !negatives) {
         leaderboard.style.display = "table";
         title.innerHTML = "Leaderboard for this category:";
         leaderboard.innerHTML = "<tr><th>Rank</th><th>Name</th><th>Score</th></tr>";
+        name.disabled = false;
 
         for (let i = 0; i < text.length; i++) {
             leaderboard.innerHTML += "<tr><td>" + (i + 1) + "</td><td>" + text[i].name + "</td><td>" + text[i].score + "</td></tr>";
@@ -483,14 +484,12 @@ async function showLeaderboard() {
 async function submitTimeScore() {
     let username = document.getElementById("name").value;
     let leaderboard = document.getElementById("leaderboard");
+    let name = document.getElementById("name");
+
+    name.disabled = true;
 
     standardOps = ["add", "subtract", "multiply", "divide"];
-    console.log(check(operators, standardOps));
-    console.log(amountMode);
-    console.log(maxQuestions);
-    console.log(document.getElementById("max").value);
-    console.log(document.getElementById("negatives").checked);
-    if (check(operators, standardOps) && amountMode && maxQuestions == 10 && document.getElementById("max").value == 100 && !document.getElementById("negatives").checked) {
+    if (check(operators, standardOps) && amountMode && maxQuestions == 10 && maximum == 100 && !negatives) {
         let response = await fetch("https://tutorial-worker.pvanoostveenneo2.workers.dev/leaderboard/default");
         text = await response.text();
         text = JSON.parse(text);
@@ -539,7 +538,7 @@ async function submitTimeScore() {
         leaderboard.innerHTML += "<tr><td>" + (i + 1) + "</td><td>" + text[i].name + "</td><td>" + text[i].score + "</td></tr>";
     }
 
-    if (check(operators, standardOps) && amountMode && maxQuestions == 10 && document.getElementById("max").value == 100 && !document.getElementById("negatives").checked) {
+    if (check(operators, standardOps) && amountMode && maxQuestions == 10 && maximum == 100 && !negatives) {
         let response = await fetch("https://tutorial-worker.pvanoostveenneo2.workers.dev/leaderboard/default", {
             method: "POST",
             body: JSON.stringify(text)
