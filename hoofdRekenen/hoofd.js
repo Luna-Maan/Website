@@ -27,6 +27,8 @@ function loadHandler() {
     let root = document.getElementById("root").checked;
     let modulo = document.getElementById("mod").checked;
 
+    let det = document.getElementById("determinant").checked;
+
     let knuth = document.getElementById("knuth").checked;
     let priemn = document.getElementById("priemn").checked;
 
@@ -99,6 +101,10 @@ function loadHandler() {
         numOperators += 1;
         operators.push("priemn");
     }
+    if (det) {
+        numOperators += 1;
+        operators.push("det");
+    }
 
     if (numOperators == 0) {
         alert("Please select at least one operator");
@@ -144,6 +150,9 @@ function nextQuestion() {
     }
     if (operators[operator] === "priemn") {
         priemnQuestion();
+    }
+    if (operators[operator] === "det") {
+        determinantQuestion();
     }
 
     question.innerHTML = vraag;
@@ -353,6 +362,79 @@ function priemnQuestion() {
     vraag += "<span class=\"tooltiptext\"><a target=\"_blank\" href=\"https://en.wikipedia.org/wiki/Prime_number\">wikipedia: prime number.</a> P<sub>n</sub> is the n'th prime number. P<sub>1</sub>=2</span></div>: ";
     vraag += "\\(P_{" + een + "}=\\)";
     answer = priemNumbers[een - 1];
+}
+
+function determinantQuestion() {
+    let max = maximum;
+
+    // 10: 1x1 mat5rix, 100: 2x2 matrix, 1000: 3x3 matrix, 10000: 4x4 matrix, 100000: 5x5 matrix
+    twee = Math.floor(Math.log10(max));
+
+    console.log(10 ** twee);
+
+    // goes up gradially from 10 to 100, then drops back down. goes up to 1000, then drops back down. goes up to 10000, then drops back down. goes up to 100000, then drops back down.
+    een = 10 ** (Math.log10(max) - twee) * 0.5 + 8;
+
+
+    matrix = [];
+    for (let i = 0; i < twee; i++) {
+        let row = [];
+        for (let j = 0; j < twee; j++) {
+            row.push(Math.floor(Math.random() * een));
+        }
+        matrix.push(row);
+    }
+
+    console.log(matrix);
+
+
+
+    answer = calculateDeterminant(matrix);
+
+    vraag += "<span class=\"tooltiptext\"><a target=\"_blank\" href=\"https://en.wikipedia.org/wiki/Determinant\">wikipedia: determinant</a></span></div>: ";
+    vraag += "\\(\\begin{vmatrix}"
+
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix.length; j++) {
+            vraag += matrix[i][j];
+            if (j < matrix.length - 1) {
+                vraag += " & ";
+            }
+        }
+        if (i < matrix.length - 1) {
+            vraag += " \\\\ ";
+        }
+    }
+
+    vraag += "\\end{vmatrix}=\\)"
+}
+
+function calculateDeterminant(matrix) {
+
+    if (matrix.length == 1) {
+        return matrix[0][0];
+    }
+
+    if (matrix.length == 2) {
+        return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+    }
+    else {
+        let determinant = 0;
+        for (let i = 0; i < matrix.length; i++) {
+            let minor = [];
+            for (let j = 1; j < matrix.length; j++) {
+                let row = [];
+                for (let k = 0; k < matrix.length; k++) {
+                    if (k != i) {
+                        row.push(matrix[j][k]);
+                    }
+                }
+                minor.push(row);
+            }
+            determinant += matrix[0][i] * Math.pow(-1, i) * calculateDeterminant(minor);
+        }
+        return determinant;
+    }
 }
 
 async function checkAnswer() {
@@ -613,3 +695,58 @@ function check(targetarr, arr) {
 
     return true;
 }
+
+
+detectChange = document.getElementById("detectClick");
+detectChange.addEventListener("change", function () {
+    document.getElementById("presets").value = "-";
+});
+
+selectLeaderboard = document.getElementById("presets");
+selectLeaderboard.addEventListener("change", function () {
+    if (selectLeaderboard.value == "-") {
+        return;
+    }
+    if (selectLeaderboard.value == "amount") {
+        document.getElementById("amountMode").checked = true;
+        document.getElementById("numQuestions").value = 10;
+        document.getElementById("max").value = 100;
+        document.getElementById("negatives").checked = false;
+
+        document.getElementById("add").checked = true;
+        document.getElementById("sub").checked = true;
+        document.getElementById("mul").checked = true;
+        document.getElementById("div").checked = true;
+
+        document.getElementById("exp").checked = false;
+        document.getElementById("root").checked = false;
+        document.getElementById("mod").checked = false;
+        document.getElementById("knuth").checked = false;
+        document.getElementById("priemn").checked = false;
+
+        document.getElementById("amountInput").style.display = "table-row";
+        document.getElementById("timeInput").style.display = "none";
+        amountMode = true;
+    }
+    else if (selectLeaderboard.value == "timed") {
+        document.getElementById("timedMode").checked = true;
+        document.getElementById("timeLimit").value = 60;
+        document.getElementById("max").value = 100;
+        document.getElementById("negatives").checked = false;
+
+        document.getElementById("add").checked = true;
+        document.getElementById("sub").checked = true;
+        document.getElementById("mul").checked = true;
+        document.getElementById("div").checked = true;
+
+        document.getElementById("exp").checked = false;
+        document.getElementById("root").checked = false;
+        document.getElementById("mod").checked = false;
+        document.getElementById("knuth").checked = false;
+        document.getElementById("priemn").checked = false;
+
+        document.getElementById("amountInput").style.display = "none";
+        document.getElementById("timeInput").style.display = "table-row";
+        amountMode = false;
+    }
+});

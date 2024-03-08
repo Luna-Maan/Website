@@ -5,6 +5,8 @@ let element = document.getElementById("counter");
 element.innerHTML = "visits: " + text;
 }*/
 
+// window.addEventListener("load", loadHandler);
+
 var previousscroll = window.scrollY;
 window.addEventListener("scroll", function () {
     if (this.window.innerWidth > 815) {
@@ -37,7 +39,7 @@ window.addEventListener("scroll", function () {
 });
 
 
-window.addEventListener("load", loadHandler);
+
 
 function getCookies() {
     var cookies = document.cookie.split(';');
@@ -84,6 +86,7 @@ document.getElementById("inputSelectedColor").value = allCookies["inputSelected"
 
 
 async function setColor(theme, primary, secondary, title, text, link, navSelected, inputSelected) {
+    console.log(theme);
     if (theme === "dark") {
         document.cookie = "theme=dark; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
     }

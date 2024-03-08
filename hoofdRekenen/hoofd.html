@@ -56,6 +56,18 @@
                 <h2>mental math</h2>
                 <table>
                     <tr>
+                        <td>Leaderboard presets:</td>
+                        <td>
+                            <select id="presets">
+                                <option value="amount">Default amount</option>
+                                <option value="timed">Default timed</option>
+                                <option value="-">No leaderboard</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <table id="detectClick">
+                    <tr>
                         <td>Timed or amount:</td>
                         <td>
                             <label><input type="radio" name="mode" id="amountMode" value="amount" checked>Amount</label>
@@ -116,6 +128,18 @@
                                     </label></li>
                                 <li><label><input type="checkbox" id="root">
                                         <p>&#8730;</p>
+                                    </label></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Fun operators:
+                        </td>
+                        <td>
+                            <ul class="opList">
+                                <li><label><input type="checkbox" id="determinant">
+                                        <p>det(A)</p>
                                     </label></li>
                             </ul>
                         </td>

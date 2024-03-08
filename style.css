@@ -256,7 +256,9 @@ button {
     margin-top: 5px;
 }
 
-button:hover {
+button:hover,
+input[type="submit"]:hover,
+select:hover {
     background-color: var(--input-color);
     cursor: pointer;
 }
