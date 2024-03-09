@@ -8,6 +8,10 @@
     --input-color: #b1f1ee;
 }
 
+summary {
+    color: var(--title-color);
+}
+
 
 body {
     font-family: Arial, sans-serif;
@@ -83,6 +87,11 @@ ul {
 }
 
 /* table */
+
+.border {
+    border: 2px solid var(--text-color);
+}
+
 table.leaderboard {
     width: 100%;
     border: 1px solid var(--text-color);

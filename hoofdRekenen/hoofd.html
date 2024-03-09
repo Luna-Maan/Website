@@ -66,113 +66,118 @@
                         </td>
                     </tr>
                 </table>
-                <table id="detectClick">
-                    <tr>
-                        <td>Timed or amount:</td>
-                        <td>
-                            <label><input type="radio" name="mode" id="amountMode" value="amount" checked>Amount</label>
-                            <label><input type="radio" name="mode" id="timedMode" value="timed">Timed</label>
-                        </td>
-                    </tr>
-                    <tr id="amountInput">
-                        <td>
-                            <div class="tooltip">Number of correct
-                                <span class="tooltiptext">Number of questions you need to answer correctly. 0 for
-                                    unlimited questions</span>
-                            </div>:
-                        </td>
-                        <td>
-                            <input type="number" id="numQuestions" value="10" /> <br> <br>
-                        </td>
-                    </tr>
-                    <tr id="timeInput" style="display: none;">
-                        <td>
-                            Time limit (seconds):
-                        </td>
-                        <td>
-                            <input type="number" id="timeLimit" value="60" /> <br> <br>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Standard operators:
-                        </td>
-                        <td>
-                            <ul class="opList">
-                                <li><label><input type="checkbox" id="add" checked>
-                                        <p>+</p>
-                                    </label></li>
-                                <li><label><input type="checkbox" id="sub" checked>
-                                        <p>-</p>
-                                    </label></li>
-                                <li><label><input type="checkbox" id="mul" checked>
-                                        <p>*</p>
-                                    </label></li>
-                                <li><label><input type="checkbox" id="div" checked>
-                                        <p>/</p>
-                                    </label></li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Operators:
-                        </td>
-                        <td>
-                            <ul class="opList">
-                                <li><label><input type="checkbox" id="exp">
-                                        <p>^</p>
-                                    </label></li>
-                                <li><label><input type="checkbox" id="mod">
-                                        <p>mod</p>
-                                    </label></li>
-                                <li><label><input type="checkbox" id="root">
-                                        <p>&#8730;</p>
-                                    </label></li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Fun operators:
-                        </td>
-                        <td>
-                            <ul class="opList">
-                                <li><label><input type="checkbox" id="determinant">
-                                        <p>det(A)</p>
-                                    </label></li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Joke operators:
-                        </td>
-                        <td>
-                            <ul class="opList">
-                                <li><label><input type="checkbox" id="knuth">
-                                        <p>&uarr;&uarr;</p>
-                                    </label></li>
-                                <li><label><input type="checkbox" id="priemn">
-                                        <p>P<sub>n</sub></p>
-                                    </label></li>
-                            </ul>
-                    </tr>
-                    <tr>
-                        <td>Negative numbers:</td>
-                        <td><label><input type="checkbox" id="negatives"></label></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="tooltip">max number
-                                <span class="tooltiptext">Maximum number that's used in subtraction / division. Others
-                                    have lower
-                                    max depending on their difficulty.</span>
-                            </div>:
-                        </td>
-                        <td> <input type="number" id="max" value="100" /><br></td>
-                    </tr>
-                </table>
+                <details>
+                    <summary>Settings:</summary>
+                    <table id="detectClick" class="border">
+                        <tr>
+                            <td>Timed or amount:</td>
+                            <td>
+                                <label><input type="radio" name="mode" id="amountMode" value="amount"
+                                        checked>Amount</label>
+                                <label><input type="radio" name="mode" id="timedMode" value="timed">Timed</label>
+                            </td>
+                        </tr>
+                        <tr id="amountInput">
+                            <td>
+                                <div class="tooltip">Number of correct
+                                    <span class="tooltiptext">Number of questions you need to answer correctly. 0 for
+                                        unlimited questions</span>
+                                </div>:
+                            </td>
+                            <td>
+                                <input type="number" id="numQuestions" value="10" /> <br> <br>
+                            </td>
+                        </tr>
+                        <tr id="timeInput" style="display: none;">
+                            <td>
+                                Time limit (seconds):
+                            </td>
+                            <td>
+                                <input type="number" id="timeLimit" value="60" /> <br> <br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Standard operators:
+                            </td>
+                            <td>
+                                <ul class="opList">
+                                    <li><label><input type="checkbox" id="add" checked>
+                                            <p>+</p>
+                                        </label></li>
+                                    <li><label><input type="checkbox" id="sub" checked>
+                                            <p>-</p>
+                                        </label></li>
+                                    <li><label><input type="checkbox" id="mul" checked>
+                                            <p>*</p>
+                                        </label></li>
+                                    <li><label><input type="checkbox" id="div" checked>
+                                            <p>/</p>
+                                        </label></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Operators:
+                            </td>
+                            <td>
+                                <ul class="opList">
+                                    <li><label><input type="checkbox" id="exp">
+                                            <p>^</p>
+                                        </label></li>
+                                    <li><label><input type="checkbox" id="mod">
+                                            <p>mod</p>
+                                        </label></li>
+                                    <li><label><input type="checkbox" id="root">
+                                            <p>&#8730;</p>
+                                        </label></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Fun operators:
+                            </td>
+                            <td>
+                                <ul class="opList">
+                                    <li><label><input type="checkbox" id="determinant">
+                                            <p>det(A)</p>
+                                        </label></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Joke operators:
+                            </td>
+                            <td>
+                                <ul class="opList">
+                                    <li><label><input type="checkbox" id="knuth">
+                                            <p>&uarr;&uarr;</p>
+                                        </label></li>
+                                    <li><label><input type="checkbox" id="priemn">
+                                            <p>P<sub>n</sub></p>
+                                        </label></li>
+                                </ul>
+                        </tr>
+                        <tr>
+                            <td>Negative numbers:</td>
+                            <td><label><input type="checkbox" id="negatives"></label></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="tooltip">max number
+                                    <span class="tooltiptext">Maximum number that's used in subtraction / division.
+                                        Others
+                                        have lower
+                                        max depending on their difficulty.</span>
+                                </div>:
+                            </td>
+                            <td> <input type="number" id="max" value="100" /><br></td>
+                        </tr>
+                    </table>
+                </details>
 
                 <button id="start">(Re)start test</button> <br>
                 (Timer starts when you answer the first question.)
