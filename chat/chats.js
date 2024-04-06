@@ -47,7 +47,7 @@ async function loadHandler(event) {
             let time = new Date(text[i].time);
             date = time.toLocaleDateString() + " " + time.getHours() + ":" + time.getMinutes().toString().padStart(2, "0");
 
-            if (i == 0 || text[i].name != text[i - 1].name) {
+            if (i == text.length - msgNum || text[i].name != text[i - 1].name) {
                 if (text[i].name == "luna") {
                     completeMsg += "<br></td> </tr><tr> <td class='top'><img class='chatPic' src='profiles/luna.png'></td> <td class='chatMsg'><b style='color: var(--link-color)'>" + text[i].name + "</b> <span class='chatDate'>" + date + " </span><br>" + text[i].msg + "<br>";
                 }
