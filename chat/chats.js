@@ -38,12 +38,30 @@ async function loadHandler(event) {
             msgNum = text.length;
         }
 
-        let completeMsg = "";
+        let completeMsg = "<tr><td>";
         for (let i = text.length - msgNum; i < text.length; i++) {
-            completeMsg += text[i].name + ": " + text[i].msg + "<br>";
+            if (text[i].time == undefined) {
+                text[i].time = 0;
+            }
+
+            let time = new Date(text[i].time);
+            date = time.toLocaleDateString() + " " + time.getHours() + ":" + time.getMinutes().toString().padStart(2, "0");
+
+            if (i == 0 || text[i].name != text[i - 1].name) {
+                if (text[i].name == "luna") {
+                    completeMsg += "<br></td> </tr><tr> <td class='top'><img class='chatPic' src='profiles/luna.png'></td> <td class='chatMsg'><b style='color: var(--link-color)'>" + text[i].name + "</b> <span class='chatDate'>" + date + " </span><br>" + text[i].msg + "<br>";
+                }
+                else {
+                    completeMsg += "<br></td> </tr><tr> <td class='top'><img class='chatPic' src='profiles/" + text[i].name + ".png'></td><td class='chatMsg'><b style='color: var(--title-color)'>" + text[i].name + "</b> <span class='chatDate'>" + date + " </span><br>" + text[i].msg + "<br>";
+                }
+
+            }
+            else {
+                completeMsg += text[i].msg + "<br>";
+            }
         }
 
-        box.innerHTML = completeMsg;
+        box.innerHTML = completeMsg + "<br></td></tr>";
 
         window.location.href = '#chatInput';
     } else {
@@ -75,11 +93,14 @@ async function chatHandler(event) {
 
 
     if (hash == hashPass) {
+        a = new Date();
+        a = a.getTime();
 
         let data = {
             name: name,
             personalPassword: personalPassword,
-            msg: msg
+            msg: msg,
+            time: a
         }
 
         response = await fetch(url + password, {
@@ -92,24 +113,7 @@ async function chatHandler(event) {
         return;
     }
 
-    let data = await response.text();
-    console.log(data);
-    text = JSON.parse(data);
-    console.log(text);
-
-    console.log(text);
-    console.log(text.length);
-
-    if (msgNum > text.length || msgNum == 0) {
-        msgNum = text.length;
-    }
-
-    let completeMsg = "";
-    for (let i = text.length - msgNum; i < text.length; i++) {
-        completeMsg += text[i].name + ": " + text[i].msg + "<br>";
-    }
-
-    box.innerHTML = completeMsg;
+    loadHandler();
 }
 
 let chat = document.getElementById("chatInput");

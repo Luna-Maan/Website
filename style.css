@@ -77,6 +77,26 @@ a {
     margin-bottom: 12px;
 }
 
+/* chat */
+.chatDate {
+    color: var(--primary-color);
+}
+
+.chatPic {
+    border-radius: 50%;
+    height: 2.2em;
+    width: 2.2em;
+    margin: 0px;
+}
+
+.chatMsg {
+    padding-left: 8px;
+}
+
+.top {
+    vertical-align: top;
+}
+
 /* list */
 .list {
     margin: 0;
