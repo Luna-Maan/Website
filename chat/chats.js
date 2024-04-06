@@ -52,8 +52,8 @@ async function loadHandler(event) {
 
             if (i == text.length - msgNum || text[i].name != text[i - 1].name) {
 
-                if (text[i].name == "luna") {
-                    completeMsg += "<br></td> </tr><tr> <td class='top'><img class='chatPic' src='profiles/luna.png'></td> <td class='chatMsg'><b style='color: var(--link-color)'>" + text[i].name + "</b> <span class='chatDate'>" + date + " </span><br>" + text[i].msg + "<br>";
+                if (text[i].name == "luna" || text[i].name == "esther") {
+                    completeMsg += "<br></td> </tr><tr> <td class='top'><img class='chatPic' src='profiles/" + text[i].name + ".png'></td> <td class='chatMsg'><b style='color: var(--link-color)'>" + text[i].name + "&#128187 </b> <span class='chatDate'>" + date + " </span><br>" + text[i].msg + "<br>";
                 }
                 else {
                     completeMsg += "<br></td> </tr><tr> <td class='top'><img class='chatPic' src='profiles/" + text[i].name + ".png'></td><td class='chatMsg'><b style='color: var(--title-color)'>" + text[i].name + "</b> <span class='chatDate'>" + date + " </span><br>" + text[i].msg + "<br>";
