@@ -5,8 +5,6 @@
     <link rel="stylesheet" href="../style.css" />
     <script src="../script.js" defer></script>
     <script src="chats.js" defer></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 <body>
@@ -52,14 +50,15 @@
     <main>
         <div class="container">
             <div class="project">
-                Name: <input type="text" id="name" value="test" /> <br>
+                Name: <input type="text" id="name" /> <br>
                 Personal password: <input type="password" id="personalPassword" placeholder="personal password" /> <br>
                 Number of messages: <input type="number" id="numMessages" value="30" /> <br><br>
                 <h2 class="noMargin">Chat:</h2>
                 <table id="chatBox"></table>
                 <input style="min-width: calc(min(100%,300px)); width: calc(100% - 71px);" type="text" id="chatInput"
                     name="chatInput" placeholder="text" />
-                <button type="button" id="refresh">Refresh</button>
+                <button class="visible" type="button" id="refresh">Refresh</button>
+                Auto-refresh: <label><input type="checkbox" id="autoRefresh" /></label> <br>
             </div>
         </div>
     </main>

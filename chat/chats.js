@@ -136,3 +136,17 @@ async function registerUser(username, personalPassword) {
         body: JSON.stringify(data)
     });
 }
+
+
+function startLoop() {
+    autoRefresh = document.getElementById("autoRefresh").checked;
+
+    if (autoRefresh) {
+        loadHandler();
+
+        setTimeout(startLoop, 1000);
+    }
+}
+
+autoRefresh = document.getElementById("autoRefresh");
+autoRefresh.addEventListener("change", startLoop);
