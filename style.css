@@ -129,7 +129,7 @@ table.leaderboard {
     width: 100%;
     border: 1px solid var(--text-color);
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: 0px;
 }
 
 table.leaderboard th {
@@ -143,6 +143,10 @@ table.leaderboard td {
     border: 1px solid var(--text-color);
     background-color: var(--primary-color);
     padding: 8px;
+}
+
+#leaderboard-title {
+    margin-bottom: 5px;
 }
 
 /* navbar */
@@ -403,7 +407,7 @@ label:has(>input[type="radio"]:checked) {
     top: 0;
     width: 100%;
     height: 100%;
-    padding-top: 100px;
+    padding-top: 3%;
     background-color: rgba(0, 0, 0, 0.4);
     overflow: auto;
 }
@@ -414,8 +418,8 @@ label:has(>input[type="radio"]:checked) {
     padding: 20px;
     border-radius: 8px;
     width: 300px;
-    overflow-y: auto;
-    max-height: 90%;
+    overflow-y: scroll;
+    max-height: 85%;
 }
 
 .modal h2 {
