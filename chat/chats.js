@@ -172,3 +172,5 @@ autoRefresh = document.getElementById("autoRefresh");
 autoRefresh.addEventListener("change", startLoop);
 
 
+numMessages = document.getElementById("numMessages");
+numMessages.addEventListener("change", loadHandler);
