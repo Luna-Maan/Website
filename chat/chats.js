@@ -50,6 +50,26 @@ async function loadHandler(event) {
             text[i].name = (text[i].name).replace(/</g, "&lt;").replace(/>/g, "&gt;") // prevent xss
             text[i].msg = (text[i].msg).replace(/</g, "&lt;").replace(/>/g, "&gt;") // prevent xss
 
+            currentUser = document.getElementById("name").value;
+            const replaceMentions = (msg) => {
+                return msg.replace(/@(\w+)/g, (match, username) => {
+                    if (username === currentUser) {
+                        return `<span style="background-color: var(--primary-color); color: var(--title-color)">@${username}</span>`;
+                    } else {
+                        return `<span style="color: var(--title-color)">@${username}</span>`;
+                    }
+                });
+            };
+
+            // Replace mentions in the message
+            text[i].msg = replaceMentions(text[i].msg);
+
+            const urlRegex = /(https?:\/\/(?:www\.|(?!www))[^\s.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/gi;
+            text[i].msg = text[i].msg.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+
+            text[i].msg = text[i].msg.replace(/www.(\w+)/g, 'https://$1');
+
+
             if (i == text.length - msgNum || text[i].name != text[i - 1].name) {
 
                 if (text[i].name == "luna" || text[i].name == "esther") {
