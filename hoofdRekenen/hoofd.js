@@ -544,11 +544,18 @@ async function showLeaderboard() {
     let name = document.getElementById("name");
 
     standardOps = ["add", "subtract", "multiply", "divide"];
+    hardOps = ["add", "subtract", "multiply", "divide", "exponent", "root", "modulo"];
     if (check(operators, standardOps) && amountMode && maxQuestions == 10 && maximum == 100 && !negatives) {
         boardUrl = url + "/default";
     }
     else if ((check(operators, standardOps) && !amountMode && time == 60 && maximum == 100 && !negatives)) {
         boardUrl = url + "/default_time";
+    }
+    else if (check(operators, hardOps) && !amountMode && time == 120 && maximum == 500 && negatives) {
+        boardUrl = url + "/hard_time";
+    }
+    else if (check(operators, hardOps) && amountMode && maxQuestions == 15 && maximum == 500 && negatives) {
+        boardUrl = url + "/hard";
     }
     else {
         leaderboard.style.display = "none";
@@ -578,11 +585,18 @@ async function submitScore() {
     name.disabled = true;
 
     standardOps = ["add", "subtract", "multiply", "divide"];
+    hardOps = ["add", "subtract", "multiply", "divide", "exponent", "root", "modulo"];
     if (check(operators, standardOps) && amountMode && maxQuestions == 10 && maximum == 100 && !negatives) {
         boardUrl = url + "/default";
     }
     else if ((check(operators, standardOps) && !amountMode && time == 60 && maximum == 100 && !negatives)) {
         boardUrl = url + "/default_time";
+    }
+    else if (check(operators, hardOps) && !amountMode && time == 120 && maximum == 500 && negatives) {
+        boardUrl = url + "/hard_time";
+    }
+    else if (check(operators, hardOps) && amountMode && maxQuestions == 15 && maximum == 500 && negatives) {
+        boardUrl = url + "/hard";
     }
     else {
         return;
@@ -756,5 +770,47 @@ selectLeaderboard.addEventListener("change", function () {
         document.getElementById("amountInput").style.display = "none";
         document.getElementById("timeInput").style.display = "table-row";
         amountMode = false;
+    }
+    else if (selectLeaderboard.value == "hardTimed") {
+        document.getElementById("timedMode").checked = true;
+        document.getElementById("timeLimit").value = 120;
+        document.getElementById("max").value = 500;
+        document.getElementById("negatives").checked = true;
+
+        document.getElementById("add").checked = true;
+        document.getElementById("sub").checked = true;
+        document.getElementById("mul").checked = true;
+        document.getElementById("div").checked = true;
+
+        document.getElementById("exp").checked = true;
+        document.getElementById("root").checked = true;
+        document.getElementById("mod").checked = true;
+        document.getElementById("knuth").checked = false;
+        document.getElementById("priemn").checked = false;
+
+        document.getElementById("amountInput").style.display = "none";
+        document.getElementById("timeInput").style.display = "table-row";
+        amountMode = false;
+    }
+    else if (selectLeaderboard.value == "hardAmount") {
+        document.getElementById("timedMode").checked = false;
+        document.getElementById("numQuestions").value = 15;
+        document.getElementById("max").value = 500;
+        document.getElementById("negatives").checked = true;
+
+        document.getElementById("add").checked = true;
+        document.getElementById("sub").checked = true;
+        document.getElementById("mul").checked = true;
+        document.getElementById("div").checked = true;
+
+        document.getElementById("exp").checked = true;
+        document.getElementById("root").checked = true;
+        document.getElementById("mod").checked = true;
+        document.getElementById("knuth").checked = false;
+        document.getElementById("priemn").checked = false;
+
+        document.getElementById("amountInput").style.display = "table-row";
+        document.getElementById("timeInput").style.display = "none";
+        amountMode = true;
     }
 });
