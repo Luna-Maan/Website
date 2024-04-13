@@ -89,8 +89,18 @@ a {
     margin: 0px;
 }
 
+#chatBox {
+    max-width: 100%;
+    /* Set a maximum width */
+    width: 100%;
+    /* Ensure the table fills its container */
+    table-layout: fixed;
+    /* Prevent automatic sizing based on content */
+}
+
 .chatMsg {
     padding-left: 8px;
+    word-wrap: break-word;
 }
 
 .top {

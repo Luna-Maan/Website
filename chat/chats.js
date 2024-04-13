@@ -85,7 +85,7 @@ async function loadHandler(event) {
             }
         }
 
-        box.innerHTML = completeMsg + "<br></td></tr>";
+        box.innerHTML = "<colgroup><col style='width: 35px;'><col style='max-width: 100%;'></colgroup>" + completeMsg + "<br></td></tr>";
 
         window.location.href = '#chatInput';
     } else {
@@ -170,3 +170,5 @@ function startLoop() {
 
 autoRefresh = document.getElementById("autoRefresh");
 autoRefresh.addEventListener("change", startLoop);
+
+
