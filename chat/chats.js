@@ -127,6 +127,8 @@ async function chatHandler(event) {
             time: a
         }
 
+        console.log(data);
+
         response = await fetch(url + password, {
             method: "POST",
             body: JSON.stringify(data)

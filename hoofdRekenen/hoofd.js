@@ -659,6 +659,13 @@ async function submitScore() {
 
     console.log(text);
 
+    let password = document.getElementById("password").value;
+    data = {
+        text: text,
+        password: password,
+        username: username
+    }
+
     leaderboard.style.display = "table";
     leaderboard.innerHTML = "<tr><th>Rank</th><th>Name</th><th>Score</th></tr>";
 
@@ -666,10 +673,11 @@ async function submitScore() {
         leaderboard.innerHTML += "<tr><td>" + (i + 1) + "</td><td>" + text[i].name + "</td><td>" + text[i].score + "</td></tr>";
     }
 
+    console.log(data);
     if (inserted) {
         response = await fetch(boardUrl, {
             method: "POST",
-            body: JSON.stringify(text)
+            body: JSON.stringify(data)
         });
     }
 }
