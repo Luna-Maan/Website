@@ -696,9 +696,18 @@ async function submitScore() {
     }
 }
 
+passwordInput = document.getElementById("password");
 usernameInput = document.getElementById("name");
+
 usernameInput.addEventListener("keyup", function (event) {
-    if (event.key === "Enter" && usernameInput.value != "") {
+    if (event.key === "Enter" && usernameInput.value != "" && passwordInput.value != "") {
+        submitScore();
+    }
+});
+
+
+passwordInput.addEventListener("keyup", function (event) {
+    if (event.key === "Enter" && usernameInput.value != "" && passwordInput.value != "") {
         submitScore();
     }
 });
