@@ -155,7 +155,17 @@ async function registerUser(username, personalPassword) {
         method: "POST",
         body: JSON.stringify(data)
     });
+
+    console.log(response);
 }
+
+let register = document.getElementById("register");
+register.addEventListener("click", function () {
+    let username = document.getElementById("name").value;
+    let personalPassword = document.getElementById("personalPassword").value;
+
+    registerUser(username, personalPassword);
+});
 
 
 function startLoop() {
