@@ -164,7 +164,7 @@ function startLoop() {
     if (autoRefresh) {
         loadHandler();
 
-        setTimeout(startLoop, 1000);
+        setTimeout(startLoop, 2000);
     }
 }
 
