@@ -43,16 +43,37 @@
     </nav>
     <header>
         <h1>groupchat</h1>
-        <form id="form">
-            <input type="password" id="password" placeholder="password" autocomplete="current-password" />
-        </form>
+
     </header>
     <main>
         <div class="container">
             <div class="project">
-                Name: <input type="text" id="name" /> <br>
-                Personal password: <input type="password" id="personalPassword" placeholder="personal password" /> <br>
-                <button type="button" id="register">Register</button> <br><br>
+                <table>
+                    <tr>
+                        <td>Groupchat password:</td>
+                        <td>
+                            <form id="form">
+                                <input type="password" id="password" placeholder="password"
+                                    autocomplete="current-password" />
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Name: </td>
+                        <td><input type="text" id="name" /></td>
+                    </tr>
+                    <tr>
+                        <td>Personal password: </td>
+                        <td><input type="password" id="personalPassword" placeholder="personal password" /></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><button type="button" id="register">Register</button></td>
+                    </tr>
+                </table>
+                Fill in everything to log in. You only need to click 'register' if you want to register a new name. <br>
+
+                <br><br><br>
                 Number of messages: <input type="number" id="numMessages" value="30" /> <br><br>
                 <h2 class="noMargin">Chat:</h2>
                 <table id="chatBox"></table>
