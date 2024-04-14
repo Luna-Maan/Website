@@ -17,6 +17,7 @@ maximum = 0;
 negatives = false;
 score = 0;
 
+//MARK: loadHandler
 function loadHandler() {
     let add = document.getElementById("add").checked;
     let subtract = document.getElementById("sub").checked;
@@ -118,6 +119,7 @@ window.addEventListener("load", loadHandler);
 start = document.getElementById("start");
 start.addEventListener("click", loadHandler);
 
+//MARK: nextQuestion
 function nextQuestion() {
     console.log("nextQuestion")
     let question = document.getElementById("question");
@@ -160,7 +162,7 @@ function nextQuestion() {
     questionNum++;
 }
 
-/* question types */
+//MARK: functions that generate questions
 function addQuestion() {
     let max = maximum + 1;
 
@@ -437,6 +439,7 @@ function calculateDeterminant(matrix) {
     }
 }
 
+//MARK: checkAnswer
 async function checkAnswer() {
     if (questionNum == 1) {
         startTime = new Date();
@@ -482,6 +485,7 @@ async function checkAnswer() {
     }
 }
 
+//MARK: timeEndQuiz
 function timeEndQuiz() {
     modal = document.getElementById("modal");
     title = document.getElementById("modal-title");
@@ -733,6 +737,7 @@ detectChange.addEventListener("change", function () {
     document.getElementById("presets").value = "-";
 });
 
+//MARK: mode selection
 selectLeaderboard = document.getElementById("presets");
 selectLeaderboard.addEventListener("change", function () {
     if (selectLeaderboard.value == "-") {
