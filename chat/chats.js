@@ -1,4 +1,4 @@
-url = "wss://tutorial-worker.pvanoostveenneo2.workers.dev/wschat"
+url = "wss://tutorial-worker.pvanoostveenneo2.workers.dev/wschat"  // "ws://localhost:8080/wschat"
 let hashPass = "1a069ff25f963e4763031a086c99606e842a6d5e3ad79f2a42ac2911692c9692";
 
 let ws;
@@ -43,6 +43,7 @@ async function loadChat(data) {
 
     text = JSON.parse(data);
 
+
     console.log(text);
     console.log(text.length);
 
@@ -52,11 +53,13 @@ async function loadChat(data) {
 
     let completeMsg = "<tr><td>";
     for (let i = text.length - msgNum; i < text.length; i++) {
+
+
         if (text[i].time == undefined) {
             text[i].time = 0;
         }
 
-        let time = new Date(text[i].time);
+        let time = new Date(Math.floor(text[i].time));
         date = time.toLocaleDateString() + " " + time.getHours() + ":" + time.getMinutes().toString().padStart(2, "0");
 
         text[i].name = (text[i].name).replace(/</g, "&lt;").replace(/>/g, "&gt;") // prevent xss
@@ -112,10 +115,17 @@ async function socket() {
 
     ws.onmessage = function (event) {
         console.log(event.data);
+
         loadChat(event.data);
     }
 
+    ws.onerror = function (event) {
+        event.preventDefault();
+        console.log("Error");
+    }
+
     ws.onclose = function (event) {
+        event.preventDefault();
         console.log("Disconnected");
     }
 }
