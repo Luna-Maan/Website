@@ -149,6 +149,55 @@ table.leaderboard td {
     margin-bottom: 5px;
 }
 
+.boon_table {
+    width: 100%;
+    table-layout: auto;
+    border: 1px solid var(--text-color);
+    border-collapse: collapse;
+    margin-top: 0px;
+}
+
+.boon_table th {
+    background-color: var(--primary-color);
+    color: var(--title-color);
+    border: 3px solid var(--text-color);
+    padding: 8px;
+}
+
+.boon_god {
+    font-weight: bold;
+    font-size: large;
+    border: 3px solid var(--text-color);
+}
+
+.boon_req {
+    border: 1px solid var(--text-color);
+    padding: 8px;
+    cursor: pointer;
+    padding: 5px;
+    margin: 2px;
+}
+
+.met {
+    background-color: var(--navSelected-color);
+}
+
+
+.low {
+    background-color: #ff4d4d;
+    border: 3px solid var(--text-color);
+}
+
+.high {
+    background-color: #3c9145;
+    border: 3px solid var(--text-color);
+}
+
+.medium {
+    background-color: #fcde30;
+    border: 3px solid var(--text-color);
+}
+
 /* navbar */
 #nav {
     transition: top 0.45s;
