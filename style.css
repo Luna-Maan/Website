@@ -168,7 +168,7 @@ table.leaderboard td {
     font-weight: bold;
     font-size: large;
     border: 3px solid var(--text-color);
-}
+} 
 
 .boon_req {
     border: 1px solid var(--text-color);
