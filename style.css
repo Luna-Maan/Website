@@ -293,6 +293,19 @@ nav {
     overflow: hidden;
 }
 
+.dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: var(--navSelected-color);
+}
+
+#searchField {
+    margin-bottom: 5px;
+}
+
 #themeCustomizer {
     float: right;
 }

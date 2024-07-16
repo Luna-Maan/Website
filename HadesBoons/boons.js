@@ -1,5 +1,105 @@
 let strike_boon = null;
 
+const items = [
+    'Divine Vengeance',
+    'Lightning Lance',
+    'Slippery Slope',
+
+    'Flame Strike',
+    'Flutter Strike',
+    'Heaven Strike',
+    'Ice Strike',
+    'Nova Srtike',
+    'Sworn Strike',
+    'Volcanic Strike',
+    'Wave Strike',
+    'Flame Flourish',
+    'Flutter Flourish',
+    'Heaven Flourish',
+    'Ice Flourish',
+    'Nova Flourish',
+    'Sworn Flourish',
+    'Volcanic Flourish',
+    'Wave Flourish',
+    'Anvil Ring',
+    'Arctic Ring',
+    'Engagement Ring',
+    'Tidal Ring',
+    'Rapture Ring',
+    'Smolder Ring',
+    'Storm Ring',
+    'Blinding Sprint',
+    'Breaker Sprint',
+    'Frigid Sprint',
+    'Nexus Sprint',
+    'Passion Rush',
+    'Smithy Sprint',
+    'Soot Sprint',
+    'Thunder Sprint',
+    'Born Gain',
+    'Fixed Gain',
+    'Fluid Gain',
+    'Glamour Gain',
+    'Hearth Gain',
+    'Ionic Gain',
+    'Lucid Gain',
+    'Tranquil Gain',
+];
+
+const strike_list = [
+    'Flame Strike',
+    'Flutter Strike',
+    'Heaven Strike',
+    'Ice Strike',
+    'Nova Srtike',
+    'Sworn Strike',
+    'Volcanic Strike',
+    'Wave Strike',
+]
+
+const flourish_list = [
+    'Flame Flourish',
+    'Flutter Flourish',
+    'Heaven Flourish',
+    'Ice Flourish',
+    'Nova Flourish',
+    'Sworn Flourish',
+    'Volcanic Flourish',
+    'Wave Flourish',
+]
+
+const ring_list = [
+    'Anvil Ring',
+    'Arctic Ring',
+    'Engagement Ring',
+    'Tidal Ring',
+    'Rapture Ring',
+    'Smolder Ring',
+    'Storm Ring',
+]
+
+const sprint_list = [
+    'Blinding Sprint',
+    'Breaker Sprint',
+    'Frigid Sprint',
+    'Nexus Sprint',
+    'Passion Rush',
+    'Smithy Sprint',
+    'Soot Sprint',
+    'Thunder Sprint',
+]
+
+const gain_list = [
+    'Born Gain',
+    'Fixed Gain',
+    'Fluid Gain',
+    'Glamour Gain',
+    'Hearth Gain',
+    'Ionic Gain',
+    'Lucid Gain',
+    'Tranquil Gain',
+]
+
 // Sample data structure with multiple options for each requirement
 const rows = [
     {
@@ -255,6 +355,65 @@ dropdowns['gain'].addEventListener('change', () => {
     console.log(gain.value);
     gottenRequirements["gain"] = gain.value;
     renderRows();
+});
+
+const searchField = document.getElementById('searchField');
+const dropdown = document.getElementById('dropdown');
+
+searchField.addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    dropdown.innerHTML = '';
+    if (query) {
+        const filteredItems = items.filter(item => item.toLowerCase().includes(query));
+        filteredItems.forEach(item => {
+            const div = document.createElement('div');
+            div.classList.add('dropdown-item');
+            div.textContent = item;
+            div.addEventListener('click', function () {
+                if (strike_list.includes(item)) {
+                    gottenRequirements["strike"] = item;
+                    dropdowns['strike'].value = item;
+                }
+                else if (flourish_list.includes(item)) {
+                    gottenRequirements["flourish"] = item;
+                    dropdowns['flourish'].value = item;
+                }
+                else if (ring_list.includes(item)) {
+                    gottenRequirements["ring"] = item;
+                    dropdowns['ring'].value = item;
+                }
+                else if (sprint_list.includes(item)) {
+                    gottenRequirements["sprint"] = item;
+                    dropdowns['sprint'].value = item;
+                }
+                else if (gain_list.includes(item)) {
+                    gottenRequirements["gain"] = item;
+                    dropdowns['gain'].value = item;
+                }
+                else if (gottenRequirements["others"].includes(item)) {
+                    gottenRequirements["others"] = gottenRequirements["others"].filter(req => req !== item);
+                }
+                else {
+                    gottenRequirements["others"].push(item);
+                }
+
+                searchField.value = "";
+                dropdown.innerHTML = '';
+                dropdown.style.display = 'none';
+                renderRows();
+            });
+            dropdown.appendChild(div);
+        });
+        dropdown.style.display = 'block';
+    } else {
+        dropdown.style.display = 'none';
+    }
+});
+
+document.addEventListener('click', function (e) {
+    if (!e.target.closest('.autocomplete-container')) {
+        dropdown.style.display = 'none';
+    }
 });
 
 // Initial render
