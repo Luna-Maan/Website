@@ -1,33 +1,100 @@
+let strike_boon = null;
+
 // Sample data structure with multiple options for each requirement
 const rows = [
     {
-        id: 1, gods: ['zeus', 'hera'], subrows: [
-            ['req1a', 'req2a'],
-            ['req3a'],
+        id: "Killer Current", gods: ['Poseidon', 'Zeus'], subrows: [
+            {
+                strike: '',
+                flourish: '',
+                ring: '',
+                sprint: '',
+                gain: '',
+                other1: 'Slippery Slope',
+                other2: '',
+                other3: '',
+            },
+            {
+                strike: 'Heaven Strike',
+                flourish: 'Heaven Flourish',
+                ring: 'Storm Ring',
+                sprint: 'Thunder Sprint',
+                gain: '',
+                other1: 'Divine Vengeance',
+                other2: 'Lightning Lance',
+                other3: '',
+            },
         ]
     },
     {
-        id: 2, gods: ['zeus', 'hera'], subrows: [
-            ['volcanic', 'volcanic', 'Arctic Ring', 'Frigid Sprint', 'Tranquil Gain', 'Cold Storage', 'Rare Crop', 'Snow Queen'],
-            ['req4a']
+        id: "Scalding Vapor", gods: ['Hestia', 'Poseidon'], subrows: [
+            {
+                strike: 'Flame Strike',
+                flourish: 'Flame Flourish',
+                ring: 'Smolder Ring',
+                sprint: '',
+                gain: '',
+                other1: 'Controlled Burn',
+                other2: 'Glowing Coal',
+                other3: 'Highly Flammable',
+            },
+            {
+                strike: '',
+                flourish: '',
+                ring: '',
+                sprint: '',
+                gain: '',
+                other1: 'Slippery Slope',
+                other2: '',
+                other3: '',
+            }
         ]
     },
     {
-        id: 3, gods: ['zeus', 'hera'], subrows: [
-            ['req1a'],
-            ['req4a', 'req5a']
+        id: "Spiteful Strength", gods: ['Hephaestus', 'Hera'], subrows: [
+            {
+                strike: '',
+                flourish: 'Furnace Blast',
+                ring: 'Grand Caldera',
+                sprint: 'Heavy Metal',
+                gain: 'Molten Touch',
+                other1: 'Mint Condition',
+                other2: 'Trusty Shield',
+                other3: 'Uncanny Fortitude',
+            },
+            {
+                strike: '',
+                flourish: '',
+                ring: '',
+                sprint: 'Blood Line',
+                gain: 'Dying Wish',
+                other1: 'Family Trade',
+                other2: 'Hereditary Bane',
+                other3: 'Nasty Comeback',
+            }
         ]
-    },
+    }
     // Add more rows as needed
 ];
 
-let gottenRequirements = [];
+let gottenRequirements = {
+    strike: null,
+    flourish: null,
+    ring: null,
+    sprint: null,
+    gain: null,
+    others: [],
+}
 
 function calculatePercentageMet(row) {
     const totalSubrows = row.subrows.length;
-    const metSubrows = row.subrows.filter(subrow =>
-        subrow.some(req => gottenRequirements.includes(req)))
-        .length;
+    let metSubrows = 0;
+    for (let i = 0; i < totalSubrows; i++) {
+        const subrow = row.subrows[i];
+        if (subrow.strike === gottenRequirements.strike || gottenRequirements.flourish === subrow.flourish || gottenRequirements.ring === subrow.ring || gottenRequirements.sprint === subrow.sprint || gottenRequirements.gain === subrow.gain || gottenRequirements.others.includes(subrow.strike) || gottenRequirements.others.includes(subrow.flourish) || gottenRequirements.others.includes(subrow.ring) || gottenRequirements.others.includes(subrow.sprint) || gottenRequirements.others.includes(subrow.gain) || gottenRequirements.others.includes(subrow.other1) || gottenRequirements.others.includes(subrow.other2) || gottenRequirements.others.includes(subrow.other3)) {
+            metSubrows += 1;
+        }
+    }
     return (metSubrows / totalSubrows) * 100;
 }
 
@@ -38,6 +105,9 @@ function getRowClass(percentageMet) {
 }
 
 function renderRows() {
+    const list = document.getElementById('other_list');
+    list.innerHTML = gottenRequirements.others.map(req => `<li>${req}</li>`).join('');
+
     const container = document.getElementById('rows-container');
     container.innerHTML = '';
 
@@ -59,42 +129,133 @@ function renderRows() {
                 const idCell = document.createElement('td');
                 idCell.className = rowClass;
                 idCell.rowSpan = row.subrows.length;
-                idCell.textContent = `Row ${row.id}`;
+                idCell.textContent = `${row.id}`;
                 rowElement.appendChild(idCell);
             }
 
             const godCell = document.createElement('td');
-            godCell.className = 'boon_god';
+            if (index === 0) {
+                godCell.className = 'boon_god_top';
+            }
+            else {
+                godCell.className = 'boon_god';
+            }
             godCell.textContent = row.gods[index];
             rowElement.appendChild(godCell);
 
-            subrow.forEach(req => {
-                const reqCell = document.createElement('td');
-                reqCell.className = 'boon_req';
-
-                if (gottenRequirements.includes(req)) {
-                    reqCell.classList.add('met');
-                }
-                reqCell.textContent = req;
-                reqCell.addEventListener('click', () => handleRequirementClick(req));
-
-                rowElement.appendChild(reqCell);
-            });
+            renderCell(subrow, index, rowElement, 'strike');
+            renderCell(subrow, index, rowElement, 'flourish');
+            renderCell(subrow, index, rowElement, 'ring');
+            renderCell(subrow, index, rowElement, 'sprint');
+            renderCell(subrow, index, rowElement, 'gain');
+            renderCell(subrow, index, rowElement, 'other1');
+            renderCell(subrow, index, rowElement, 'other2');
+            renderCell(subrow, index, rowElement, 'other3');
 
             container.appendChild(rowElement);
         });
     });
 }
 
-function handleRequirementClick(option) {
-    if (!gottenRequirements.includes(option)) {
-        gottenRequirements.push(option);
+function renderCell(subrow, index, rowElement, boon_type) {
+    const reqCell = document.createElement('td');
+    if (index === 0) {
+        reqCell.className = 'boon_req_top';
     }
     else {
-        gottenRequirements.pop(option);
+        reqCell.className = 'boon_req';
     }
+    if (subrow[boon_type] !== '') {
+        if (gottenRequirements[boon_type] === subrow[boon_type]) {
+            reqCell.classList.add('met');
+        }
+        else if (gottenRequirements["others"].includes(subrow[boon_type])) {
+            reqCell.classList.add('met');
+        }
+        reqCell.textContent = subrow[boon_type];
+        reqCell.addEventListener('click', () => handleRequirementClick(subrow[boon_type], boon_type));
+    }
+    else {
+        reqCell.textContent = "";
+    }
+    rowElement.appendChild(reqCell);
+}
+
+function handleRequirementClick(option, boon_type) {
+    console.log(option, boon_type);
+    console.log(gottenRequirements);
+    if (gottenRequirements[boon_type] === option) {
+        gottenRequirements[boon_type] = null;
+        if (boon_type !== "other1" && boon_type !== "other2" && boon_type !== "other3") {
+            dropdowns[boon_type].value = '0';
+        }
+    }
+    else if (gottenRequirements["others"].includes(option)) {
+        gottenRequirements["others"] = gottenRequirements["others"].filter(req => req !== option);
+    }
+    else {
+        if (boon_type !== "other1" && boon_type !== "other2" && boon_type !== "other3") {
+            if (hasOption(dropdowns[boon_type], option)) {
+                gottenRequirements[boon_type] = option;
+                dropdowns[boon_type].value = option;
+            }
+            else {
+                gottenRequirements["others"].push(option);
+            }
+        }
+        else {
+            gottenRequirements["others"].push(option);
+        }
+    }
+
     renderRows();
 }
+
+function hasOption(select, valueToCheck) {
+    for (var i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === valueToCheck) {
+            return true;
+        }
+    }
+    return false;
+}
+
+const dropdowns = []
+
+dropdowns['strike'] = document.getElementById('strike');
+dropdowns['strike'].addEventListener('change', () => {
+    console.log(strike.value);
+    gottenRequirements["strike"] = strike.value;
+    renderRows();
+});
+
+dropdowns['flourish'] = document.getElementById('flourish');
+dropdowns['flourish'].addEventListener('change', () => {
+    console.log(flourish.value);
+    gottenRequirements["flourish"] = flourish.value;
+    renderRows();
+});
+
+dropdowns['ring'] = document.getElementById('ring');
+dropdowns['ring'].addEventListener('change', () => {
+    console.log(ring.value);
+    gottenRequirements["ring"] = ring.value;
+    renderRows();
+});
+
+dropdowns['sprint'] = document.getElementById('sprint');
+dropdowns['sprint'].addEventListener('change', () => {
+    console.log(sprint.value);
+    gottenRequirements["sprint"] = sprint.value;
+    renderRows();
+});
+
+dropdowns['gain'] = document.getElementById('gain');
+dropdowns['gain'].addEventListener('change', () => {
+    console.log(gain.value);
+    gottenRequirements["gain"] = gain.value;
+    renderRows();
+});
 
 // Initial render
 renderRows();

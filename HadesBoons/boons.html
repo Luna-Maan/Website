@@ -34,9 +34,11 @@
         <h1>Duo and Legendary boon tool for Hades II</h1>
     </header>
     <main>
-        <div class="container">
+        <div class="container" id="boon_container">
             <div class="project">
                 <h2>boon table</h2>
+                <h3 class="list">Other boons:</h3>
+                <p id="other_list"></p>
                 <table class="boon_table">
                     <thead>
                         <tr>
@@ -47,6 +49,46 @@
                             <th>Cast (Ring)</th>
                             <th>Sprint</th>
                             <th>Mana Gain</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>
+                                <select class="boon_select" id="strike">
+                                    <option value="0">None</option>
+                                    <option value="Flame Strike">Flame</option>
+                                    <option value="Heaven Strike">Heaven</option>
+                                </select>
+                            </th>
+                            <th>
+                                <select class="boon_select" id="flourish">
+                                    <option value="0">None</option>
+                                    <option value="Flame Flourish">Flame</option>
+                                    <option value="Heaven Flourish">Heaven</option>
+                                </select>
+                            </th>
+                            <th>
+                                <select class="boon_select" id="ring">
+                                    <option value="0">None</option>
+                                    <option value="Storm Ring">Storm</option>
+                                    <option value="Smolder Ring">Smolder</option>
+                                </select>
+                            </th>
+                            <th>
+                                <select class="boon_select" id="sprint">
+                                    <option value="0">None</option>
+                                    <option value="Thunder Sprint">Thunder</option>
+                                </select>
+                            </th>
+                            <th>
+                                <select class="boon_select" id="gain">
+                                    <option value="0">None</option>
+                                    <option value="1">Aphrodite</option>
+                                </select>
+                            </th>
                             <th></th>
                             <th></th>
                             <th></th>
