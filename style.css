@@ -204,6 +204,46 @@ table.leaderboard td {
     margin: 2px;
 }
 
+#Poseidon {
+    background-color: #0000ff;
+    color: white;
+}
+
+#Aphrodite {
+    background-color: #c63cd0;
+    color: white;
+}
+
+#Apollo {
+    background-color: #ffcc00;
+    color: black;
+}
+
+#Demeter {
+    background-color: #2c98d7;
+    color: white;
+}
+
+#Hephaestus {
+    background-color: #ff6600;
+    color: white;
+}
+
+#Hestia {
+    background-color: #ff3333;
+    color: white;
+}
+
+#Hera {
+    background-color: #445aef;
+    color: white;
+}
+
+#Zeus {
+    background-color: #ddda23;
+    color: black;
+}
+
 .met {
     background-color: var(--navSelected-color);
 }
