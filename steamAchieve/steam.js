@@ -1,6 +1,6 @@
 url = "https://tutorial-worker.pvanoostveenneo2.workers.dev/steam"
-appId = '504230';
-steamId = '76561198304850577';
+appId = '';
+steamId = '';
 
 player = '';
 
@@ -91,10 +91,15 @@ function displayRow(achievement) {
 }
 
 async function getSteamData() {
+
+
+    appId = document.getElementById('appId').value;
+    steamId = document.getElementById('steamId').value;
+
     response = await fetchGameAchievements(appId)
     player = await fetchPlayerAchievements(appId, steamId);
-
     displayGameAchievements(response);
 }
 
-getSteamData();
+start = document.getElementById('getAchievements');
+start.addEventListener('click', getSteamData);
