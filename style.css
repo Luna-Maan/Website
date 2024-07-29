@@ -535,7 +535,7 @@ label {
 
 label:has(>input[type="checkbox"]:checked),
 label:has(>input[type="radio"]:checked) {
-    background-color: var(--navSelected-color);
+    background-color: var(--title-color);
     color: var(--title-color);
 }
 

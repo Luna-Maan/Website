@@ -8,15 +8,28 @@
 </head>
 
 <body>
-    <input type="text" id="steamId" placeholder="Steam ID (account nr.)" />
-    <input type="text" id="appId" placeholder="App ID" />
-    <button id="getAchievements">Get Achievements</button>
+    <nav id="nav">
+        <div class="navbar" id="navbar">
+            <a class="white navLeft" href="../index.html">Home</a>
+            <a class="active" href="../steamAchieve/steam.html">Achievements</a>
+            <a class="white" href="../chat/chats.html">Chat</a>
+            <a class="white" href="../HadesBoons/boons.html">Hades 2</a>
+            <a class="white" href="../hoofdRekenen/hoofd.html">Mental Math</a>
+        </div>
+    </nav>
+    <main>
+        <h1>Steam Achievements</h1>
+        <input type="text" id="steamId" placeholder="Steam ID (account nr.)" />
+        <input type="text" id="appId" placeholder="App ID" />
+        <button id="getAchievements">Get Achievements</button>
 
-    <h2>Tracked Achievements</h2>
-    <table id="trackedAchievementsList">
-    </table>
+        <div id="category-section">
+            <input type="text" id="category-name" placeholder="Category Name">
+            <button id="categorizeButton">Categorize Selected Achievements</button>
+            <button id="uncategorizeButton" style="background-color: darkred;">Remove Selected from Category</button>
+        </div>
 
-
-    <h2>Other Achievements</h2>
-    <table id="otherAchievementsList"></table>
+        <div id="categorizedAchievements">
+        </div>
+    </main>
 </body>

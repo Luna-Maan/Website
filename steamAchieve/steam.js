@@ -2,7 +2,9 @@ url = "https://tutorial-worker.pvanoostveenneo2.workers.dev/steam"
 appId = '';
 steamId = '';
 
-player = '';
+game = [];
+player = [];
+custom = [];
 
 async function fetchGameAchievements(appId) {
     let response = await fetch(url + '/achievements', {
@@ -22,54 +24,112 @@ async function fetchPlayerAchievements(appId, steamId) {
     return response;
 }
 
-function trackAchievement(name, response) {
-    console.log(name);
-    let savedAchievements = JSON.parse(localStorage.getItem('savedAchievements')) || [];
-    if (!savedAchievements.includes(name)) {
-        savedAchievements.push(name);
-        localStorage.setItem('savedAchievements', JSON.stringify(savedAchievements));
-        displayGameAchievements(response);
+function categorizeAchievements() {
+    const category = document.getElementById('category-name').value;
+    if (!category) {
+        alert('Please enter a category name.');
+        return;
     }
-}
 
-async function removeAchievement(name, response) {
-    let savedAchievements = JSON.parse(localStorage.getItem('savedAchievements')) || [];
-    if (savedAchievements.includes(name)) {
-        savedAchievements = savedAchievements.filter(achievement => achievement !== name);
-        localStorage.setItem('savedAchievements', JSON.stringify(savedAchievements));
-        displayGameAchievements(response);
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+    if (checkboxes.length === 0) {
+        alert('Please select achievements to categorize.');
+        return;
     }
-}
 
-function displayGameAchievements(response) {
-    const trackedAchievementsList = document.getElementById('trackedAchievementsList');
-    trackedAchievementsList.innerHTML = '';
-    const gameAchievementsList = document.getElementById('otherAchievementsList');
-    gameAchievementsList.innerHTML = '';
+    if (!custom[category]) {
+        custom[category] = [];
+    }
 
-    response.forEach(achievement => {
-        let row = displayRow(achievement);
-
-        if (JSON.parse(localStorage.getItem('savedAchievements')).includes(achievement.displayName)) {
-            row.addEventListener('click', () => removeAchievement(achievement.displayName, response));
-            trackedAchievementsList.appendChild(row);
+    checkboxes.forEach(checkbox => {
+        if (!custom[category].includes(checkbox.value)) {
+            custom[category].push(checkbox.value);
         }
-        else {
-            row.addEventListener('click', () => trackAchievement(achievement.displayName, response));
-            gameAchievementsList.appendChild(row);
-        }
+        checkbox.checked = false;
     });
+
+    localStorage.setItem(appId, JSON.stringify(custom));
+    displayGameAchievements();
 }
 
-function displayRow(achievement) {
+function uncategorizeAchievements() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+    if (checkboxes.length === 0) {
+        alert('Please select achievements to uncategorize.');
+        return;
+    }
+
+    checkboxes.forEach(checkbox => {
+        custom[checkbox.name] = custom[checkbox.name].filter(achievement => achievement !== checkbox.value);
+        checkbox.checked = false;
+    });
+
+    localStorage.setItem(appId, JSON.stringify(custom));
+    displayGameAchievements();
+}
+
+async function removeAchievement(name) {
+    if (savedAchievements.includes(name)) {
+        custom.savedAchievements = custom.savedAchievements.filter(achievement => achievement !== name);
+        localStorage.setItem(appId, JSON.stringify(custom.savedAchievements));
+        displayGameAchievements();
+    }
+}
+
+function displayGameAchievements() {
+    const categorizedAchievements = document.getElementById('categorizedAchievements');
+    categorizedAchievements.innerHTML = '';
+
+    for (const [category, achievements] of Object.entries(custom)) {
+        let categoryHeader = document.createElement('h2');
+        categoryHeader.textContent = category;
+        categorizedAchievements.appendChild(categoryHeader);
+
+        let table = document.createElement('table');
+        achievements.forEach(achievementName => {
+            achievement = game.find(gameAchievement => gameAchievement.displayName === achievementName);
+            let row = displayRow(achievement, category);
+            table.appendChild(row);
+        });
+        categorizedAchievements.appendChild(table);
+    }
+
+    uncategorized = game.filter(achievement => {
+        return !Object.values(custom).flat().includes(achievement.displayName);
+    });
+
+    let categoryHeader = document.createElement('h2');
+    categoryHeader.textContent = 'Uncategorized';
+    categorizedAchievements.appendChild(categoryHeader);
+
+    let table = document.createElement('table');
+    uncategorized.forEach(achievement => {
+        let row = displayRow(achievement, '');
+        table.appendChild(row);
+    });
+    categorizedAchievements.appendChild(table);
+}
+
+function displayRow(achievement, category) {
+    console.log(achievement);
     let row = document.createElement('tr');
 
     let listItem = document.createElement('td');
+    const label = document.createElement('label');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    if (category) {
+        checkbox.name = category
+    }
+    checkbox.value = achievement.displayName;
+    label.appendChild(checkbox);
+    listItem.appendChild(label);
+    row.appendChild(listItem);
+
+    listItem = document.createElement('td');
     const image = document.createElement('img');
 
-    const bool = player.some(playerAchievement => playerAchievement.apiname === achievement.name && playerAchievement.achieved === 1);
-
-    if (bool) {
+    if (player.some(playerAchievement => playerAchievement.apiname === achievement.name && playerAchievement.achieved === 1)) {
         image.src = achievement.icon;
     }
     else {
@@ -91,15 +151,35 @@ function displayRow(achievement) {
 }
 
 async function getSteamData() {
-
-
     appId = document.getElementById('appId').value;
     steamId = document.getElementById('steamId').value;
 
-    response = await fetchGameAchievements(appId)
+    if (appId === '' || steamId === '') {
+        alert('Please fill in both fields');
+        return;
+    }
+
+    if (localStorage.getItem(appId === null)) {
+        localStorage.setItem(appId, JSON.stringify([]));
+    }
+
+    game = await fetchGameAchievements(appId)
     player = await fetchPlayerAchievements(appId, steamId);
-    displayGameAchievements(response);
+    custom = JSON.parse(localStorage.getItem(appId));
+    if (!custom) {
+        custom = {};
+    }
+    if (!custom.savedAchievements) {
+        custom.savedAchievements = [];
+    }
+    displayGameAchievements();
 }
 
 start = document.getElementById('getAchievements');
 start.addEventListener('click', getSteamData);
+
+categorize = document.getElementById('categorizeButton');
+categorize.addEventListener('click', categorizeAchievements);
+
+uncategorize = document.getElementById('uncategorizeButton');
+uncategorize.addEventListener('click', uncategorizeAchievements);
