@@ -61,6 +61,9 @@ function uncategorizeAchievements() {
 
     checkboxes.forEach(checkbox => {
         custom[checkbox.name] = custom[checkbox.name].filter(achievement => achievement !== checkbox.value);
+        if (custom[checkbox.name].length === 0) {
+            delete custom[checkbox.name];
+        }
         checkbox.checked = false;
     });
 
@@ -68,24 +71,23 @@ function uncategorizeAchievements() {
     displayGameAchievements();
 }
 
-async function removeAchievement(name) {
-    if (savedAchievements.includes(name)) {
-        custom.savedAchievements = custom.savedAchievements.filter(achievement => achievement !== name);
-        localStorage.setItem(appId, JSON.stringify(custom.savedAchievements));
-        displayGameAchievements();
-    }
-}
-
 function displayGameAchievements() {
     const categorizedAchievements = document.getElementById('categorizedAchievements');
     categorizedAchievements.innerHTML = '';
 
     for (const [category, achievements] of Object.entries(custom)) {
+        let table = document.createElement('table');
+
+
+        let row = document.createElement('tr');
+        let cell = document.createElement('td');
         let categoryHeader = document.createElement('h2');
         categoryHeader.textContent = category;
-        categorizedAchievements.appendChild(categoryHeader);
+        cell.setAttribute('colspan', '3');
+        cell.appendChild(categoryHeader);
+        row.appendChild(cell);
+        table.appendChild(row);
 
-        let table = document.createElement('table');
         achievements.forEach(achievementName => {
             achievement = game.find(gameAchievement => gameAchievement.displayName === achievementName);
             let row = displayRow(achievement, category);
@@ -98,11 +100,16 @@ function displayGameAchievements() {
         return !Object.values(custom).flat().includes(achievement.displayName);
     });
 
+    let table = document.createElement('table');
+    let row = document.createElement('tr');
+    let cell = document.createElement('td');
     let categoryHeader = document.createElement('h2');
     categoryHeader.textContent = 'Uncategorized';
-    categorizedAchievements.appendChild(categoryHeader);
+    cell.setAttribute('colspan', '3');
+    cell.appendChild(categoryHeader);
+    row.appendChild(cell);
+    table.appendChild(row);
 
-    let table = document.createElement('table');
     uncategorized.forEach(achievement => {
         let row = displayRow(achievement, '');
         table.appendChild(row);
@@ -168,9 +175,6 @@ async function getSteamData() {
     custom = JSON.parse(localStorage.getItem(appId));
     if (!custom) {
         custom = {};
-    }
-    if (!custom.savedAchievements) {
-        custom.savedAchievements = [];
     }
     displayGameAchievements();
 }
