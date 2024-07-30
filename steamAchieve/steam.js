@@ -16,12 +16,38 @@ async function fetchGameAchievements(appId) {
 }
 
 async function fetchPlayerAchievements(appId, steamId) {
+    console.log(appId);
+    console.log(steamId);
     let response = await fetch(url + '/player', {
         method: 'POST',
         body: JSON.stringify({ appId: appId, steamId: steamId }),
     });
     response = await response.json();
     return response;
+}
+
+async function fetchSteamId(name) {
+    let response = await fetch(url + '/fetchSteamId', {
+        method: 'POST',
+        body: JSON.stringify({ url: name }),
+    });
+    response = await response.json();
+    console.log(response);
+    return response;
+}
+
+async function fetchGameId(name) {
+    let response = await fetch(url + '/fetchGameId', {
+        method: 'POST',
+        body: JSON.stringify({ gameName: name }),
+    });
+    response = await response.json();
+    gameIDs = response.applist.apps.filter(app => app.name.toLowerCase() === name.toLowerCase());
+    if (gameIDs.length === 0) {
+        gameIDs = response.applist.apps.filter(app => app.name.toLowerCase().includes(name.toLowerCase()));
+    }
+    console.log(gameIDs);
+    return gameIDs;
 }
 
 function categorizeAchievements() {
@@ -80,10 +106,10 @@ function displayGameAchievements() {
 
 
         let row = document.createElement('tr');
-        let cell = document.createElement('td');
+        let cell = document.createElement('th');
         let categoryHeader = document.createElement('h2');
         categoryHeader.textContent = category;
-        cell.setAttribute('colspan', '3');
+        cell.setAttribute('colspan', '4');
         cell.appendChild(categoryHeader);
         row.appendChild(cell);
         table.appendChild(row);
@@ -100,28 +126,68 @@ function displayGameAchievements() {
         return !Object.values(custom).flat().includes(achievement.displayName);
     });
 
-    let table = document.createElement('table');
-    let row = document.createElement('tr');
-    let cell = document.createElement('td');
-    let categoryHeader = document.createElement('h2');
-    categoryHeader.textContent = 'Uncategorized';
-    cell.setAttribute('colspan', '3');
-    cell.appendChild(categoryHeader);
-    row.appendChild(cell);
-    table.appendChild(row);
+    let split = document.getElementById('divideAchieved').checked;
 
-    uncategorized.forEach(achievement => {
-        let row = displayRow(achievement, '');
+    if (split) {
+        let achieved = uncategorized.filter(achievement => player.some(playerAchievement => playerAchievement.apiname === achievement.name && playerAchievement.achieved === 1));
+        let unachieved = uncategorized.filter(achievement => !player.some(playerAchievement => playerAchievement.apiname === achievement.name && playerAchievement.achieved === 1));
+
+        let table = document.createElement('table');
+        let row = document.createElement('tr');
+        let cell = document.createElement('th');
+        let categoryHeader = document.createElement('h2');
+        categoryHeader.textContent = 'Unachieved Uncategorized';
+        cell.setAttribute('colspan', '4');
+        cell.appendChild(categoryHeader);
+        row.appendChild(cell);
         table.appendChild(row);
-    });
-    categorizedAchievements.appendChild(table);
+
+        unachieved.forEach(achievement => {
+            let row = displayRow(achievement, '');
+            table.appendChild(row);
+        });
+        categorizedAchievements.appendChild(table);
+
+        table = document.createElement('table');
+        row = document.createElement('tr');
+        cell = document.createElement('th');
+        categoryHeader = document.createElement('h2');
+        categoryHeader.textContent = 'Achieved Uncategorized';
+        cell.setAttribute('colspan', '4');
+        cell.appendChild(categoryHeader);
+        row.appendChild(cell);
+        table.appendChild(row);
+
+        achieved.forEach(achievement => {
+            let row = displayRow(achievement, '');
+            table.appendChild(row);
+        });
+        categorizedAchievements.appendChild(table);
+    }
+    else {
+        let table = document.createElement('table');
+        let row = document.createElement('tr');
+        let cell = document.createElement('th');
+        let categoryHeader = document.createElement('h2');
+        categoryHeader.textContent = 'Uncategorized';
+        cell.setAttribute('colspan', '4');
+        cell.appendChild(categoryHeader);
+        row.appendChild(cell);
+        table.appendChild(row);
+
+        uncategorized.forEach(achievement => {
+            let row = displayRow(achievement, '');
+            table.appendChild(row);
+        });
+        categorizedAchievements.appendChild(table);
+    }
 }
 
 function displayRow(achievement, category) {
-    console.log(achievement);
+    //console.log(achievement);
     let row = document.createElement('tr');
 
-    let listItem = document.createElement('td');
+    let listItem = document.createElement('th');
     const label = document.createElement('label');
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
@@ -161,14 +227,37 @@ async function getSteamData() {
     appId = document.getElementById('appId').value;
     steamId = document.getElementById('steamId').value;
 
+    console.log(appId + ' ' + steamId);
+
     if (appId === '' || steamId === '') {
         alert('Please fill in both fields');
         return;
     }
 
+    if (isNaN(steamId)) {
+        fetched = await fetchSteamId(steamId);
+        if (fetched.response.success !== 1) {
+            alert('Invalid Custom Url');
+            return;
+        }
+        steamId = fetched.response.steamid;
+    }
+
+    if (isNaN(appId)) {
+        fetched = await fetchGameId(appId);
+        if (fetched.length === 0) {
+            alert('Invalid Game Name');
+            return;
+        }
+        appId = fetched[fetched.length - 1].appid;
+    }
+
     if (localStorage.getItem(appId === null)) {
         localStorage.setItem(appId, JSON.stringify([]));
     }
+
+    localStorage.setItem('lastUsedAppId', appId);
+    localStorage.setItem('lastUsedSteamId', steamId);
 
     game = await fetchGameAchievements(appId)
     player = await fetchPlayerAchievements(appId, steamId);
@@ -179,6 +268,12 @@ async function getSteamData() {
     displayGameAchievements();
 }
 
+if (localStorage.getItem('lastUsedAppId') && localStorage.getItem('lastUsedSteamId')) {
+    document.getElementById('appId').value = localStorage.getItem('lastUsedAppId');
+    document.getElementById('steamId').value = localStorage.getItem('lastUsedSteamId');
+    getSteamData();
+}
+
 start = document.getElementById('getAchievements');
 start.addEventListener('click', getSteamData);
 
@@ -187,3 +282,39 @@ categorize.addEventListener('click', categorizeAchievements);
 
 uncategorize = document.getElementById('uncategorizeButton');
 uncategorize.addEventListener('click', uncategorizeAchievements);
+
+divideAchieved = document.getElementById('divideAchieved')
+divideAchieved.addEventListener('change', displayGameAchievements);
+
+exportButton = document.getElementById('exportButton');
+exportButton.addEventListener('click', () => {
+    const element = document.createElement(`a`);
+    save = {};
+    save.content = JSON.parse(localStorage.getItem(appId));
+    save.appId = appId;
+    save.steamId = steamId;
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(save)));
+    element.setAttribute('download', `${appId}.json`);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+});
+
+importButton = document.getElementById('importButton');
+importButton.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        custom = JSON.parse(e.target.result).content;
+        appId = JSON.parse(e.target.result).appId;
+        steamId = JSON.parse(e.target.result).steamId;
+        localStorage.setItem('lastUsedAppId', appId);
+        localStorage.setItem('lastUsedSteamId', steamId);
+        console.log(appId);
+        appId = Number(appId);
+        localStorage.setItem(JSON.stringify(appId), JSON.stringify(custom));
+        location.reload();
+    }
+    reader.readAsText(file);
+});

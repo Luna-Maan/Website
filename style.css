@@ -90,12 +90,24 @@ a {
 #categorizedAchievements {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 #categorizedAchievements table {
-    margin-bottom: 30px;
+    align-self: flex-start;
+    border-collapse: collapse;
+    margin-top: 30px;
 }
+
+#categorizedAchievements table td {
+    border: 1px solid var(--text-color);
+    padding: 8px;
+}
+
+#categorizedAchievements table td:has(>img) {
+    padding: 0px;
+}
+
 
 /* chat */
 .chatDate {

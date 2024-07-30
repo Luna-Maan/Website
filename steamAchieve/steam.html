@@ -1,7 +1,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8" />
-    <title>steam achievements</title>
+    <title>steam achievement tracker</title>
     <link rel="stylesheet" href="../style.css" />
     <script src="../script.js" defer></script>
     <script src="steam.js" defer></script>
@@ -21,7 +21,7 @@
         <h1>Steam Achievements</h1>
     </header>
     <main>
-        <input type="text" id="steamId" placeholder="Steam ID (account nr.)" />
+        <input type="text" id="steamId" placeholder="SteamID64 or custom Url" />
         <input type="text" id="appId" placeholder="App ID" />
         <button id="getAchievements">Get Achievements</button>
 
@@ -30,6 +30,14 @@
             <button id="categorizeButton">Categorize Selected Achievements</button>
             <button id="uncategorizeButton" style="background-color: darkred;">Remove Selected from Category</button>
         </div>
+
+        Divide uncategorized in achieved and not achieved:
+        <label>
+            <input type="checkbox" id="divideAchieved"></checkbox>
+        </label>
+
+        <button id="exportButton">Export</button>
+        <input type="file" id="importButton">
 
         <div id="categorizedAchievements">
         </div>
