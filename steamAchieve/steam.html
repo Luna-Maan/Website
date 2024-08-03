@@ -22,8 +22,10 @@
     </header>
     <main>
         <input type="text" id="steamId" placeholder="SteamID64 or custom Url" />
-        <input type="text" id="appId" placeholder="App ID" />
+        <input type="text" id="appId" placeholder="App ID or (partial) name" />
         <button id="getAchievements">Get Achievements</button>
+        <pre>Note: Using a game name instead of an appID slightly worsen loading times 
+and changes network usage from less than 100kB to about 10MB</pre>
 
         <div id="category-section">
             <input type="text" id="category-name" placeholder="Category Name">
@@ -35,9 +37,12 @@
         <label>
             <input type="checkbox" id="divideAchieved"></checkbox>
         </label>
+        <pre></pre>
 
-        <button id="exportButton">Export</button>
-        <input type="file" id="importButton">
+        <label for="exportButton" class="btn">Export</label>
+        <button id="exportButton" style="visibility:hidden;">Export</button>
+        <label for="importButton" class="btn">Import</label>
+        <input type="file" style="visibility:hidden;" id="importButton">
 
         <div id="categorizedAchievements">
         </div>
