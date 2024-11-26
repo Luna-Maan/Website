@@ -220,6 +220,12 @@ function drawGameOver() {
   ctx.fillStyle = "red";
   ctx.textAlign = "center";
   ctx.fillText("Game Over!", canvas.width / 2, canvas.height / 2);
+
+  
+  // Display the score
+  ctx.font = "30px Arial";
+  ctx.fillStyle = "black";
+  ctx.fillText(`Final Score: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
 }
 
 // Main game loop
