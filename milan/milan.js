@@ -47,6 +47,8 @@ function addPlayer() {
     y: Math.random() * (canvas.height - 200) + 100, // Keep players away from the goal and edges
     width: 30,
     height: 30
+    dx: (Math.random() - 0.5) * 4, // Random horizontal speed
+    dy: (Math.random() - 0.5) * 4  // Random vertical speed
   };
   players.push(player);
 }
@@ -115,6 +117,22 @@ function drawPlayers() {
   ctx.fillStyle = "purple";
   players.forEach((player) => {
     ctx.fillRect(player.x, player.y, player.width, player.height);
+  });
+}
+
+// Move players
+function updatePlayers() {
+  players.forEach((player) => {
+    player.x += player.dx;
+    player.y += player.dy;
+
+    // Bounce off canvas boundaries
+    if (player.x < 0 || player.x + player.width > canvas.width) {
+      player.dx *= -1;
+    }
+    if (player.y < 0 || player.y + player.height > canvas.height) {
+      player.dy *= -1;
+    }
   });
 }
 
@@ -220,6 +238,7 @@ function gameLoop() {
     
     if (score > 1) {
       drawPlayers();
+      updatePlayers();
     }
 
     updateBall();
