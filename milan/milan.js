@@ -47,7 +47,7 @@ function addPlayer() {
     y: Math.random() * (canvas.height - 200) + 100, // Keep players away from the goal and edges
     width: 30,
     height: 30,
-    dx: (Math.random() - 0.5) * 4, // Random horizontal speed
+    dx: (Math.random() - 0.5) * 1, // Random horizontal speed
     dy: (Math.random() - 0.5) * 4  // Random vertical speed
   };
   players.push(player);
@@ -130,7 +130,7 @@ function updatePlayers() {
     if (player.x < 0 || player.x + player.width > canvas.width) {
       player.dx *= -1;
     }
-    if (player.y < 0 || player.y + player.height > canvas.height) {
+    if (player.y < 0 || player.y + player.height + 100 > canvas.height) {
       player.dy *= -1;
     }
   });
