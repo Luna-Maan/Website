@@ -47,8 +47,8 @@ function addPlayer() {
     y: Math.random() * (canvas.height - 200) + 100, // Keep players away from the goal and edges
     width: 30,
     height: 30,
-    dx: (Math.random() - 0.5) * 1, // Random horizontal speed
-    dy: (Math.random() - 0.5) * 4  // Random vertical speed
+    dx: (Math.random() - 0.5) * 4, // Random horizontal speed
+    dy: (Math.random() - 0.5) * 1  // Random vertical speed
   };
   players.push(player);
 }
