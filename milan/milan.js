@@ -46,7 +46,7 @@ function addPlayer() {
     x: Math.random() * (canvas.width - 50) + 25, // Ensure players are not at the edge
     y: Math.random() * (canvas.height - 200) + 100, // Keep players away from the goal and edges
     width: 30,
-    height: 30
+    height: 30,
     dx: (Math.random() - 0.5) * 4, // Random horizontal speed
     dy: (Math.random() - 0.5) * 4  // Random vertical speed
   };
