@@ -18,7 +18,7 @@ const ball = {
   y: canvas.height - 50,
   dx: 0,
   dy: 0,
-  speed: 5
+  speed: 3
 };
 
 // Goal object
