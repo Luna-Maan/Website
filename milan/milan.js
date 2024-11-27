@@ -1,3 +1,5 @@
+url = "https://tutorial-worker.pvanoostveenneo2.workers.dev/leaderboard/voetbal"
+
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -139,7 +141,7 @@ function updatePlayers() {
 // Draw the score
 function drawScore() {
   ctx.font = "20px Arial";
-  ctx.fillStyle = "black";
+  ctx.fillStyle = "white";
   ctx.fillText(`Score: ${score}`, 10, 30);
 }
 
@@ -176,13 +178,13 @@ function updateBall() {
     ball.x + ballRadius > goalkeeper.x &&
     ball.x - ballRadius < goalkeeper.x + goalkeeper.width &&
     ball.y + ballRadius > goalkeeper.y &&
-    ball.y - ballRadius < goalkeeper.y + goalkeeper.height && 
+    ball.y - ballRadius < goalkeeper.y + goalkeeper.height &&
     score > 0
   ) {
     gameOver = true;
   }
-  
-    // Player collision
+
+  // Player collision
   players.forEach((player) => {
     if (
       ball.x + ballRadius > player.x &&
@@ -214,18 +216,122 @@ function resetBall() {
   stopBall();
 }
 
-// Display game over message
-function drawGameOver() {
-  ctx.font = "40px Arial";
-  ctx.fillStyle = "red";
-  ctx.textAlign = "center";
-  ctx.fillText("Game Over!", canvas.width / 2, canvas.height / 2);
+const modal = document.getElementById("modal");
+const leaderboard = document.getElementById("leaderboard");
 
-  
-  // Display the score
-  ctx.font = "30px Arial";
-  ctx.fillStyle = "black";
-  ctx.fillText(`Final Score: ${score}`, canvas.width / 2, canvas.height / 2 + 30);
+requested = false
+posted = false
+submitted = false
+text = ""
+// Populate leaderboard content
+async function showLeaderboard() {
+
+  if (requested == false) {
+    requested = true
+    let response = await fetch(url);
+    text = await response.text();
+    text = JSON.parse(text);
+    console.log(text);
+
+    let scoreText = document.getElementById("modal-content");
+    scoreText.innerHTML = `Your Score is: ${score}!`
+
+    let leaderboardRows = text
+      .map((player) => `<tr><td>${player.name}</td><td>${player.score}</td></tr>`)
+      .join("");
+
+    modal.style.display = "block";
+    leaderboard.innerHTML = `
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${leaderboardRows}
+      </tbody>
+  `;
+  }
+
+
+
+  const nameField = document.getElementById("name");
+  nameField.addEventListener("keydown", async (e) => {
+    if (e.key === "Enter") {
+      const playerName = nameField.value.trim();
+      if (playerName) {
+        await submitScore(playerName);
+        showLeaderboard(); // Refresh leaderboard after submitting
+      } else {
+        alert("Please enter your name before submitting.");
+      }
+    }
+
+  });
+
+
+  const restartButton = document.getElementById("restartButton");
+  restartButton.addEventListener("click", restartGame);
+}
+
+async function submitScore(playerName) {
+  // Add the new player to the leaderboard
+  if (submitted == false) {
+    submitted = true
+    const existingPlayerIndex = text.findIndex(player => player.name === playerName);
+
+    if (existingPlayerIndex !== -1) {
+      // If the player exists, update their score if the new score is better
+      if (text[existingPlayerIndex].score < score) {
+        text[existingPlayerIndex].score = score;
+      }
+    } else {
+      // If the player doesn't exist, add them to the leaderboard
+      text.push({ name: playerName, score: score });
+    }
+  }
+
+  // Sort the leaderboard again
+  text.sort((a, b) => b.score - a.score);
+
+  data = {
+    text: text,
+    password: "test2",
+    username: "test"
+  }
+
+  // Send updated leaderboard to the server
+  if (posted == false) {
+    console.log(JSON.stringify(text))
+    posted = true
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+    console.log(response);
+    requested = false;
+  }
+}
+
+// Restart the game
+function restartGame() {
+  requested = false
+  posted = false
+  submitted = false
+  modal.style.display = "none";
+  gameOver = false;
+  score = 0;
+  players.length = 0;
+  resetBall();
+  goalkeeper.x = canvas.width / 2 - 50;
+  gameLoop();
+}
+
+// Display the leaderboard when the game ends
+function drawGameOver() {
+  // Show leaderboard
+  showLeaderboard();
 }
 
 // Main game loop
@@ -241,7 +347,7 @@ function gameLoop() {
       drawGoalkeeper();
       updateGoalkeeper();
     }
-    
+
     if (score > 1) {
       drawPlayers();
       updatePlayers();
@@ -252,7 +358,9 @@ function gameLoop() {
     drawGameOver();
   }
 
+
   requestAnimationFrame(gameLoop);
+
 }
 
 // Start the game

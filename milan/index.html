@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Football Game</title>
     <script src="milan.js" defer></script>
+    <link rel="stylesheet" href="../style.css" />
     <style>
         body {
             margin: 0;
@@ -19,7 +20,29 @@
 </head>
 
 <body>
-    <canvas id="gameCanvas"></canvas>
+    <main>
+        <canvas id="gameCanvas"></canvas>
+    </main>
+    <section>
+        <div class="modal" id="modal">
+            <div class="modal-content">
+                <h2 class="modal-title" id="modal-title">Game over!</h2>
+                <p id="modal-content"></p>
+
+                <h3 id="leaderboard-title">Leaderboard: </h3>
+                <table class="leaderboard" id="leaderboard">
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                    </tr>
+                </table><br>
+                submit your score <br>
+                name: <input type="text" id="name" /> <br>
+                <input type="button" id="restartButton" value="Play again" />
+            </div>
+        </div>
+    </section>
 </body>
 
 </html>
