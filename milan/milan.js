@@ -255,7 +255,7 @@ async function showLeaderboard() {
   `;
   }
 
-  if (score > 10 & locatieText == false) {
+  if (score > 9 & locatieText == false) {
     locatieText = true
     console.log(score)
     const modalElement = document.getElementById("modal-content");
