@@ -264,7 +264,7 @@ async function showLeaderboard() {
     const newHeading = document.createElement("h2");
     
     // Set the text content for the new h2 element
-    newHeading.textContent = "New Heading Text";
+    newHeading.textContent = "Het cadeau bevindt zich in de keuken onder de bank.";
     
     // Optionally, add a class or id to the new h2 element
     newHeading.id = "new-heading";
