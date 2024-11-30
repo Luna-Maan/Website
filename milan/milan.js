@@ -255,6 +255,7 @@ async function showLeaderboard() {
   }
 
   if (score > 10) {
+    console.log(score)
     const modalElement = document.getElementById("modal");
     
     // Create a new h2 element
