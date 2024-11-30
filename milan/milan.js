@@ -254,13 +254,23 @@ async function showLeaderboard() {
   `;
   }
 
-  const cadeauElement = document.getElementById("cadeauLocatie");
   if (score > 10) {
-    cadeauElement.style.display = "block";
+    const modalElement = document.getElementById("modal");
+    
+    // Create a new h2 element
+    const newHeading = document.createElement("h2");
+    
+    // Set the text content for the new h2 element
+    newHeading.textContent = "New Heading Text";
+    
+    // Optionally, add a class or id to the new h2 element
+    newHeading.id = "new-heading";
+    newHeading.className = "modal-title";
+    
+    // Append the new h2 element to the modal
+    modalElement.appendChild(newHeading);
   }
-  else {
-    cadeauElement.style.display = "none";
-  }
+
 
 
   const nameField = document.getElementById("name");
