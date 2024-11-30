@@ -223,7 +223,7 @@ requested = false
 posted = false
 submitted = false
 text = ""
-loactieText = false
+locatieText = false
 // Populate leaderboard content
 async function showLeaderboard() {
 
