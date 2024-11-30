@@ -223,6 +223,7 @@ requested = false
 posted = false
 submitted = false
 text = ""
+loactieText = false
 // Populate leaderboard content
 async function showLeaderboard() {
 
@@ -254,7 +255,8 @@ async function showLeaderboard() {
   `;
   }
 
-  if (score > 10) {
+  if (score > 10 & locatieText == false) {
+    locatieText = true
     console.log(score)
     const modalElement = document.getElementById("modal");
     
