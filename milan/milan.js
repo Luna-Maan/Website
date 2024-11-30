@@ -258,7 +258,7 @@ async function showLeaderboard() {
   if (score > 10 & locatieText == false) {
     locatieText = true
     console.log(score)
-    const modalElement = document.getElementById("modal");
+    const modalElement = document.getElementById("modal-content");
     
     // Create a new h2 element
     const newHeading = document.createElement("h2");
