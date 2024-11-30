@@ -345,7 +345,6 @@ function restartGame() {
   players.length = 0;
   resetBall();
   goalkeeper.x = canvas.width / 2 - 50;
-  gameLoop();
 }
 
 // Display the leaderboard when the game ends
