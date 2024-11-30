@@ -254,6 +254,13 @@ async function showLeaderboard() {
   `;
   }
 
+  const cadeauElement = document.getElementById("cadeauLocatie");
+  if (score > 10) {
+    cadeauElement.style.display = "block";
+  }
+  else {
+    cadeauElement.style.display = "none";
+  }
 
 
   const nameField = document.getElementById("name");
