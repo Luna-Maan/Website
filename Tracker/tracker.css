@@ -1,0 +1,30 @@
+/*body {
+    background: #f9f9f9;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}*/
+
+.tracker {
+    width: 104px;
+    height: 104px;
+}
+
+.today-tracker {
+    width: 300px;
+    height: 350px;
+}
+
+.today-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.goal {
+    cursor: pointer;
+}

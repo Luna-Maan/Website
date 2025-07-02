@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Goals Tracker</title>
+    <link rel="stylesheet" href="tracker.css" />
+    <link rel="stylesheet" href="../style.css">
+    <script src="tracker.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <h1>Daily Tracker</h1>
+    </header>
+
+    <div class="container">
+        <div class="project" , style="text-align: center;">
+
+            Month:
+            <input type="month" id="month-selector" />
+
+            Day:
+            <input type="number" id="day-selector" min="1" max="31" />
+
+            <button id="export-btn">Export Data</button>
+            <input type="file" id="import-file" accept=".json" style="display:none;" />
+            <button id="import-btn">Import Data</button>
+        </div>
+        <div class="project" style="text-align: center;">
+            <h2 id="selected-day-title">Test</h2>
+            <div id="today-tracker"></div>
+
+        </div>
+        <div class="project" style="text-align: center;">
+            <h2 id="selected-month-title">Test</h2>
+            <div id="tracker-grid"></div>
+
+        </div>
+        <div class="project" style="text-align: center;">
+            <h2>Summary</h2>
+            <div id="month-summary"></div>
+            <div id="year-summary"></div>
+        </div>
+    </div>
+</body>
+
+</html>
