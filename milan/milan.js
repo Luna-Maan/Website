@@ -4,7 +4,8 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 // Set canvas dimensions
-canvas.width = window.innerWidth;
+const maxCanvasWidth = 600;
+canvas.width = Math.min(window.innerWidth, maxCanvasWidth);
 canvas.height = window.innerHeight;
 
 const goalWidth = 200;
@@ -77,6 +78,23 @@ canvas.addEventListener("touchmove", (e) => {
 canvas.addEventListener("touchend", () => {
   isDragging = false;
 });
+
+//mouse events
+canvas.addEventListener("mousedown", (e) => {
+  dragStartX = e.clientX;
+  dragStartY = e.clientY;
+  isDragging = true;
+});
+
+canvas.addEventListener("mousemove", (e) => {
+  if (!isDragging || gameOver) return;
+  moveBall(e.clientX, e.clientY);
+});
+
+canvas.addEventListener("mouseup", () => {
+  isDragging = false;
+});
+
 
 // Helper functions for moving and stopping the ball
 function moveBall(clientX, clientY) {
@@ -259,17 +277,17 @@ async function showLeaderboard() {
     locatieText = true
     console.log(score)
     const modalElement = document.getElementById("modal-contentm");
-    
+
     // Create a new h2 element
     const newHeading = document.createElement("h2");
-    
+
     // Set the text content for the new h2 element
     newHeading.textContent = "Het cadeau bevindt zich in de keuken onder de bank.";
-    
+
     // Optionally, add a class or id to the new h2 element
     newHeading.id = "new-heading";
     newHeading.className = "modal-title";
-    
+
     // Append the new h2 element to the modal
     modalElement.appendChild(newHeading);
   }

@@ -28,6 +28,10 @@ body {
     white-space: pre-wrap;
 }
 
+canvas {
+    display: block;
+    margin: 0 auto;
+}
 
 pre {
     overflow-x: auto;
