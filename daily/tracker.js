@@ -404,3 +404,39 @@ document.getElementById('import-file').addEventListener('change', async (event) 
     }
 });
 
+document.getElementById('cloud-save-btn').addEventListener('click', async () => {
+    const username = prompt("Enter your username:");
+    const password = prompt("Enter your password:");
+
+    if (!username || !password) {
+        alert("Username and password are required.");
+        return;
+    }
+
+    const trackerData = JSON.parse(localStorage.getItem('trackerData') || '{}');
+
+    try {
+        const response = await fetch('https://storage.pro-gramming.net/store', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username,
+                password,
+                data: trackerData
+            })
+        });
+
+        const text = await response.text();
+
+        if (response.ok) {
+            alert("Successfully saved to the cloud!");
+        } else {
+            alert("Server error: " + text);
+        }
+
+    } catch (err) {
+        alert("Failed to save data: " + err.message);
+    }
+});
