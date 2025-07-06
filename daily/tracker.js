@@ -298,6 +298,7 @@ async function initTracker() {
                 updateArc(path, val, radii[i]);
                 data[focusDay - 1][i] = val;
                 saveStateToLocalStorage(monthStr, data);
+                render(monthStr, focusDay);
             });
 
             row.appendChild(span);
