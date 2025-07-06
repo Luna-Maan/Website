@@ -19,7 +19,7 @@ function saveCategories(categories) {
 }
 
 let categories = loadCategories();
-if (categories.length === 0) {
+if (!categories || categories.length === 0) {
     categories = ["Fruit", "Shower", "Exercise (30m/60m)", "Screen Time (2h/1h30)", "Browser Time (1h30/1h)", "sleep (6h30/7h30)", "Bed Time (1:30/0:30)"];
     saveCategories(categories);
 }
