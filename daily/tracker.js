@@ -404,6 +404,8 @@ document.getElementById('import-file').addEventListener('change', async (event) 
     }
 });
 
+
+//MARK: Cloud
 document.getElementById('cloud-save-btn').addEventListener('click', async () => {
     const username = prompt("Enter your username:");
     const password = prompt("Enter your password:");
@@ -438,5 +440,54 @@ document.getElementById('cloud-save-btn').addEventListener('click', async () => 
 
     } catch (err) {
         alert("Failed to save data: " + err.message);
+    }
+});
+
+document.getElementById('cloud-load-btn').addEventListener('click', async () => {
+    const username = prompt("Enter your username:");
+    const password = prompt("Enter your password:");
+
+    if (!username || !password) {
+        alert("Username and password are required.");
+        return;
+    }
+
+    try {
+        // Assuming your GET endpoint uses query params for auth, e.g.:
+        // https://storage.pro-gramming.net/retrieve?username=...&password=...
+        // (Adjust the URL and parameters according to your API)
+        const url = `https://storage.pro-gramming.net/retrieve?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            const text = await response.text();
+            alert("Failed to load data from cloud: " + text);
+            return;
+        }
+
+        const json = await response.json();
+
+        if (!json.data) {
+            alert("No data found for this user.");
+            return;
+        }
+
+        // Save loaded data to localStorage
+        localStorage.setItem('trackerData', JSON.stringify(json.data));
+
+        alert("Successfully loaded data from the cloud!");
+
+        // Re-render tracker with new data
+        // Assuming initTracker or render function will pick up the changes on reload
+        location.reload();
+
+    } catch (err) {
+        alert("Error loading data: " + err.message);
     }
 });
