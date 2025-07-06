@@ -1,3 +1,66 @@
+function loadCategories() {
+    const allData = localStorage.getItem("trackerData");
+    if (allData) {
+        try {
+            const parsedData = JSON.parse(allData);
+            return parsedData.categories || [];
+        } catch {
+            // Fallback to default categories if parsing fails
+            return [];
+        }
+    }
+}
+
+// Save categories
+function saveCategories(categories) {
+    const allData = JSON.parse(localStorage.getItem("trackerData") || '{}');
+    allData.categories = categories;
+    localStorage.setItem("trackerData", JSON.stringify(allData));
+}
+
+let categories = loadCategories();
+if (categories.length === 0) {
+    categories = ["Fruit", "Shower", "Exercise (30m/60m)", "Screen Time (2h/1h30)", "Browser Time (1h30/1h)", "sleep (6h30/7h30)", "Bed Time (1:30/0:30)"];
+    saveCategories(categories);
+}
+
+const labels = categories.map((cat, i) => {
+    const parts = cat.split(" ");
+    return parts.map((part, j) => {
+        if (j === 0) {
+            return part.charAt(0).toUpperCase() + part.slice(1);
+        }
+        return part.toLowerCase();
+    }).join(" ");
+});
+const emptyArray = Array(categories.length).fill(0);
+let radii = generateRadii(categories.length);
+function generateRadii(numCategories) {
+    const radii = [];
+    let radius = 8;
+    for (let i = 0; i < numCategories; i++) {
+        radii.unshift(radius); // add radius to front
+        radius += 16;
+    }
+    return radii;
+}
+
+let colors = ["darkgreen", "green", "#6A7FDB", "#6D3B47", "darkred", "purple", "darkblue"];
+
+document.getElementById("edit-categories-btn").addEventListener("click", () => {
+    const newCategories = prompt("Edit categories (comma-separated) (adding to the end will preserve your save, as will deleting from the end):", categories.join(", "));
+    if (newCategories) {
+        const newCategoryArray = newCategories.split(",").map(cat => cat.trim());
+        if (newCategoryArray.length > 0) {
+            categories = newCategoryArray;
+            colors = Array.from({ length: categories.length }, () => "#" + Math.floor(Math.random() * 16777215).toString(16));
+            saveCategories(categories);
+            location.reload(); // Reload to reflect changes
+        }
+    }
+});
+
+// MARK: SVG arcs
 function polarToCartesian(cx, cy, r, angle) {
     const rad = (angle - 90) * Math.PI / 180.0;
     return {
@@ -5,7 +68,6 @@ function polarToCartesian(cx, cy, r, angle) {
         y: cy + r * Math.sin(rad)
     };
 }
-
 function describeArc(cx, cy, r, startAngle, endAngle) {
     const start = polarToCartesian(cx, cy, r, startAngle);
     const end = polarToCartesian(cx, cy, r, endAngle);
@@ -17,16 +79,18 @@ function describeArc(cx, cy, r, startAngle, endAngle) {
         "A", r, r, 0, largeArcFlag, 0, end.x, end.y
     ].join(" ");
 }
-
-
 function updateArc(path, level, r) {
+    const maxRadius = Math.max(...radii);
+    const padding = 10;
+    const width = (maxRadius + padding) * 2;
+    const center = (maxRadius + padding);
     const clamped = Math.max(-2, Math.min(2, level));
     const angle = (clamped / 2) * 360;
     if (angle == 0) {
         path.setAttribute('d', '');
     } else if (angle >= 360) {
         // Draw full circle with two arcs
-        const cx = 115, cy = 115;
+        const cx = center, cy = center;
         const d = `
             M ${cx - r}, ${cy}
             a ${r},${r} 0 1,1 ${2 * r},0
@@ -34,7 +98,7 @@ function updateArc(path, level, r) {
         `;
         path.setAttribute('d', d.trim());
     } else if (angle <= -180) {
-        const cx = 115, cy = 115;
+        const cx = center, cy = center;
         console.log("Negative angle:", angle);
         const endAngle = 720.1 + angle; // positive number ≥ 180
         console.log("End angle:", endAngle);
@@ -53,9 +117,10 @@ function updateArc(path, level, r) {
     }
     else {
         // Arc from top (0 deg) clockwise to angle
-        path.setAttribute('d', describeArc(115, 115, r, 0, angle));
+        path.setAttribute('d', describeArc(center, center, r, 0, angle));
     }
 }
+
 
 function createDayTracker(day, levels = emptyArray, today = false) {
     const svgNS = "http://www.w3.org/2000/svg";
@@ -65,7 +130,13 @@ function createDayTracker(day, levels = emptyArray, today = false) {
     } else {
         svg.setAttribute("class", "tracker");
     }
-    svg.setAttribute("viewBox", "0 0 230 230");
+
+    const maxRadius = Math.max(...radii);
+    const padding = 10;
+    const width = (maxRadius + padding) * 2;
+    const center = (maxRadius + padding);
+
+    svg.setAttribute("viewBox", `0 0 ${width} ${width}`);
 
     for (let i = 0; i < emptyArray.length; i++) {
         const group = document.createElementNS(svgNS, "g");
@@ -74,8 +145,8 @@ function createDayTracker(day, levels = emptyArray, today = false) {
 
         const circle = document.createElementNS(svgNS, "circle");
         circle.setAttribute("class", "bg");
-        circle.setAttribute("cx", "115");
-        circle.setAttribute("cy", "115");
+        circle.setAttribute("cx", center);
+        circle.setAttribute("cy", center);
         circle.setAttribute("r", radii[i]);
         circle.setAttribute("fill", "none");
         circle.setAttribute("stroke", "#ccc");
@@ -367,11 +438,6 @@ async function initTracker() {
     render(defaultMonthStr, defaultDay);
 }
 
-const labels = ["Fruit", "Shower", "Exercise (30m/60m)", "Screen Time (2h/1h30)", "Browser Time (1h30/1h)", "sleep (6h30/7h30)", "Bed Time (1:30/0:30)"];
-const radii = [104, 88, 72, 56, 40, 24, 8];
-const emptyArray = [0, 0, 0, 0, 0, 0, 0];
-const colors = ["darkgreen", "green", "#6A7FDB", "#6D3B47", "darkred", "purple", "darkblue"];
-
 window.addEventListener('DOMContentLoaded', initTracker);
 
 //MARK: Export/Import
@@ -411,14 +477,14 @@ document.getElementById('cloud-save-btn').addEventListener('click', async () => 
     const password = prompt("Enter your password:");
 
     if (!username || !password) {
-        alert("Username and password are required.");
+        alert("Username and password are required. \nRegister at the bottom of the day view.");
         return;
     }
 
     const trackerData = JSON.parse(localStorage.getItem('trackerData') || '{}');
 
     try {
-        const response = await fetch('https://storage.pro-gramming.net/store', {
+        const response = await fetch('https://tutorial-worker.pvanoostveenneo2.workers.dev/tracker', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -448,15 +514,12 @@ document.getElementById('cloud-load-btn').addEventListener('click', async () => 
     const password = prompt("Enter your password:");
 
     if (!username || !password) {
-        alert("Username and password are required.");
+        alert("Username and password are required. \nRegister at the bottom of the day view.");
         return;
     }
 
     try {
-        // Assuming your GET endpoint uses query params for auth, e.g.:
-        // https://storage.pro-gramming.net/retrieve?username=...&password=...
-        // (Adjust the URL and parameters according to your API)
-        const url = `https://storage.pro-gramming.net/retrieve?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+        const url = `https://tutorial-worker.pvanoostveenneo2.workers.dev/tracker?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
 
         const response = await fetch(url, {
             method: "GET",
@@ -478,16 +541,45 @@ document.getElementById('cloud-load-btn').addEventListener('click', async () => 
             return;
         }
 
-        // Save loaded data to localStorage
         localStorage.setItem('trackerData', JSON.stringify(json.data));
 
         alert("Successfully loaded data from the cloud!");
 
-        // Re-render tracker with new data
-        // Assuming initTracker or render function will pick up the changes on reload
         location.reload();
 
     } catch (err) {
         alert("Error loading data: " + err.message);
     }
 });
+
+document.getElementById('register-btn').addEventListener('click', async () => {
+    const name = prompt("Enter a new username:");
+    const personalPassword = prompt("Enter a new password:");
+
+    if (!name || !personalPassword) {
+        alert("Username and password are required.");
+        return;
+    }
+
+    try {
+        const response = await fetch('https://tutorial-worker.pvanoostveenneo2.workers.dev/register/', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name, personalPassword })
+        });
+
+        const text = await response.text();
+
+        if (response.ok) {
+            alert("Registration successful!");
+        } else {
+            alert("Registration failed: " + text);
+        }
+
+    } catch (err) {
+        alert("Error during registration: " + err.message);
+    }
+});
+
