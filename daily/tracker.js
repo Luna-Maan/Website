@@ -310,7 +310,7 @@ async function initTracker() {
 
         // --- Notes Section ---
         const notesKey = `${monthStr}-${focusDay}`;
-        const allData = JSON.parse(localStorage.getItem('trackerData') || '{}');
+        let allData = JSON.parse(localStorage.getItem('trackerData') || '{}');
         const note = allData.notes?.[notesKey] || "";
 
         const notesLabel = document.createElement("div");
@@ -385,16 +385,74 @@ async function initTracker() {
             });
         });
 
+        const streaksContainer = document.getElementById("streak-counters");
         const summaryMonthContainer = document.getElementById("month-summary");
         const summaryYearContainer = document.getElementById("year-summary");
 
+        streaksContainer.innerHTML = "";
         summaryMonthContainer.innerHTML = "";
         summaryYearContainer.innerHTML = "";
+
+        // Initialize streaks per category
+        let streaks = Array(emptyArray.length).fill(0);
+        let streakBroken = Array(emptyArray.length).fill(false);
+
+        // Parse selected date
+        const currentDate = new Date(year, month - 1, focusDay);
+        allData = JSON.parse(localStorage.getItem('trackerData') || '{}');
+
+        // Go backwards in time day by day
+        while (streakBroken.some(broken => !broken)) {
+            const key = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+            const monthData = allData[key];
+            if (!monthData) break;
+
+            const dayIndex = currentDate.getDate() - 1;
+            const levels = monthData[dayIndex] ?? emptyArray;
+
+            for (let i = 0; i < levels.length; i++) {
+                if (streakBroken[i]) continue;
+                const level = levels[i] ?? 0;
+                if (level >= 1) {
+                    streaks[i]++;
+                } else {
+                    streakBroken[i] = true;
+                }
+            }
+
+            // Go back one day
+            currentDate.setDate(currentDate.getDate() - 1);
+        }
+
+        // Display streaks
+        for (let i = 0; i < categories.length; i++) {
+            const streak = streaks[i];
+
+            // Choose emoji based on streak length
+            let emoji = "";
+            if (streak >= 20) {
+                times = Math.floor((streak - 10) / 10);
+                emoji = "🔥".repeat(times);
+            } else if (streak >= 15) {
+                emoji = "🏅";
+            } else if (streak >= 10) {
+                emoji = "💪";
+            } else if (streak >= 5) {
+                emoji = "✨";
+            }
+
+            const line = document.createElement("div");
+            line.textContent = `${emoji ? emoji + " " : ""}${labels[i]}: ${streak} day${streak === 1 ? '' : 's'}`;
+            line.style.color = colors[i];
+            line.style.marginBottom = "4px";
+            streaksContainer.appendChild(line);
+        }
+
         // Summary for the selected month
         today = new Date();
         const selectedDate = new Date(y, m - 1, focusDay);
-        const isCurrentMonth = today.getFullYear() === year && today.getMonth() + 1 === month;
-        const dayCutoff = isCurrentMonth ? today.getDate() : daysInMonth;
+        isCurrentMonth = today.getFullYear() === year && today.getMonth() + 1 === month;
+        dayCutoff = isCurrentMonth ? today.getDate() : daysInMonth;
         const monthAverages = computeAverages(data, dayCutoff);
         summaryMonthContainer.appendChild(createSummaryTracker("Month", monthAverages));
 
