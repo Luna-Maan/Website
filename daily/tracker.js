@@ -307,6 +307,29 @@ async function initTracker() {
         });
 
         todayWrapper.appendChild(inputPanel);
+
+        // --- Notes Section ---
+        const notesKey = `${monthStr}-${focusDay}`;
+        const allData = JSON.parse(localStorage.getItem('trackerData') || '{}');
+        const note = allData.notes?.[notesKey] || "";
+
+        const notesLabel = document.createElement("div");
+        notesLabel.innerHTML = "<strong>Daily Notes:</strong>";
+
+        const notesInput = document.createElement("textarea");
+        notesInput.value = note;
+        notesInput.rows = 3;
+        notesInput.style.width = "100%";
+        notesInput.placeholder = "Write your notes here...";
+        notesInput.addEventListener("input", () => {
+            const updatedData = JSON.parse(localStorage.getItem('trackerData') || '{}');
+            if (!updatedData.notes) updatedData.notes = {};
+            updatedData.notes[notesKey] = notesInput.value;
+            localStorage.setItem('trackerData', JSON.stringify(updatedData));
+        });
+
+        todayWrapper.appendChild(notesLabel);
+        todayWrapper.appendChild(notesInput);
         todayContainer.appendChild(todayWrapper);
 
         // --- Grid of the Month ---

@@ -28,11 +28,6 @@ body {
     white-space: pre-wrap;
 }
 
-canvas {
-    display: block;
-    margin: 0 auto;
-}
-
 pre {
     overflow-x: auto;
     font-size: 1rem;
@@ -90,7 +85,13 @@ a {
     margin-bottom: 12px;
 }
 
-/* steam */
+canvas {
+    display: block;
+    margin: 0 auto;
+}
+
+/* MARK: steam 
+*/
 #categorizedAchievements {
     display: flex;
     flex-wrap: wrap;
@@ -113,7 +114,8 @@ a {
 }
 
 
-/* chat */
+/* MARK: chat 
+*/
 .chatDate {
     color: var(--primary-color);
 }
@@ -143,7 +145,8 @@ a {
     vertical-align: top;
 }
 
-/* list */
+/* MARK: list 
+*/
 .list {
     margin: 0;
 }
@@ -152,8 +155,8 @@ ul {
     margin-top: 0;
 }
 
-/* table */
-
+/* MARK: table 
+*/
 .border {
     border: 2px solid var(--text-color);
 }
@@ -300,7 +303,8 @@ table.leaderboard td {
     padding: 5px;
 }
 
-/* navbar */
+/* MARK: navbar 
+*/
 #nav {
     transition: top 0.45s;
 }
@@ -440,7 +444,8 @@ div a.active,
     flex-direction: column;
 }
 
-/* input */
+/* MARK: input 
+*/
 input:focus,
 textarea:focus {
     background-color: var(--input-color);
@@ -487,7 +492,8 @@ input[type="checkbox"] {
     padding: 0.5rem;
 }
 
-/* tooltip */
+/* MARK: tooltip 
+*/
 .tooltip {
     position: relative;
     display: inline-block;
@@ -527,7 +533,8 @@ input[type="checkbox"] {
     opacity: 1;
 }
 
-/* mental math */
+/* MARK: mental math 
+*/
 .opList {
     padding: 0;
     margin: 0;
@@ -566,7 +573,8 @@ label:has(>input[type="radio"]:checked) {
     color: var(--title-color);
 }
 
-/* modal */
+/* MARK: modal 
+*/
 .modal {
     display: none;
     position: fixed;
@@ -610,7 +618,8 @@ label:has(>input[type="radio"]:checked) {
     cursor: pointer;
 }
 
-/* mobile */
+/* MARK: mobile 
+*/
 @media (max-width: 815px) {
     .navLeft {
         border-radius: 8px 0 0 0;
