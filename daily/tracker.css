@@ -14,7 +14,7 @@
 
 .today-tracker {
     width: 300px;
-    height: 350px;
+    height: 300px;
 }
 
 .today-wrapper {
@@ -27,4 +27,19 @@
 
 .goal {
     cursor: pointer;
+}
+
+.level-input {
+    margin-top: 0px;
+    padding: 4px;
+}
+
+#selected-day-title {
+    margin-bottom: 0px;
+}
+
+#daily-notes {
+    width: 100%;
+    padding: 8px;
+    margin-top: 2px;
 }

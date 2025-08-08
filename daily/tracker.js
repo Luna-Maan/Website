@@ -282,6 +282,7 @@ async function initTracker() {
             span.style.color = colors[i];
 
             const input = document.createElement("input");
+            input.className = "level-input";
             input.type = "number";
             input.min = "0";
             input.max = "2";
@@ -313,14 +314,7 @@ async function initTracker() {
         let allData = JSON.parse(localStorage.getItem('trackerData') || '{}');
         const note = allData.notes?.[notesKey] || "";
 
-        const notesLabel = document.createElement("div");
-        notesLabel.innerHTML = "<strong>Daily Notes:</strong>";
-
-        const notesInput = document.createElement("textarea");
-        notesInput.value = note;
-        notesInput.rows = 3;
-        notesInput.style.width = "100%";
-        notesInput.placeholder = "Write your notes here...";
+        const notesInput = document.getElementById("daily-notes");
         notesInput.addEventListener("input", () => {
             const updatedData = JSON.parse(localStorage.getItem('trackerData') || '{}');
             if (!updatedData.notes) updatedData.notes = {};
@@ -328,8 +322,6 @@ async function initTracker() {
             localStorage.setItem('trackerData', JSON.stringify(updatedData));
         });
 
-        todayWrapper.appendChild(notesLabel);
-        todayWrapper.appendChild(notesInput);
         todayContainer.appendChild(todayWrapper);
 
         // --- Grid of the Month ---
