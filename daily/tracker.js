@@ -45,7 +45,7 @@ function generateRadii(numCategories) {
     return radii;
 }
 
-let colors = ["darkgreen", "green", "#6A7FDB", "#6D3B47", "darkred", "purple", "darkblue"];
+let colors = ["#99ffe9b0", "#fefabcff", "#f9d3b4ff", "#f99ca2ff", "#feb2ebff", "#bfaaff", "#a3c4f3"];
 
 document.getElementById("edit-categories-btn").addEventListener("click", () => {
     const newCategories = prompt("Edit categories (comma-separated) (adding to the end will preserve your save, as will deleting from the end):", categories.join(", "));
