@@ -149,7 +149,7 @@ function createDayTracker(day, levels = emptyArray, today = false) {
         circle.setAttribute("cy", center);
         circle.setAttribute("r", radii[i]);
         circle.setAttribute("fill", "none");
-        circle.setAttribute("stroke", "#ccc");
+        circle.setAttribute("stroke", "#d6d6d6ff");
         circle.setAttribute("stroke-width", "16");
 
         const path = document.createElementNS(svgNS, "path");
