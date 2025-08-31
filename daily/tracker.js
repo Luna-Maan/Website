@@ -1,3 +1,5 @@
+let colors = ["hsla(130, 60%, 60%, 1.00)", "hsla(56, 60%, 60%, 1.00)", "hsl(27, 60%, 60%)", "hsl(356, 60%, 60%)", "hsl(315, 60%, 60%)", "hsl(255, 60%, 60%)", "hsl(215, 60%, 60%)"];
+
 function loadCategories() {
     const allData = localStorage.getItem("trackerData");
     if (allData) {
@@ -44,8 +46,6 @@ function generateRadii(numCategories) {
     }
     return radii;
 }
-
-let colors = ["#99ffe9b0", "#fefabcff", "#f9d3b4ff", "#f99ca2ff", "#feb2ebff", "#bfaaff", "#a3c4f3"];
 
 document.getElementById("edit-categories-btn").addEventListener("click", () => {
     const newCategories = prompt("Edit categories (comma-separated) (adding to the end will preserve your save, as will deleting from the end):", categories.join(", "));
