@@ -1,64 +1,112 @@
-let colors = ["hsla(130, 60%, 60%, 1.00)", "hsla(56, 60%, 60%, 1.00)", "hsl(27, 60%, 60%)", "hsl(356, 60%, 60%)", "hsl(315, 60%, 60%)", "hsl(255, 60%, 60%)", "hsl(215, 60%, 60%)"];
+let defaultColors = [
+    "#5cd670ff",
+    "#d6ce5cff",
+    "#d6935cff",
+    "#d65c64ff",
+    "#d65cb8ff",
+    "#7a5cd6ff",
+    "#5c8fd6ff"
+];
 
+// Load categories + colors
 function loadCategories() {
     const allData = localStorage.getItem("trackerData");
     if (allData) {
         try {
             const parsedData = JSON.parse(allData);
-            return parsedData.categories || [];
+
+            let categories = Array.isArray(parsedData.categories)
+                ? parsedData.categories
+                : [];
+
+            let colors = Array.isArray(parsedData.colors)
+                ? parsedData.colors
+                : defaultColors.slice(0, categories.length);
+
+            // Ensure colors length matches categories
+            if (colors.length < categories.length) {
+                colors = colors.concat(
+                    defaultColors.slice(colors.length, categories.length)
+                );
+            }
+
+            return { categories, colors };
         } catch {
-            // Fallback to default categories if parsing fails
-            return [];
+            return { categories: [], colors: defaultColors };
         }
     }
+    return { categories: [], colors: defaultColors };
 }
 
-// Save categories
-function saveCategories(categories) {
+// Save categories + colors
+function saveCategories(categories, colors) {
     const allData = JSON.parse(localStorage.getItem("trackerData") || '{}');
-    allData.categories = categories;
+    allData.categories = [...categories]; // clone array
+    allData.colors = [...colors];         // clone array
     localStorage.setItem("trackerData", JSON.stringify(allData));
 }
 
-let categories = loadCategories();
+
+let { categories, colors } = loadCategories();
+
 if (!categories || categories.length === 0) {
-    categories = ["Fruit", "Shower", "Exercise (30m/60m)", "Screen Time (2h/1h30)", "Browser Time (1h30/1h)", "sleep (6h30/7h30)", "Bed Time (1:30/0:30)"];
-    saveCategories(categories);
+    categories = [
+        "Fruit",
+        "Shower",
+        "Exercise (30m/60m)",
+        "Screen Time (2h/1h30)",
+        "Browser Time (1h30/1h)",
+        "Sleep (6h30/7h30)",
+        "Bed Time (1:30/0:30)"
+    ];
+    colors = defaultColors.slice(0, categories.length);
+    saveCategories(categories, colors);
 }
 
-const labels = categories.map((cat, i) => {
-    const parts = cat.split(" ");
-    return parts.map((part, j) => {
-        if (j === 0) {
-            return part.charAt(0).toUpperCase() + part.slice(1);
-        }
-        return part.toLowerCase();
-    }).join(" ");
-});
+const labels = categories;
+
 const emptyArray = Array(categories.length).fill(0);
+
 let radii = generateRadii(categories.length);
 function generateRadii(numCategories) {
     const radii = [];
     let radius = 8;
     for (let i = 0; i < numCategories; i++) {
-        radii.unshift(radius); // add radius to front
+        radii.unshift(radius);
         radius += 16;
     }
     return radii;
 }
 
+// Edit button
 document.getElementById("edit-categories-btn").addEventListener("click", () => {
-    const newCategories = prompt("Edit categories (comma-separated) (adding to the end will preserve your save, as will deleting from the end):", categories.join(", "));
-    if (newCategories) {
-        const newCategoryArray = newCategories.split(",").map(cat => cat.trim());
-        if (newCategoryArray.length > 0) {
-            categories = newCategoryArray;
-            colors = Array.from({ length: categories.length }, () => "#" + Math.floor(Math.random() * 16777215).toString(16));
-            saveCategories(categories);
-            location.reload(); // Reload to reflect changes
+    const combined = categories.map((cat, i) => `${cat}_${colors[i]}`).join(", ");
+    const newInput = prompt(
+        "Edit categories and colors (format: Category:Color, ...)\nExample: Shower:#ff0000",
+        combined
+    );
+    if (newInput) {
+        const newPairs = newInput.split(",").map(pair => pair.trim());
+        const newCategories = [];
+        const newColors = [];
+
+        newPairs.forEach(pair => {
+            const [cat, col] = pair.split("_").map(s => s.trim());
+            if (cat) {
+                newCategories.push(cat);
+                newColors.push(col || "#" + Math.floor(Math.random() * 16777215).toString(16));
+            }
+        });
+
+        if (newCategories.length > 0) {
+            categories = newCategories;
+            colors = newColors;
+            saveCategories(categories, colors);
+            location.reload();
         }
     }
 });
+
 
 // MARK: SVG arcs
 function polarToCartesian(cx, cy, r, angle) {
