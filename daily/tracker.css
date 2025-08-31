@@ -8,13 +8,18 @@
 }*/
 
 .tracker {
-    width: 104px;
-    height: 104px;
+    width: 90px;
+    height: 90px;
 }
 
 .today-tracker {
     width: 300px;
     height: 300px;
+}
+
+.summary-tracker {
+    width: 100%;
+    height: 100%;
 }
 
 .today-wrapper {
@@ -42,4 +47,17 @@
     width: 100%;
     padding: 8px;
     margin-top: 2px;
+}
+
+#summary-container {
+    display: flex;
+    justify-content: center;
+    /* or space-between, space-around */
+    gap: 20px;
+    /* space between the circles */
+}
+
+#month-summary,
+#year-summary {
+    display: inline-block;
 }

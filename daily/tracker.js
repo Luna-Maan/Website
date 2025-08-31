@@ -122,11 +122,13 @@ function updateArc(path, level, r) {
 }
 
 
-function createDayTracker(day, levels = emptyArray, today = false) {
+function createDayTracker(day, levels = emptyArray, today = false, summary = false) {
     const svgNS = "http://www.w3.org/2000/svg";
     const svg = document.createElementNS(svgNS, "svg");
     if (today) {
         svg.setAttribute("class", "today-tracker");
+    } else if (summary) {
+        svg.setAttribute("class", "summary-tracker");
     } else {
         svg.setAttribute("class", "tracker");
     }
@@ -479,18 +481,18 @@ async function initTracker() {
     });
 
     function createSummaryTracker(label, averageLevels) {
-        const tracker = createDayTracker(label, averageLevels.map(p => -p * 2), true);
+        const tracker = createDayTracker(label, averageLevels.map(p => -p * 2), false, true);
 
-        const labelDiv = document.createElement("div");
-        labelDiv.style.marginBottom = "8px";
-        labelDiv.textContent = label;
+        //const labelDiv = document.createElement("div");
+        //labelDiv.style.marginBottom = "8px";
+        //labelDiv.textContent = label;
 
         const container = document.createElement("div");
         container.style.display = "inline-block";
         container.style.margin = "0 10px";
         container.style.textAlign = "center";
 
-        container.appendChild(labelDiv);
+        //container.appendChild(labelDiv);
         container.appendChild(tracker);
 
         return container;
