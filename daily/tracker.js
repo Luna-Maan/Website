@@ -82,7 +82,7 @@ function generateRadii(numCategories) {
 document.getElementById("edit-categories-btn").addEventListener("click", () => {
     const combined = categories.map((cat, i) => `${cat}_${colors[i]}`).join(", ");
     const newInput = prompt(
-        "Edit categories and colors (format: Category:Color, ...)\nExample: Shower:#ff0000",
+        "Edit categories and colors (format: Category_Color, ...)\nExample: Shower_#ff0000",
         combined
     );
     if (newInput) {
