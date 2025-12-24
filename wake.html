@@ -6,10 +6,12 @@
 </head>
 <body>
   <button id="wake-btn">Wake PC</button>
+  <input id="wake-password" type="password" placeholder="Enter password" />
 
   <script>
     document.getElementById('wake-btn').addEventListener('click', async () => {
-      const password = prompt("Enter wake password:");
+      const passwordInput = document.getElementById('wake-password');
+      const password = passwordInput.value;
 
       if (!password) {
         alert("Password is required.");
@@ -26,7 +28,7 @@
             },
             body: JSON.stringify({ password })
           }
-        );
+        );kyhkyk
 
         const text = await response.text();
 
