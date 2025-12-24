@@ -6,13 +6,16 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <button id="wake-btn">Wake PC</button>
-  <input id="wake-password" type="password" placeholder="Enter password" />
+  <form id="wake-form" autocomplete="current-password">
+    <input id="wake-password" type="password" name="password" placeholder="Password" />
+    <button type="submit">Wake PC</button>
+  </form>
 
   <script>
-    document.getElementById('wake-btn').addEventListener('click', async () => {
-      const passwordInput = document.getElementById('wake-password');
-      const password = passwordInput.value;
+    document.getElementById('wake-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const password = document.getElementById('wake-password').value;
 
       if (!password) {
         alert("Password is required.");
