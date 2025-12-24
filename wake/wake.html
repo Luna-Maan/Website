@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Wake PC</title>
+  
+  <!-- PWA Configuration -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Wake PC">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#000000">
+  
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- iOS Icons -->
+  <link rel="apple-touch-icon" href="icon-192.png">
+  
+  <!-- Android Chrome Icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+</head>
+<body>
+  <div class="container">
+    <input id="wake-password" type="password" name="password" placeholder="Password" autocomplete="current-password" />
+  </div>
+
+  <script>
+    // Ensure proper viewport scaling
+    document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
+    
+    // Update on resize
+    window.addEventListener('resize', () => {
+      document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
+    });
+
+    const passwordInput = document.getElementById('wake-password');
+
+    async function sendWakeRequest(password) {
+      try {
+        const response = await fetch(
+          'https://tutorial-worker.pvanoostveenneo2.workers.dev/wake',
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ password })
+          }
+        );
+
+        const text = await response.text();
+
+        if (response.ok) {
+          alert("Wake signal sent!");
+        } else {
+          alert("Wake failed: " + text);
+        }
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    }
+
+    // Also handle form submission for better compatibility
+    passwordInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && passwordInput.value) {
+        sendWakeRequest(passwordInput.value);
+      }
+    });
+
+    // Detect autofill by listening to input event
+    passwordInput.addEventListener('input', () => {
+      if (passwordInput.value) {
+        sendWakeRequest(passwordInput.value);
+      }
+    });
+    
+    // Focus on input when page loads
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        passwordInput.focus();
+      }, 100);
+    });
+  </script>
+</body>
+</html>
