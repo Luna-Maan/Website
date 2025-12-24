@@ -6,14 +6,11 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <form id="wake-form" autocomplete="current-password">
-    <input id="wake-password" type="password" name="password" placeholder="Password" />
-    <button type="submit">Wake PC</button>
-  </form>
+  <input id="wake-password" type="password" name="password" placeholder="Password" />
+
 
   <script>
     const passwordInput = document.getElementById('wake-password');
-    const form = document.getElementById('wake-form');
 
     async function sendWakeRequest(password) {
       try {
@@ -39,14 +36,6 @@
         alert("Error: " + err.message);
       }
     }
-
-    // Submit form manually
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (passwordInput.value) {
-        sendWakeRequest(passwordInput.value);
-      }
-    });
 
     // Detect autofill by listening to input event
     passwordInput.addEventListener('input', () => {
