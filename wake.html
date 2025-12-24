@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wake PC</title>
+</head>
+<body>
+  <button id="wake-btn">Wake PC</button>
+
+  <script>
+    document.getElementById('wake-btn').addEventListener('click', async () => {
+      const password = prompt("Enter wake password:");
+
+      if (!password) {
+        alert("Password is required.");
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          'https://tutorial-worker.pvanoostveenneo2.workers.dev/wake',
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ password })
+          }
+        );
+
+        const text = await response.text();
+
+        if (response.ok) {
+          alert("Wake signal sent!");
+        } else {
+          alert("Wake failed: " + text);
+        }
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    });
+  </script>
+</body>
+</html>
