@@ -12,16 +12,10 @@
   </form>
 
   <script>
-    document.getElementById('wake-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
+    const passwordInput = document.getElementById('wake-password');
+    const form = document.getElementById('wake-form');
 
-      const password = document.getElementById('wake-password').value;
-
-      if (!password) {
-        alert("Password is required.");
-        return;
-      }
-
+    async function sendWakeRequest(password) {
       try {
         const response = await fetch(
           'https://tutorial-worker.pvanoostveenneo2.workers.dev/wake',
@@ -43,6 +37,21 @@
         }
       } catch (err) {
         alert("Error: " + err.message);
+      }
+    }
+
+    // Submit form manually
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (passwordInput.value) {
+        sendWakeRequest(passwordInput.value);
+      }
+    });
+
+    // Detect autofill by listening to input event
+    passwordInput.addEventListener('input', () => {
+      if (passwordInput.value) {
+        sendWakeRequest(passwordInput.value);
       }
     });
   </script>
