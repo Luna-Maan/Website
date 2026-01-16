@@ -7,12 +7,11 @@ player = [];
 custom = [];
 
 async function fetchGameAchievements(appId) {
-    let response = await fetch(url + '/achievements', {
+    let response = await fetch(url + `/achievements?appId=${appId}`, {
         headers: {
             'Content-Type': 'application/json'
         },
-        method: 'POST',
-        body: JSON.stringify({ appId: appId }),
+        method: 'GET',
     });
     try {
         response = await response.json();
@@ -29,9 +28,8 @@ async function fetchPlayerAchievements(appId, steamId) {
     console.log(appId);
     console.log(steamId);
 
-    let response = await fetch(url + '/player', {
-        method: 'POST',
-        body: JSON.stringify({ appId: appId, steamId: steamId }),
+    let response = await fetch(url + `/player?appId=${appId}&steamId=${steamId}`, {
+        method: 'GET',
     });
     try {
         response = await response.json();
@@ -46,9 +44,8 @@ async function fetchPlayerAchievements(appId, steamId) {
 }
 
 async function fetchSteamId(name) {
-    let response = await fetch(url + '/fetchSteamId', {
-        method: 'POST',
-        body: JSON.stringify({ url: name }),
+    let response = await fetch(url + `/fetchSteamId?url=${name}`, {
+        method: 'GET',
     });
     response = await response.json();
     console.log(response);
@@ -56,9 +53,8 @@ async function fetchSteamId(name) {
 }
 
 async function fetchGameId(name) {
-    let response = await fetch(url + '/fetchGameId', {
-        method: 'POST',
-        body: JSON.stringify({ gameName: name }),
+    let response = await fetch(url + `/fetchGameId?gameName=${name}`, {
+        method: 'GET',
     });
     response = await response.json();
     console.log(response.items.name);
