@@ -14,18 +14,34 @@ async function fetchGameAchievements(appId) {
         method: 'POST',
         body: JSON.stringify({ appId: appId }),
     });
-    response = await response.json();
+    try {
+        response = await response.json();
+    }
+    catch (error) {
+        alert('Error fetching game achievements. Is the appId correct?');
+        return;
+    }
+
     return response;
 }
 
 async function fetchPlayerAchievements(appId, steamId) {
     console.log(appId);
     console.log(steamId);
+
     let response = await fetch(url + '/player', {
         method: 'POST',
         body: JSON.stringify({ appId: appId, steamId: steamId }),
     });
-    response = await response.json();
+    try {
+        response = await response.json();
+    }
+    catch (error) {
+        alert('Error fetching player achievements. Is the profile public? (also make sure the appId is correct)');
+        return;
+    }
+
+
     return response;
 }
 
@@ -269,6 +285,9 @@ async function getSteamData() {
     localStorage.setItem('lastUsedSteamId', steamId);
 
     game = await fetchGameAchievements(appId)
+    if (!game) {
+        return;
+    }
     player = await fetchPlayerAchievements(appId, steamId);
     custom = JSON.parse(localStorage.getItem(appId));
     if (!custom) {
