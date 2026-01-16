@@ -8,6 +8,9 @@ custom = [];
 
 async function fetchGameAchievements(appId) {
     let response = await fetch(url + '/achievements', {
+        headers: {
+            'Content-Type': 'application/json'
+        },
         method: 'POST',
         body: JSON.stringify({ appId: appId }),
     });
@@ -42,12 +45,16 @@ async function fetchGameId(name) {
         body: JSON.stringify({ gameName: name }),
     });
     response = await response.json();
-    gameIDs = response.applist.apps.filter(app => app.name.toLowerCase() === name.toLowerCase());
-    if (gameIDs.length === 0) {
-        gameIDs = response.applist.apps.filter(app => app.name.toLowerCase().includes(name.toLowerCase()));
+    console.log(response.items.name);
+    console.log(name);
+
+    games = response.items.filter(app => app.name.toLowerCase() === name.toLowerCase());
+    console.log(games);
+    if (games.length === 0) {
+        games = response.items.filter(app => app.name.toLowerCase().includes(name.toLowerCase()));
     }
-    console.log(gameIDs);
-    return gameIDs;
+    console.log(games);
+    return games;
 }
 
 function categorizeAchievements() {
@@ -249,7 +256,9 @@ async function getSteamData() {
             alert('Invalid Game Name');
             return;
         }
-        appId = fetched[fetched.length - 1].appid;
+        // appId = fetched[fetched.length - 1].appid;
+        appId = fetched[0].id;
+        console.log('Fetched AppID: ' + appId);
     }
 
     if (localStorage.getItem(appId === null)) {
