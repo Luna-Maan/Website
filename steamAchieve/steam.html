@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="../style.css" />
     <script src="../script.js" defer></script>
     <script src="steam.js" defer></script>
+    <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
@@ -19,9 +20,14 @@
             <a class="white" href="../milan/index.html">Soccer</a>
         </div>
     </nav>
-    <header>
+    <header> 
         <h1>Steam Achievements</h1>
     </header>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('../sw.js')
+        }
+    </script>
     <main>
         <input type="text" id="steamId" placeholder="SteamID64 or custom Url" />
         <input type="text" id="appId" placeholder="App ID or search term" />
