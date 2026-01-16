@@ -4,6 +4,7 @@ const RUNTIME_CACHE = 'tutorial-worker-cache-v1';
 STATIC_FILES = [
     '/',
     '/steamAchieve/steam.html',
+    '/steamAchieve/steam',
     '/steamAchieve/steam.js',
     '/steamAchieve/PWA.css',
     '/steamAchieve/manifest.json',
