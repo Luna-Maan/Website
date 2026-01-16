@@ -13,7 +13,9 @@ STATIC_FILES = [
     '/style.css',
     '/script.js',
     '/steam/achievements',
-    '/steam/player'
+    '/steam/player',
+    '/steam/fetchSteamId',
+    '/steam/fetchGameId'
 ];
 
 self.addEventListener('fetch', event => {
