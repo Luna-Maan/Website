@@ -3,6 +3,7 @@
     <meta charset="utf-8" />
     <title>steam achievement tracker</title>
     <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="PWA.css" />
     <script src="../script.js" defer></script>
     <script src="steam.js" defer></script>
     <link rel="manifest" href="manifest.json">
@@ -32,7 +33,7 @@
         <input type="text" id="steamId" placeholder="SteamID64 or custom Url" />
         <input type="text" id="appId" placeholder="App ID or search term" />
         <button id="getAchievements">Get Achievements</button>
-        <p>The first field needs your steam user ID or your name in your custom profile URL.
+        <p>The first field needs your steam user ID or your name from your profile URL. <br>
             The second field needs the app ID or a search term that will return the first result in the steam store.</p>
 
         <div id="category-section">
@@ -45,7 +46,7 @@
         <label>
             <input type="checkbox" id="divideAchieved"></checkbox>
         </label>
-        <pre></pre>
+        <br>
 
         <label for="exportButton" class="btn">Export</label>
         <button id="exportButton" style="visibility:hidden;">Export</button>

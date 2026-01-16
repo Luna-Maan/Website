@@ -1,0 +1,10 @@
+/* hide navbar when in PWA mode */
+@media all and (display-mode: standalone) {
+    nav {
+        display: none;
+    }
+
+    header {
+        display: none;
+    }
+}
