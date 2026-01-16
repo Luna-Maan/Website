@@ -5,12 +5,14 @@ STATIC_FILES = [
     '/',
     '/steamAchieve/steam.html',
     '/steamAchieve/steam.js',
+    '/steamAchieve/PWA.css',
     '/steamAchieve/manifest.json',
-    '/steamAchieve/icons/icon-192x192.png',
-    '/steamAchieve/icons/icon-512x512.png',
+    '/steamAchieve/icons/manifest-icon-192.maskable.png',
+    '/steamAchieve/icons/manifest-icon-512.maskable.png',
     '/style.css',
     '/script.js',
-    '/steam/achievements'
+    '/steam/achievements',
+    '/steam/player'
 ];
 
 self.addEventListener('fetch', event => {
@@ -25,42 +27,36 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    // Use network first for all other requests
-    event.respondWith(networkFirst(req));
+    // Don't use cache for other requests
+    event.respondWith(
+        fetch(req)
+    );
 });
 
-async function networkFirst(request) {
-    const cache = await caches.open(RUNTIME_CACHE);
-    try {
-        // Try network first
-        const response = await fetch(request.clone());
-
-        // Update cache if successful
-        if (response.ok) {
-            await cache.put(request, response.clone());
-        }
-
-        return response;
-    } catch (err) {
-        // Network failed → offline
-        const cached = await cache.match(request);
-        if (cached) return cached;
-
-        throw err;
-    }
-}
-
 async function cacheFirst(request) {
-    console.log('Cache first for ', request.url);
     const cache = await caches.open(RUNTIME_CACHE);
     const cached = await cache.match(request);
-    if (cached) return cached;
 
-    // Cache miss → try network
-    const response = await fetch(request);
-    if (response.ok) {
-        await cache.put(request, response.clone());
+    console.log('Cache first for ', request.url);
+
+    // Start network request immediately (do not await yet)
+    const networkPromise = fetch(request)
+        .then(response => {
+            if (response.ok) {
+                cache.put(request, response.clone());
+            }
+            return response;
+        })
+        .catch(() => null);
+
+    // If we have cached data, return it immediately
+    if (cached) {
+        return cached;
     }
 
-    return response;
+    // Otherwise wait for the network
+    const networkResponse = await networkPromise;
+    if (networkResponse) return networkResponse;
+
+    throw new Error('Network failed and no cache available');
 }
