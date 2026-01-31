@@ -1,3 +1,5 @@
+const version = "1.0";
+
 let defaultColors = [
     "#5cd670ff",
     "#d6ce5cff",
@@ -8,66 +10,127 @@ let defaultColors = [
     "#5c8fd6ff"
 ];
 
-// Load categories + colors
-function loadCategories() {
-    const allData = localStorage.getItem("trackerData");
-    if (allData) {
-        try {
-            const parsedData = JSON.parse(allData);
+let defaultCategories = [
+    "Fruit",
+    "Shower",
+    "Exercise (30m/60m)",
+    "Screen Time (2h/1h30)",
+    "Browser Time (1h30/1h)",
+    "Sleep (6h30/7h30)",
+    "Bed Time (1:30/0:30)"
+];
 
-            let categories = Array.isArray(parsedData.categories)
-                ? parsedData.categories
-                : [];
+const Data = {
+    version: version,
+    categories: [],
+    colors: [],
+    notes: {},
+    months: {},
 
-            let colors = Array.isArray(parsedData.colors)
-                ? parsedData.colors
-                : defaultColors.slice(0, categories.length);
+    init() {
+        const allData = localStorage.getItem("trackerData");
 
-            // Ensure colors length matches categories
-            if (colors.length < categories.length) {
-                colors = colors.concat(
-                    defaultColors.slice(colors.length, categories.length)
-                );
-            }
-
-            return { categories, colors };
-        } catch {
-            return { categories: [], colors: defaultColors };
+        if (!allData) {
+            this.setDefaults();
+            return this;
         }
+
+        if (allData) {
+            try {
+                const parsed = JSON.parse(allData);
+
+                // --- DATA MIGRATION LOGIC ---
+                if (!parsed.version || parsed.version < version) {
+                    console.log("Migrating data to version 1.0...");
+                    this.version = version;
+                    this.months = {};
+                    // Move old root-level keys (e.g., "2025-06") into the months object
+                    Object.keys(parsed).forEach(key => {
+                        if (/^\d{4}-\d{2}$/.test(key)) { // Matches "YYYY-MM"
+                            this.months[key] = parsed[key];
+                        }
+                    });
+                    this.notes = parsed.notes || {};
+                    this.categories = parsed.categories || [...defaultCategories];
+                    this.colors = parsed.colors || [...defaultColors];
+                    this.persist(); // Save migrated format immediately
+                } else {
+                    this.categories = parsed.categories;
+                    this.colors = parsed.colors;
+                    this.notes = parsed.notes;
+                    this.months = parsed.months;
+                }
+            } catch (e) {
+                console.error("Critical: Storage corrupted.", e);
+                this.setDefaults();
+            }
+        }
+        return this;
+    },
+
+    setDefaults() {
+        this.version = version;
+        this.categories = [...defaultCategories];
+        this.colors = [...defaultColors];
+        this.notes = {};
+        this.months = {};
+        this.persist();
+    },
+
+    persist() {
+        const allData = {
+            version: this.version,
+            categories: this.categories,
+            colors: this.colors,
+            notes: this.notes,
+            months: this.months
+        };
+        localStorage.setItem("trackerData", JSON.stringify(allData));
+    },
+
+    getState() {
+        return {
+            version: this.version,
+            categories: this.categories,
+            colors: this.colors,
+            notes: this.notes,
+            months: this.months
+        };
+    },
+
+    getMonthData(monthKey) {
+        if (!this.months[monthKey]) {
+            const daysInMonth = new Date(...monthKey.split("-").map(Number), 0).getDate();
+            this.months[monthKey] = Array.from({ length: daysInMonth }, () => Array(this.categories.length).fill(0));
+            this.persist();
+        }
+        return this.months[monthKey];
+    },
+
+    setDayLevel(monthKey, dayIndex, categoryIndex, level) {
+        console.log(`Setting level for ${monthKey}, day ${dayIndex}, category ${categoryIndex} to ${level}`);
+        const monthData = this.getMonthData(monthKey);
+        monthData[dayIndex][categoryIndex] = level;
+        this.persist();
+    },
+
+    setNote(notesKey, note) {
+        this.notes[notesKey] = note;
+        this.persist();
+    },
+
+    updateMetaData(newCategories, newColors) {
+        this.categories = [...newCategories];
+        this.colors = [...newColors];
+        this.persist();
     }
-    return { categories: [], colors: defaultColors };
-}
+};
 
-// Save categories + colors
-function saveCategories(categories, colors) {
-    const allData = JSON.parse(localStorage.getItem("trackerData") || '{}');
-    allData.categories = [...categories]; // clone array
-    allData.colors = [...colors];         // clone array
-    localStorage.setItem("trackerData", JSON.stringify(allData));
-}
+Data.init();
 
+const emptyArray = Array(Data.categories.length).fill(0);
 
-let { categories, colors } = loadCategories();
-
-if (!categories || categories.length === 0) {
-    categories = [
-        "Fruit",
-        "Shower",
-        "Exercise (30m/60m)",
-        "Screen Time (2h/1h30)",
-        "Browser Time (1h30/1h)",
-        "Sleep (6h30/7h30)",
-        "Bed Time (1:30/0:30)"
-    ];
-    colors = defaultColors.slice(0, categories.length);
-    saveCategories(categories, colors);
-}
-
-const labels = categories;
-
-const emptyArray = Array(categories.length).fill(0);
-
-let radii = generateRadii(categories.length);
+let radii = generateRadii(Data.categories.length);
 function generateRadii(numCategories) {
     const radii = [];
     let radius = 8;
@@ -80,7 +143,7 @@ function generateRadii(numCategories) {
 
 // Edit button
 document.getElementById("edit-categories-btn").addEventListener("click", () => {
-    const combined = categories.map((cat, i) => `${cat}_${colors[i]}`).join(", ");
+    const combined = Data.categories.map((cat, i) => `${cat}_${Data.colors[i]}`).join(", ");
     const newInput = prompt(
         "Edit categories and colors (format: Category_Color, ...)\nExample: Shower_#ff0000",
         combined
@@ -99,9 +162,7 @@ document.getElementById("edit-categories-btn").addEventListener("click", () => {
         });
 
         if (newCategories.length > 0) {
-            categories = newCategories;
-            colors = newColors;
-            saveCategories(categories, colors);
+            Data.updateMetaData(newCategories, newColors);
             location.reload();
         }
     }
@@ -204,7 +265,7 @@ function createDayTracker(day, levels = emptyArray, today = false, summary = fal
 
         const path = document.createElementNS(svgNS, "path");
         path.setAttribute("class", "fill");
-        path.setAttribute("stroke", colors[i]);
+        path.setAttribute("stroke", Data.colors[i]);
         path.setAttribute("stroke-width", "16");
         path.setAttribute("fill", "none");
 
@@ -231,27 +292,6 @@ function createDayTracker(day, levels = emptyArray, today = false, summary = fal
     wrapper.appendChild(label);
     wrapper.appendChild(svg);
     return wrapper;
-}
-
-// Helper: Save current state to localStorage
-function saveStateToLocalStorage(monthKey, monthData) {
-    const allData = JSON.parse(localStorage.getItem('trackerData') || '{}');
-    allData[monthKey] = monthData;
-    localStorage.setItem('trackerData', JSON.stringify(allData));
-}
-
-
-// Helper: Load from localStorage or fallback to fetched data.json
-async function loadData(monthKey) {
-    const allData = JSON.parse(localStorage.getItem('trackerData') || '{}');
-
-    if (!allData[monthKey]) {
-        const daysInMonth = new Date(...monthKey.split("-").map(Number), 0).getDate();
-        allData[monthKey] = Array.from({ length: daysInMonth }, () => [...emptyArray]);
-        localStorage.setItem('trackerData', JSON.stringify(allData));
-    }
-
-    return allData[monthKey];
 }
 
 async function initTracker() {
@@ -300,7 +340,7 @@ async function initTracker() {
         if (focusDay > daysInMonth) focusDay = daysInMonth;
         dayInput.max = daysInMonth;
 
-        let data = await loadData(monthStr);
+        let data = await Data.getMonthData(monthStr);
         if (data.length < daysInMonth) {
             for (let i = data.length; i < daysInMonth; i++) {
                 data[i] = emptyArray;
@@ -320,7 +360,7 @@ async function initTracker() {
 
         const goalGroups = todayTracker.querySelectorAll(".goal");
 
-        labels.forEach((label, i) => {
+        Data.categories.forEach((label, i) => {
             const row = document.createElement("div");
             row.style.display = "flex";
             row.style.alignItems = "center";
@@ -329,7 +369,7 @@ async function initTracker() {
 
             const span = document.createElement("span");
             span.textContent = `${label}: `;
-            span.style.color = colors[i];
+            span.style.color = Data.colors[i];
 
             const input = document.createElement("input");
             input.className = "level-input";
@@ -348,7 +388,7 @@ async function initTracker() {
                 group.setAttribute("data-level", val);
                 updateArc(path, val, radii[i]);
                 data[focusDay - 1][i] = val;
-                saveStateToLocalStorage(monthStr, data);
+                Data.setDayLevel(monthStr, focusDay - 1, i, val);
                 render(monthStr, focusDay);
             });
 
@@ -361,15 +401,15 @@ async function initTracker() {
 
         // --- Notes Section ---
         const notesKey = `${monthStr}-${focusDay}`;
-        let allData = JSON.parse(localStorage.getItem('trackerData') || '{}');
-        const note = allData.notes?.[notesKey] || "";
 
         const notesInput = document.getElementById("daily-notes");
-        notesInput.addEventListener("input", () => {
-            const updatedData = JSON.parse(localStorage.getItem('trackerData') || '{}');
-            if (!updatedData.notes) updatedData.notes = {};
-            updatedData.notes[notesKey] = notesInput.value;
-            localStorage.setItem('trackerData', JSON.stringify(updatedData));
+        notesInput.value = Data.notes[notesKey] || "";
+        notesInput.placeholder = "Add your notes for the day here...";
+        notesInput.replaceWith(notesInput.cloneNode(true));
+
+        const newNotesInput = document.getElementById("daily-notes");
+        newNotesInput.addEventListener("input", () => {
+            Data.setNote(notesKey, newNotesInput.value);
         });
 
         todayContainer.appendChild(todayWrapper);
@@ -394,7 +434,7 @@ async function initTracker() {
                 updateArc(path, level, radius);
 
                 data[focusDay - 1][i] = level;
-                saveStateToLocalStorage(monthStr, data);
+                Data.setDayLevel(monthStr, focusDay - 1, i, level);
 
                 render(monthStr, focusDay); // Re-render to update the view
             });
@@ -420,7 +460,7 @@ async function initTracker() {
 
                 if (dayNumber && ringIndex !== -1) {
                     data[dayNumber - 1][ringIndex] = level;
-                    saveStateToLocalStorage(monthStr, data);
+                    Data.setDayLevel(monthStr, dayNumber - 1, ringIndex, level);
                 }
 
                 render(monthStr, focusDay); // Re-render to update the view
@@ -441,12 +481,11 @@ async function initTracker() {
 
         // Parse selected date
         const currentDate = new Date(year, month - 1, focusDay);
-        allData = JSON.parse(localStorage.getItem('trackerData') || '{}');
 
         // Go backwards in time day by day
         while (streakBroken.some(broken => !broken)) {
             const key = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
-            const monthData = allData[key];
+            const monthData = Data.months[key];
             if (!monthData) break;
 
             const dayIndex = currentDate.getDate() - 1;
@@ -467,7 +506,7 @@ async function initTracker() {
         }
 
         // Display streaks
-        for (let i = 0; i < categories.length; i++) {
+        for (let i = 0; i < Data.categories.length; i++) {
             const streak = streaks[i];
 
             // Choose emoji based on streak length
@@ -484,8 +523,8 @@ async function initTracker() {
             }
 
             const line = document.createElement("div");
-            line.textContent = `${emoji ? emoji + " " : ""}${labels[i]}: ${streak} day${streak === 1 ? '' : 's'}`;
-            line.style.color = colors[i];
+            line.textContent = `${emoji ? emoji + " " : ""}${Data.categories[i]}: ${streak} day${streak === 1 ? '' : 's'}`;
+            line.style.color = Data.colors[i];
             line.style.marginBottom = "4px";
             streaksContainer.appendChild(line);
         }
@@ -504,7 +543,7 @@ async function initTracker() {
 
         for (let mo = 1; mo <= 12; mo++) {
             const key = `${y}-${String(mo).padStart(2, '0')}`;
-            const monthData = JSON.parse(localStorage.getItem('trackerData') || '{}')[key];
+            const monthData = Data.months[key];
             if (!monthData) continue;
 
             const maxDay = (y === today.getFullYear() && mo === today.getMonth() + 1) ? today.getDate() : monthData.length;
@@ -564,15 +603,16 @@ async function initTracker() {
 
 window.addEventListener('DOMContentLoaded', initTracker);
 
+
 //MARK: Export/Import
 document.getElementById('export-btn').addEventListener('click', () => {
-    const allData = JSON.parse(localStorage.getItem('trackerData') || '{}');
+    const allData = Data.getState();
     const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'tracker-data.json';
+    a.download = `tracker-backup-v${Data.version}.json`;
     a.click();
 
     URL.revokeObjectURL(url);
@@ -605,8 +645,6 @@ document.getElementById('cloud-save-btn').addEventListener('click', async () => 
         return;
     }
 
-    const trackerData = JSON.parse(localStorage.getItem('trackerData') || '{}');
-
     try {
         const response = await fetch('https://tutorial-worker.pvanoostveenneo2.workers.dev/tracker', {
             method: "POST",
@@ -616,7 +654,7 @@ document.getElementById('cloud-save-btn').addEventListener('click', async () => 
             body: JSON.stringify({
                 username,
                 password,
-                data: trackerData
+                data: Data.getState()
             })
         });
 
