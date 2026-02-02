@@ -1,4 +1,7 @@
 import { Data } from './data.js';
+import { TrackerUI } from './tracker-ui.js';
+import { stats } from './stats.js';
+
 Data.init();
 
 let radii = generateRadii(Data.categories.length);
@@ -40,175 +43,45 @@ document.getElementById("edit-categories-btn").addEventListener("click", () => {
     }
 });
 
-
-function getArcPath(x, y, r, startAngle, endAngle) {
-    const rad = (angle) => (angle - 90) * Math.PI / 180.0;
-    const p1 = { x: x + r * Math.cos(rad(startAngle)), y: y + r * Math.sin(rad(startAngle)) };
-    const p2 = { x: x + r * Math.cos(rad(endAngle)), y: y + r * Math.sin(rad(endAngle)) };
-
-    const diff = Math.abs(endAngle - startAngle);
-    if (diff >= 360) {
-        // Full circle fix: Path cannot start and end at same point
-        return `M ${x - r} ${y} a ${r} ${r} 0 1 1 ${r * 2} 0 a ${r} ${r} 0 1 1 ${-r * 2} 0`;
-    }
-
-    const largeArc = diff > 180 ? 1 : 0;
-    const sweep = endAngle >= startAngle ? 1 : 0;
-    return `M ${p1.x} ${p1.y} A ${r} ${r} 0 ${largeArc} ${sweep} ${p2.x} ${p2.y}`;
-}
-
-function updateArc(path, level, r) {
-    const maxRadius = Math.max(...radii);
-    const padding = 10;
-    const center = (maxRadius + padding);
-    const angle = (level / 2) * 360;
-
-    if (angle === 0) {
-        path.setAttribute('d', '');
-    } else {
-        // Always start from the top (0°) and go to the calculated angle
-        path.setAttribute('d', getArcPath(center, center, r, 0, angle));
-    }
-}
-
-const createElNS = (tag, attrs = {}) => {
-    const svgNS = "http://www.w3.org/2000/svg";
-    const el = document.createElementNS(svgNS, tag);
-    Object.entries(attrs).forEach(([k, v]) => {
-        if (v == null) return;
-        el.setAttribute(k, String(v));
-    });
-    return el;
-};
-
-/**
- * 
- * @param {*} day 
- * @param {*} levels 
- * @param {*} type 'today' or 'summary' or 'day'
- * @returns 
- */
-function createDayTracker(dayNr, levels, type) {
-    const svgNS = "http://www.w3.org/2000/svg";
-    const svg = document.createElementNS(svgNS, "svg");
-    if (type === "today") {
-        svg.setAttribute("class", "today-tracker");
-    } else if (type === "summary") {
-        svg.setAttribute("class", "summary-tracker");
-    } else {
-        svg.setAttribute("class", "tracker");
-    }
-
-    const maxRadius = Math.max(...radii);
-    const padding = 10;
-    const width = (maxRadius + padding) * 2;
-    const center = (maxRadius + padding);
-
-    svg.setAttribute("viewBox", `0 0 ${width} ${width}`);
-
-    for (let i = 0; i < Data.categories.length; i++) {
-        const group = createElNS("g");
-        group.classList.add("goal");
-        group.dataset.index = i;
-        group.dataset.dayNr = dayNr;
-        group.dataset.level = levels[i] ?? 0;
-        group.dataset.radius = radii[i];
-
-        const circle = createElNS("circle", {
-            class: "bg",
-            cx: center,
-            cy: center,
-            r: radii[i],
-            fill: "none",
-            stroke: "#d6d6d6ff",
-            "stroke-width": "16"
-        });
-
-        const path = createElNS("path", {
-            class: "fill",
-            stroke: Data.colors[i],
-            "stroke-width": "16",
-            fill: "none"
-        });
-        path.dataset.index = i;
-        path.dataset.dayNr = dayNr;
-
-        updateArc(path, levels[i] ?? 0, radii[i]);
-
-        group.appendChild(circle);
-        group.appendChild(path);
-        svg.appendChild(group);
-    }
-
-    const wrapper = document.createElement("div");
-    wrapper.className = "day-wrapper";
-    wrapper.style.display = "inline-block";
-    wrapper.style.margin = "2px";
-    wrapper.style.textAlign = "center";
-    wrapper.dataset.dayNr = dayNr;
-
-    const label = document.createElement("div");
-    if (type === "day") {
-        label.textContent = dayNr;
-    }
-
-    label.style.marginBottom = "4px";
-
-    wrapper.appendChild(label);
-    wrapper.appendChild(svg);
-    return wrapper;
-}
-
-function createSummaryTracker(label, averageLevels) {
-    const tracker = createDayTracker(label, averageLevels.map(p => -p * 2), "summary");
-
-    const container = document.createElement("div");
-    container.style.display = "inline-block";
-    container.style.margin = "0 10px";
-    container.style.textAlign = "center";
-    container.appendChild(tracker);
-
-    return container;
-}
-
-function updateMonthRing(dayNr, ringIndex, level) {
-    const grid = document.getElementById("tracker-grid");
-    const gridDay = grid.querySelector(`.day-wrapper[data-day-nr='${dayNr}']`);
-    gridDay.setAttribute('data-level', level);
-    const radius = parseFloat(gridDay.querySelector(`.goal[data-index='${ringIndex}'] .bg`).getAttribute('r'));
-    updateArc(gridDay.querySelector('.fill'), level, radius);
-}
-
 function handleLevelChange(monthStr, dayNr, ringIndex, goal, updateInput = true) {
-    let level = parseInt(goal.getAttribute('data-level'), 10);
+    const inputField = document.querySelector(`.level-input[data-index='${ringIndex}']`);
+    let level;
+
     if (updateInput) {
-        level = (level + 1) % 3;
+        level = (parseInt(goal.getAttribute('data-level'), 10) + 1) % 3;
+    } else {
+        level = parseInt(inputField.value, 10);
     }
 
+    // Update the element that was actually clicked (Today OR Grid)
     goal.setAttribute('data-level', level);
     const path = goal.querySelector(".fill");
     const radius = parseFloat(goal.querySelector(".bg").getAttribute('r'));
+    TrackerUI.updateArc(path, level, radius, radii);
 
-    updateArc(path, level, radius);
-    updateMonthRing(dayNr, ringIndex, level);
-
-    const inputField = document.querySelector(`.level-input[data-index='${ringIndex}']`);
+    // Sync the Today View input box
     if (inputField) {
         inputField.value = level;
     }
 
+    // Sync the Month Grid (this handles updating the small trackers)
+    TrackerUI.updateMonthRing(dayNr, ringIndex, level, radii);
+
+    // Persist data
     Data.setDayLevel(monthStr, dayNr - 1, ringIndex, level);
 
     const daysInMonth = new Date(...monthStr.split("-").map(Number), 0).getDate();
-    displayStreaks(monthStr, dayNr);
-    displaySummary(monthStr, daysInMonth);
+    stats.displayStreaks(monthStr, dayNr);
+    stats.displaySummary(monthStr, daysInMonth, radii);
 }
 
 async function initTracker() {
     const grid = document.getElementById("tracker-grid");
-    const todayContainer = document.getElementById("today-tracker");
     const monthInput = document.getElementById("month-selector");
     const dayInput = document.getElementById("day-selector");
+
+    const monthTitle = document.getElementById("selected-month-title");
+    const dayTitle = document.getElementById("selected-day-title");
 
     // Default to today
     let today = new Date();
@@ -218,10 +91,9 @@ async function initTracker() {
     monthInput.value = defaultMonthStr;
     dayInput.value = defaultDay;
 
+    createInputPanel();
+
     async function render(monthStr, focusDay) {
-        // Update titles
-        const monthTitle = document.getElementById("selected-month-title");
-        const dayTitle = document.getElementById("selected-day-title");
 
         const [y, m] = monthStr.split("-").map(Number);
         const date = new Date(y, m - 1, focusDay);
@@ -240,7 +112,6 @@ async function initTracker() {
 
         // Clear containers
         grid.innerHTML = "";
-        todayContainer.innerHTML = "";
 
         const [year, month] = monthStr.split("-").map(Number);
         const daysInMonth = new Date(year, month, 0).getDate(); // month is 1-indexed here
@@ -254,27 +125,31 @@ async function initTracker() {
 
         // --- Focus Day Section ---
         const todayLevels = data[focusDay - 1];
-        const todayWrapper = document.createElement('div');
-        todayWrapper.className = "today-wrapper";
-
-        const todayTracker = createDayTracker(focusDay, todayLevels, "today");
+        const todayWrapper = document.getElementById("today-wrapper");
+        todayWrapper.innerHTML = "";
+        const todayTracker = TrackerUI.createDayTracker(focusDay, todayLevels, "today", radii);
         todayWrapper.appendChild(todayTracker);
 
         // Input panel
         const goalGroups = todayTracker.querySelectorAll(".goal");
-        const inputPanel = createInputPanel(year, monthStr, focusDay, todayLevels, goalGroups);
-        todayWrapper.appendChild(inputPanel);
+        const inputs = document.querySelectorAll(".level-input");
+        inputs.forEach((input, i) => {
+            input.value = todayLevels[i] ?? 0;
+            // Update the 'change' logic to use current render context
+            input.onchange = () => {
+                const goalGroup = todayTracker.querySelector(`.goal[data-index='${i}']`);
+                handleLevelChange(monthStr, focusDay, i, goalGroup, false);
+            };
+        });
 
         // --- Notes Section ---
         createNoteSection(monthStr, focusDay);
-
-        todayContainer.appendChild(todayWrapper);
 
         // --- Grid of the Month ---
         for (let day = 1; day <= daysInMonth; day++) {
             const levels = data[day - 1];
             console.log(`Creating tracker for day ${day} with levels`, levels);
-            const tracker = createDayTracker(day, levels, "day");
+            const tracker = TrackerUI.createDayTracker(day, levels, "day", radii);
             grid.appendChild(tracker);
         }
 
@@ -287,17 +162,18 @@ async function initTracker() {
         });
 
         // Clickable tracking for month grid
-        grid.querySelectorAll('.goal').forEach((goal, i) => {
-            const index = goal.dataset.index;
-            const dayNr = goal.parentElement.parentElement.dataset.dayNr;
+        grid.querySelectorAll('.goal').forEach((goal) => {
+            const index = parseInt(goal.dataset.index, 10);
+            const dayNr = parseInt(goal.closest('.day-wrapper').dataset.dayNr, 10);
 
-            goal.addEventListener('click', () => {
-                handleLevelChange(monthStr, dayNr, index, goalGroups[index]);
+            goal.addEventListener('click', (e) => {
+                e.stopPropagation();
+                handleLevelChange(monthStr, dayNr, index, goal);
             });
         });
 
-        displayStreaks(monthStr, focusDay);
-        displaySummary(monthStr, daysInMonth);
+        stats.displayStreaks(monthStr, focusDay);
+        stats.displaySummary(monthStr, daysInMonth, radii);
     }
 
     // Attach change listeners
@@ -314,16 +190,13 @@ async function initTracker() {
 
 window.addEventListener('DOMContentLoaded', initTracker);
 
-function createInputPanel(year, monthStr, focusDay, todayLevels, goalGroups) {
-    const inputPanel = document.createElement('div');
-    inputPanel.innerHTML = "<strong>Set fill levels (0–2):</strong><br>";
+function createInputPanel() {
+    const container = document.getElementById("input-panel-container"); // Add this ID to your HTML
+    container.innerHTML = "<strong>Set fill levels (0–2):</strong>";
 
     Data.categories.forEach((label, i) => {
         const row = document.createElement("div");
-        row.style.display = "flex";
-        row.style.alignItems = "center";
-        row.style.marginBottom = "4px";
-        row.style.gap = "8px";
+        row.className = "input-row";
 
         const span = document.createElement("span");
         span.textContent = `${label}: `;
@@ -331,28 +204,14 @@ function createInputPanel(year, monthStr, focusDay, todayLevels, goalGroups) {
 
         const input = document.createElement("input");
         input.className = "level-input";
-        input.dataset.index = i;
         input.type = "number";
         input.min = "0";
         input.max = "2";
-        input.value = todayLevels[i];
-        input.style.width = "4em";
-        input.style.marginLeft = "auto";
+        input.dataset.index = i; // Crucial for identification
 
-        input.addEventListener("change", () => {
-            let val = Math.max(0, Math.min(2, parseInt(input.value, 10) || 0));
-            const group = goalGroups[i];
-            group.dataset.level = val;
-
-            console.log(`Input change: Setting level for ${monthStr}, day ${focusDay}, category ${i} to ${val}`);
-            handleLevelChange(monthStr, focusDay, i, group, false);
-        });
-
-        row.appendChild(span);
-        row.appendChild(input);
-        inputPanel.appendChild(row);
+        row.append(span, input);
+        container.appendChild(row);
     });
-    return inputPanel;
 }
 
 function createNoteSection(monthStr, focusDay) {
@@ -367,115 +226,6 @@ function createNoteSection(monthStr, focusDay) {
     newNotesInput.addEventListener("input", () => {
         Data.setNote(notesKey, newNotesInput.value);
     });
-}
-
-async function displayStreaks(monthStr, focusDay) {
-    const [year, month] = monthStr.split("-").map(Number);
-    const streaksContainer = document.getElementById("streak-counters");
-    streaksContainer.innerHTML = "";
-
-    // Initialize streaks per category
-    let streaks = Array(Data.categories.length).fill(0);
-    let streakBroken = Array(Data.categories.length).fill(false);
-
-    // Parse selected date
-    const currentDate = new Date(year, month - 1, focusDay);
-
-    // Go backwards in time day by day
-    while (streakBroken.some(broken => !broken)) {
-        const key = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
-        const monthData = Data.months[key];
-        if (!monthData) break;
-
-        const dayIndex = currentDate.getDate() - 1;
-        const levels = monthData[dayIndex] ?? Array(Data.categories.length).fill(0);
-
-        for (let i = 0; i < levels.length; i++) {
-            if (streakBroken[i]) continue;
-            const level = levels[i] ?? 0;
-            if (level >= 1) {
-                streaks[i]++;
-            } else {
-                streakBroken[i] = true;
-            }
-        }
-
-        // Go back one day
-        currentDate.setDate(currentDate.getDate() - 1);
-    }
-
-    // Display streaks
-    for (let i = 0; i < Data.categories.length; i++) {
-        const streak = streaks[i];
-
-        // Choose emoji based on streak length
-        let emoji = "";
-        if (streak >= 20) {
-            const times = Math.floor((streak - 10) / 10);
-            emoji = "🔥".repeat(times);
-        } else if (streak >= 15) {
-            emoji = "🏅";
-        } else if (streak >= 10) {
-            emoji = "💪";
-        } else if (streak >= 5) {
-            emoji = "✨";
-        }
-
-        const line = document.createElement("div");
-        line.textContent = `${emoji ? emoji + " " : ""}${Data.categories[i]}: ${streak} day${streak === 1 ? '' : 's'}`;
-        line.style.color = Data.colors[i];
-        line.style.marginBottom = "4px";
-        streaksContainer.appendChild(line);
-    }
-}
-
-function displaySummary(monthStr, daysInMonth) {
-    const [year, month] = monthStr.split("-").map(Number);
-    const summaryMonthContainer = document.getElementById("month-summary");
-    const summaryYearContainer = document.getElementById("year-summary");
-
-
-    summaryMonthContainer.innerHTML = "";
-    summaryYearContainer.innerHTML = "";
-    // MARK: Summaries
-    // Summary for the selected month
-    const today = new Date();
-    const isCurrentMonth = today.getFullYear() === year && today.getMonth() + 1 === month;
-    const dayCutoff = isCurrentMonth ? today.getDate() : daysInMonth;
-    const monthData = Data.months[monthStr];
-    const monthAverages = computeAverages(monthData || [], dayCutoff);
-    summaryMonthContainer.appendChild(createSummaryTracker("Month", monthAverages));
-
-    // Summary for the selected year
-    let yearTotal = Array(Data.categories.length).fill(0);
-    let yearDays = 0;
-
-    for (let mo = 1; mo <= 12; mo++) {
-        const key = `${year}-${String(mo).padStart(2, '0')}`;
-        const monthData = Data.months[key];
-        if (!monthData) continue;
-
-        const maxDay = (year === today.getFullYear() && mo === today.getMonth() + 1) ? today.getDate() : monthData.length;
-        for (let i = 0; i < maxDay; i++) {
-            for (let j = 0; j < Data.categories.length; j++) {
-                yearTotal[j] += monthData[i]?.[j] ?? 0;
-            }
-        }
-        yearDays += maxDay;
-    }
-
-    const yearAverages = yearTotal.map(sum => (sum / (yearDays || 1)) / 2);
-    summaryYearContainer.appendChild(createSummaryTracker("Year", yearAverages));
-}
-
-function computeAverages(data, dayLimit) {
-    const total = Array(Data.categories.length).fill(0);
-    for (let i = 0; i < dayLimit && i < data.length; i++) {
-        for (let j = 0; j < Data.categories.length; j++) {
-            total[j] += data[i]?.[j] ?? 0;
-        }
-    }
-    return total.map(sum => (sum / (dayLimit || 1)) / 2);  // Normalize: level 2 = 100%
 }
 
 //MARK: Export/Import
@@ -507,7 +257,6 @@ document.getElementById('import-file').addEventListener('change', async (event) 
         alert("Invalid file or corrupted data.");
     }
 });
-
 
 //MARK: Cloud
 document.getElementById('cloud-save-btn').addEventListener('click', async () => {
