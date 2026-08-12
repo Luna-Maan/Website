@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exactly — precision puzzles</title>
+<style>
+  :root{
+    --bg: #10141b;
+    --panel: #161b24;
+    --panel-hover: #1c2330;
+    --grid: rgba(125, 211, 252, 0.06);
+    --ink: #e7edf5;
+    --dim: #7c8a9e;
+    --accent: #7dd3fc;
+    --accent-dim: #3a6a82;
+    --good: #6ee7b7;
+    --bad: #fb7185;
+    --mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* fills the viewport, but always leaves room below for the result line + next button */
+    --content-w: min(94vw, calc(100vh - 300px), 1000px);
+    --menu-w: min(94vw, 640px);
+  }
+  *{ box-sizing: border-box; }
+  html,body{
+    margin:0; padding:0; height:100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  body{
+    display:flex; flex-direction:column; align-items:center;
+    min-height:100%;
+    padding: 18px 16px 32px;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  header{
+    width:100%; max-width: var(--content-w);
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom: 6px;
+  }
+  .left-controls{ display:flex; align-items:center; gap:12px; }
+  .wordmark{
+    font-family: var(--mono);
+    letter-spacing: 0.02em;
+    font-size: 15px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .wordmark b{ color: var(--ink); font-weight: 600; }
+  .round-counter{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--dim);
+  }
+  .back-btn{
+    display:none;
+    align-items:center; gap:6px;
+    background:transparent; border:1px solid rgba(125,211,252,0.25);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight:600; font-size:13px;
+    padding: 7px 12px 7px 10px;
+    border-radius: 7px;
+    cursor:pointer;
+  }
+  .back-btn:hover{ background: rgba(125,211,252,0.08); border-color: rgba(125,211,252,0.4); }
+  .back-btn.show{ display:inline-flex; }
+
+  h1{
+    width:100%; max-width:var(--content-w);
+    font-size: clamp(24px, 4.5vw, 36px);
+    font-weight: 700;
+    margin: 4px 0 2px;
+    letter-spacing: -0.01em;
+  }
+  .sub{
+    width:100%; max-width:var(--content-w);
+    color: var(--dim);
+    font-size: clamp(14px, 1.6vw, 17px);
+    margin-bottom: 18px;
+  }
+
+  /* ---------- game screen ---------- */
+  #gameScreen{ display:none; flex-direction:column; align-items:center; width:100%; }
+  #gameScreen.show{ display:flex; }
+
+  .stage{
+    position:relative;
+    width:100%; max-width:var(--content-w);
+    aspect-ratio: 1 / 1;
+    background: var(--panel);
+    border: 1px solid rgba(125,211,252,0.12);
+    border-radius: 10px;
+    overflow:hidden;
+    box-shadow: 0 20px 60px -30px rgba(0,0,0,0.7);
+    touch-action: none;
+  }
+  svg{ display:block; width:100%; height:100%; cursor: crosshair; touch-action: none; }
+
+  .hint-row{
+    display:flex; justify-content:space-between; align-items:center;
+    width:100%; max-width:var(--content-w); margin-top: 14px;
+  }
+  .streak{
+    font-family: var(--mono); font-size: 12px; color: var(--dim);
+  }
+  .streak b{ color: var(--accent); font-weight:600; }
+
+  /* result line — no boxed panel, just plain centered text */
+  .result{
+    width:100%; max-width:var(--content-w);
+    margin-top: 18px;
+    min-height: 26px;
+    text-align:center;
+    display:none;
+  }
+  .result.show{ display:block; animation: rise 240ms ease-out; }
+  @keyframes rise{ from{ opacity:0; transform: translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .result-line{
+    font-family: var(--mono);
+    font-size: clamp(15px, 1.8vw, 18px);
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .result-line .verdict-word{ font-weight: 700; }
+  .result-line .verdict-word.good{ color: var(--good); }
+  .result-line .verdict-word.bad{ color: var(--bad); }
+  .result-line .score{ color: var(--accent); font-weight:600; }
+  .result-line .pct{ color: var(--dim); }
+
+  button{
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 20px;
+    cursor: pointer;
+    transition: transform 100ms ease, background 150ms ease;
+  }
+  button:active{ transform: scale(0.97); }
+  .btn-primary{
+    background: var(--accent);
+    color: #0a1620;
+    margin-top: 18px;
+  }
+  .btn-primary:hover{ background: #93ddfd; }
+
+  footer{
+    margin-top: 20px;
+    color: var(--dim);
+    font-size: 12px;
+    text-align:center;
+    max-width: 520px;
+    font-family: var(--mono);
+  }
+
+  /* ---------- menu screen ---------- */
+  #menuScreen{ display:flex; flex-direction:column; align-items:center; width:100%; flex:1; }
+  #menuScreen.hide{ display:none; }
+
+  .menu-hero{
+    width:100%; max-width:var(--menu-w);
+    margin-top: 8px;
+  }
+  .menu-hero h1{ max-width:none; }
+  .menu-hero .sub{ max-width:none; }
+
+  .play-order-btn{
+    width:100%; max-width:var(--menu-w);
+    background: var(--accent);
+    color:#0a1620;
+    font-size:15px;
+    padding:14px 18px;
+    border-radius:10px;
+    text-align:left;
+    display:flex; align-items:center; justify-content:space-between;
+    margin: 6px 0 22px;
+  }
+  .play-order-btn:hover{ background:#93ddfd; }
+  .play-order-btn .arrow{ font-family:var(--mono); font-size:18px; }
+
+  .puzzle-list{
+    width:100%; max-width:var(--menu-w);
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .puzzle-card{
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    background: var(--panel);
+    border: 1px solid rgba(125,211,252,0.12);
+    border-radius: 10px;
+    padding: 16px 18px;
+    cursor:pointer;
+    text-align:left;
+    width:100%;
+    color: var(--ink);
+  }
+  .puzzle-card:hover{ background: var(--panel-hover); border-color: rgba(125,211,252,0.28); }
+  .puzzle-card .info{ display:flex; flex-direction:column; gap:3px; }
+  .puzzle-card .name{ font-weight:700; font-size:16px; }
+  .puzzle-card .desc{ color: var(--dim); font-size:13px; font-family: var(--mono); }
+  .puzzle-card .go{ font-family: var(--mono); color: var(--accent); font-size:14px; flex-shrink:0; }
+
+  .menu-footer{
+    margin-top: 24px;
+    color: var(--dim);
+    font-size: 12px;
+    text-align:center;
+    max-width: 520px;
+    font-family: var(--mono);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .result.show{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+  <header>
+    <div class="left-controls">
+      <button class="back-btn" id="backBtn">&larr; Menu</button>
+      <div class="wordmark" id="wordmark"><b>Exactly</b></div>
+    </div>
+    <div class="round-counter" id="roundCounter"></div>
+  </header>
+
+  <!-- ============ MENU SCREEN ============ -->
+  <div id="menuScreen">
+    <div class="menu-hero">
+      <h1>Exactly</h1>
+      <div class="sub">Tiny puzzles about placing a point exactly where it belongs. Eyes only — no measuring.</div>
+    </div>
+
+    <button class="play-order-btn" id="playOrderBtn">
+      <span>Play all puzzles in order</span>
+      <span class="arrow">→</span>
+    </button>
+
+    <div class="puzzle-list" id="puzzleList"></div>
+
+    <div class="menu-footer">More puzzles get added to this list over time.</div>
+  </div>
+
+  <!-- ============ GAME SCREEN ============ -->
+  <div id="gameScreen">
+    <h1 id="puzzleTitle">—</h1>
+    <div class="sub" id="puzzleSub">—</div>
+
+    <div class="stage">
+      <svg id="stage" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+
+    <div class="hint-row">
+      <div class="streak">STREAK <b id="streakVal">0</b></div>
+      <div class="streak" id="bestVal">BEST —</div>
+    </div>
+
+    <div class="result" id="result">
+      <div class="result-line" id="resultLine"></div>
+      <button class="btn-primary" id="nextBtn">Next line →</button>
+    </div>
+
+    <footer>You'll get one honest number: how far off you were, as a share of the line's own length.</footer>
+  </div>
+
+<script>
+(function(){
+  const NS = 'http://www.w3.org/2000/svg';
+  const VB_W = 600, VB_H = 600;
+  const PHI_T = 0.6180339887498949; // 1/phi
+
+  // ---- puzzle registry — add new puzzles here ----
+  const PUZZLES = [
+    {
+      id: 'midpoint',
+      name: 'Midpoint',
+      desc: 'Split the line exactly in half.',
+      title: 'Find the midpoint',
+      instructions: 'Press anywhere and drag along the line — your guess snaps to it. Let go to lock it in.',
+      getT(){ return 0.5; }
+    },
+    {
+      id: 'golden',
+      name: 'Golden ratio',
+      desc: 'Split the line into golden proportion.',
+      title: 'Find the golden ratio point',
+      instructions: 'Press and drag along the line. Place the point where the two resulting segments feel like they\u2019re in golden proportion. Let go to lock it in.',
+      getT(){ return Math.random() < 0.5 ? PHI_T : (1 - PHI_T); }
+    }
+  ];
+
+  // ---- screen elements ----
+  const menuScreen = document.getElementById('menuScreen');
+  const gameScreen = document.getElementById('gameScreen');
+  const backBtn = document.getElementById('backBtn');
+  const wordmark = document.getElementById('wordmark');
+  const roundCounter = document.getElementById('roundCounter');
+  const playOrderBtn = document.getElementById('playOrderBtn');
+  const puzzleList = document.getElementById('puzzleList');
+
+  const svg = document.getElementById('stage');
+  const puzzleTitle = document.getElementById('puzzleTitle');
+  const puzzleSub = document.getElementById('puzzleSub');
+  const result = document.getElementById('result');
+  const resultLine = document.getElementById('resultLine');
+  const streakVal = document.getElementById('streakVal');
+  const bestVal = document.getElementById('bestVal');
+  const nextBtn = document.getElementById('nextBtn');
+
+  // ---- app state ----
+  let currentPuzzle = null;
+  let sequenceMode = false;
+  let sequenceIndex = 0;
+  let round = 1;
+  let streak = 0;
+  let best = null;
+
+  let A = {x:0,y:0}, B = {x:0,y:0};
+  let awaitingGuess = true;
+  let isDragging = false;
+  let previewEl = null;
+  let lastSnapped = null;
+
+  // ---------- menu ----------
+  function buildMenu(){
+    puzzleList.innerHTML = '';
+    PUZZLES.forEach(function(p){
+      const card = document.createElement('button');
+      card.className = 'puzzle-card';
+      card.innerHTML =
+        '<span class="info">' +
+          '<span class="name">' + p.name + '</span>' +
+          '<span class="desc">' + p.desc + '</span>' +
+        '</span>' +
+        '<span class="go">Play →</span>';
+      card.addEventListener('click', function(){
+        startPuzzle(p.id, {sequence:false});
+      });
+      puzzleList.appendChild(card);
+    });
+  }
+
+  function showMenu(){
+    menuScreen.classList.remove('hide');
+    gameScreen.classList.remove('show');
+    backBtn.classList.remove('show');
+    wordmark.style.display = '';
+    roundCounter.textContent = '';
+  }
+
+  function showGame(){
+    menuScreen.classList.add('hide');
+    gameScreen.classList.add('show');
+    backBtn.classList.add('show');
+    wordmark.style.display = 'none';
+  }
+
+  playOrderBtn.addEventListener('click', function(){
+    sequenceMode = true;
+    sequenceIndex = 0;
+    startPuzzle(PUZZLES[0].id, {sequence:true, index:0});
+  });
+
+  backBtn.addEventListener('click', function(){
+    showMenu();
+  });
+
+  // ---------- puzzle lifecycle ----------
+  function startPuzzle(id, opts){
+    currentPuzzle = PUZZLES.find(function(p){ return p.id === id; });
+    if(!currentPuzzle) return;
+    sequenceMode = !!(opts && opts.sequence);
+    sequenceIndex = (opts && typeof opts.index === 'number') ? opts.index : 0;
+    round = 1;
+    streak = 0;
+    best = null;
+    streakVal.textContent = '0';
+    bestVal.textContent = 'BEST —';
+
+    puzzleTitle.textContent = currentPuzzle.title;
+    puzzleSub.textContent = currentPuzzle.instructions;
+
+    nextBtn.textContent = sequenceMode
+      ? (sequenceIndex + 1 < PUZZLES.length ? 'Next puzzle →' : 'Finish')
+      : 'Next line →';
+
+    showGame();
+    newLine();
+  }
+
+  nextBtn.addEventListener('click', function(){
+    if(sequenceMode){
+      const next = sequenceIndex + 1;
+      if(next < PUZZLES.length){
+        startPuzzle(PUZZLES[next].id, {sequence:true, index: next});
+      } else {
+        showMenu();
+      }
+    } else {
+      round++;
+      newLine();
+    }
+  });
+
+  // ---------- svg helpers ----------
+  function rand(min,max){ return Math.random()*(max-min)+min; }
+  function clearSvg(){ while(svg.firstChild) svg.removeChild(svg.firstChild); }
+  function el(tag, attrs){
+    const e = document.createElementNS(NS, tag);
+    for(const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function distance(p,q){ return Math.hypot(p.x-q.x, p.y-q.y); }
+
+  function newLine(){
+    const margin = 70;
+    A = { x: rand(margin, VB_W-margin), y: rand(margin, VB_H-margin) };
+    let ang, len;
+    do {
+      ang = rand(0, Math.PI*2);
+      len = rand(180, 420);
+      B = { x: A.x + Math.cos(ang)*len, y: A.y + Math.sin(ang)*len };
+    } while (B.x < 30 || B.x > VB_W-30 || B.y < 30 || B.y > VB_H-30);
+
+    awaitingGuess = true;
+    isDragging = false;
+    previewEl = null;
+    lastSnapped = null;
+    result.classList.remove('show');
+
+    roundCounter.textContent = sequenceMode
+      ? 'PUZZLE ' + (sequenceIndex+1) + '/' + PUZZLES.length
+      : 'ROUND ' + String(round).padStart(2,'0');
+
+    clearSvg();
+
+    const line = el('line', {
+      x1:A.x, y1:A.y, x2:B.x, y2:B.y,
+      stroke:'#c7d3e0', 'stroke-width':2.5, 'stroke-linecap':'round'
+    });
+    svg.appendChild(line);
+
+    [A,B].forEach(function(p){
+      svg.appendChild(el('circle', {cx:p.x, cy:p.y, r:5, fill:'#0a1620', stroke:'#c7d3e0', 'stroke-width':2}));
+    });
+
+    svg.style.cursor = 'crosshair';
+  }
+
+  function toStageCoords(evt){
+    const rect = svg.getBoundingClientRect();
+    const scaleX = VB_W / rect.width;
+    const scaleY = VB_H / rect.height;
+    return {
+      x: (evt.clientX - rect.left) * scaleX,
+      y: (evt.clientY - rect.top) * scaleY
+    };
+  }
+
+  // nearest point on segment AB to a free point P
+  function snapToLine(P){
+    const abx = B.x-A.x, aby = B.y-A.y;
+    const lenSq = abx*abx + aby*aby;
+    let t = lenSq === 0 ? 0 : ((P.x-A.x)*abx + (P.y-A.y)*aby) / lenSq;
+    t = Math.max(0, Math.min(1, t));
+    return { x: A.x + abx*t, y: A.y + aby*t };
+  }
+
+  function ensurePreview(){
+    if(!previewEl){
+      previewEl = el('circle', {r:7, fill:'#0a1620', 'stroke-width':2.5});
+      previewEl.style.stroke = '#7dd3fc';
+      svg.appendChild(previewEl);
+    }
+    return previewEl;
+  }
+
+  function onPointerDown(evt){
+    if(!awaitingGuess) return;
+    svg.setPointerCapture && svg.setPointerCapture(evt.pointerId);
+    isDragging = true;
+    const snapped = snapToLine(toStageCoords(evt));
+    lastSnapped = snapped;
+    const p = ensurePreview();
+    p.setAttribute('cx', snapped.x);
+    p.setAttribute('cy', snapped.y);
+    evt.preventDefault();
+  }
+
+  function onPointerMove(evt){
+    if(!isDragging) return;
+    const snapped = snapToLine(toStageCoords(evt));
+    lastSnapped = snapped;
+    const p = ensurePreview();
+    p.setAttribute('cx', snapped.x);
+    p.setAttribute('cy', snapped.y);
+    evt.preventDefault();
+  }
+
+  function onPointerUp(evt){
+    if(!isDragging) return;
+    isDragging = false;
+    if(!lastSnapped) return;
+    submitGuess(lastSnapped);
+  }
+
+  function onPointerCancel(evt){
+    // the browser hijacked this gesture (e.g. to scroll) — abort, don't submit
+    if(!isDragging) return;
+    isDragging = false;
+    lastSnapped = null;
+    if(previewEl){ previewEl.remove(); previewEl = null; }
+  }
+
+  function submitGuess(click){
+    if(!awaitingGuess) return;
+    awaitingGuess = false;
+    if(previewEl){ previewEl.remove(); previewEl = null; }
+
+    const t = currentPuzzle.getT();
+    const target = { x: A.x + (B.x-A.x)*t, y: A.y + (B.y-A.y)*t };
+    const lineLen = distance(A,B);
+    const err = distance(click, target);
+    const errPct = err / lineLen;
+
+    // score: 100 at 0 error, decays to 0 around 18% of line length off
+    const score = Math.max(0, Math.round(100 * Math.exp(-errPct * 10)));
+
+    // reveal both the true point and the guess
+    svg.appendChild(el('circle', {cx:target.x, cy:target.y, r:7, fill:'none', stroke:'#7dd3fc', 'stroke-width':2.5}));
+    svg.appendChild(el('circle', {cx:target.x, cy:target.y, r:2, fill:'#7dd3fc'}));
+
+    const guessColor = score>=70 ? '#6ee7b7' : '#fb7185';
+    svg.appendChild(el('circle', {cx:click.x, cy:click.y, r:6, fill:'none', stroke:guessColor, 'stroke-width':2.5}));
+    svg.appendChild(el('circle', {cx:click.x, cy:click.y, r:2, fill:guessColor}));
+
+    svg.style.cursor = 'default';
+
+    // ---- result line ----
+    const pctOff = Math.round(errPct * 1000) / 10;
+    const judgement = score>=90 ? 'Nailed it.' : score>=70 ? 'Close.' : score>=40 ? 'Off.' : 'Way off.';
+    const verdictClass = score>=70 ? 'good' : 'bad';
+    resultLine.innerHTML =
+      '<span class="verdict-word ' + verdictClass + '">' + judgement + '</span>' +
+      ' &nbsp;<span class="score">' + score + '/100</span>' +
+      ' &nbsp;<span class="pct">off by ' + pctOff + '%</span>';
+
+    if(score >= 70){ streak++; } else { streak = 0; }
+    streakVal.textContent = streak;
+    if(best === null || score > best){ best = score; bestVal.textContent = 'BEST ' + best; }
+
+    result.classList.add('show');
+  }
+
+  svg.addEventListener('pointerdown', onPointerDown);
+  svg.addEventListener('pointermove', onPointerMove);
+  svg.addEventListener('pointerup', onPointerUp);
+  svg.addEventListener('pointercancel', onPointerCancel);
+
+  // ---------- boot ----------
+  buildMenu();
+  showMenu();
+})();
+</script>
+</body>
+</html>
